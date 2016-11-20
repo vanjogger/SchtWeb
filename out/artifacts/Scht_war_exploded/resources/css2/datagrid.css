@@ -1,0 +1,32 @@
+.datagrid-view div table{
+    background-color: #2b2d3c !important;
+    color:#fff !important;
+}
+.datagrid-header{
+    background-color: #2b2d3c !important;
+    background: -webkit-linear-gradient(top,#2b2d3c 0,#2b2d3c 100%);
+}
+.datagrid-header-over{
+    background-color: #2b2d3c !important;
+    color:#fff !important;
+}
+.datagrid-body{
+    background-color: #2b2d3c !important;
+    color:#fff !important;
+}
+.datagrid-pager{
+    background-color: #2b2d3c !important;
+    color:#fff !important;
+}
+.datagrid-pager span{
+    background-color: #2b2d3c !important;
+    color:#fff !important;
+}
+.datagrid-pager input{
+    background-color: #2b2d3c !important;
+    color:#fff !important;
+}
+.pagination-page-list{
+    background-color: #2b2d3c !important;
+    color:#fff !important;
+}

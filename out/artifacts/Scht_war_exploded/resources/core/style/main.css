@@ -1,0 +1,11 @@
+.table-col2 {margin-top: 5px;width: 100%;}
+.table-col2 td {padding: 5px 0;height: 22px;line-height: 22px;}
+.table-col2 .td-left {width: 30%;text-align: right;}
+.table-col2 .td-right {width: 70%;text-align: left;}
+.table-col4 {margin-top: 5px;width: 100%;}
+.table-col4 td {padding: 5px 0;}
+.table-col4 .td-left {width: 15%;text-align: right;}
+.table-col4 .td-right {width: 35%;text-align: left;}
+.main-top {height: 80px;}
+.main-top div{margin-top: 15px;}
+.main-left {width: 220px;}
