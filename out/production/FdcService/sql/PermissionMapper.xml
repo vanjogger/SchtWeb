@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banksoft.admin.dao.PermissionDao">
+    <resultMap id="my_permission" type="com.banksoft.admin.entity.Permission">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_url" property="url"/>
+        <result column="f_pid" property="pId"/>
+    </resultMap>
+
+
+    <select id="findById" parameterType="HashMap" resultMap="my_permission">
+        select * from base_permission where f_id = #{id}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_permission">
+        select f_id,f_name,f_url,f_pid from base_permission  order by f_id asc limit #{start},#{limit}
+    </select>
+
+
+    <select id="listAllPermission" parameterType="HashMap" resultMap="my_permission">
+        select f_id,f_name,f_url,f_pid from base_permission  order by f_id desc
+    </select>
+
+    <select id="count4Page" resultType="Integer">
+        select count(f_id) from base_permission
+    </select>
+
+    <select id="findPermission" parameterType="HashMap" resultMap="my_permission">
+        select * from base_permission where f_id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.banksoft.admin.entity.Permission">
+        insert into base_permission(f_id,f_name,f_url,f_pid) VALUES
+        (#{id},#{name},#{url},#{pId})
+    </insert>
+
+    <update id="update" parameterType="com.banksoft.admin.entity.Permission">
+        update base_permission
+        <set>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="url!=null and url!=''">
+                f_url = #{url},
+            </if>
+            <if test="pId!=null and pId!=''">
+                f_pid = #{pId},
+            </if>
+        </set>
+        where f_id = #{id}
+    </update>
+    <delete id="delete" parameterType="HashMap">
+        delete from base_permission where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+</mapper>

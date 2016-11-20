@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.RoleDao">
+    <resultMap id="role_permission" type="com.scht.admin.entity.RolePermission">
+        <id column="f_id" property="id"/>
+        <result column="f_roleId" property="roleId"/>
+        <result column="f_permissionId" property="permissionId"/>
+    </resultMap>
+
+    <resultMap id="my_role" type="com.scht.admin.entity.Role">
+        <id column="f_id" property="id"/>
+        <result column="f_roleName" property="roleName"/>
+        <result column="f_status" property="status"/>
+    </resultMap>
+
+
+    <select id="listRole" parameterType="HashMap" resultMap="my_role">
+        select *
+        from base_role
+        where 1=1
+    </select>
+
+    <select id="getRolebyId" parameterType="HashMap" resultMap="my_role">
+        select * from base_role where f_id = #{id}
+    </select>
+
+    <select id="getRoleByName" parameterType="HashMap" resultMap="my_role">
+      select * from base_role where f_roleName = #{roleName} and  f_status = 0
+    </select>
+
+    <insert id="saveRole" parameterType="com.scht.admin.entity.Role">
+        insert into base_role(f_id,f_roleName,f_status) values
+        (#{id},#{roleName},#{status})
+    </insert>
+
+    <update id="updateRole" parameterType="com.scht.admin.entity.Role">
+        update base_role
+        <set>
+            <if test="roleName!=null">
+                f_roleName = #{roleName} ,
+            </if>
+            <if test="status!=null">
+                f_status = #{status} ,
+            </if>
+        </set>
+        where f_id = #{id}
+    </update>
+
+
+    <select id="listPermissionByRoleId" parameterType="HashMap" resultType="String">
+      select m.f_url
+      from base_permission m,base_role_permission r
+      where m.f_id = r.f_permissionId and r.f_roleId = #{roleId}
+    </select>
+
+    <insert id="saveRolePermission" parameterType="com.scht.admin.entity.RolePermission">
+        insert into base_role_permission(f_id,f_roleId,f_permissionId) VALUES
+        (#{id},#{roleId},#{permissionId})
+    </insert>
+
+    <delete id="deleteRolePermission" parameterType="HashMap">
+        delete from base_role_permission where f_roleId = #{roleId}
+    </delete>
+
+    <delete id="deleteRolePermissionByPermissionId" parameterType="HashMap">
+        delete from base_role_permission where f_permissionId = #{permissionId}
+    </delete>
+
+
+    <select id="findRolePermission" parameterType="HashMap" resultMap="role_permission">
+        select * from base_role_permission where f_roleId = #{roleId}
+    </select>
+</mapper>

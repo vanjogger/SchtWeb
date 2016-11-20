@@ -1,0 +1,103 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, div, span, applet, object, iframe, table, caption, tbody, tfoot, thead, tr, th, td,     
+del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, 
+p, blockquote, pre, a, abbr, acronym, address, big, cite, code,     
+dl, dt, dd, ol, ul, li, form, checkbox, label, legend,submit {    
+ margin: 0;    
+ padding: 0;      
+}
+ 
+body{
+ margin:0 auto;
+ color:#313131;
+ line-height:1.5em;
+ font-size: 12px;
+ font-family: "宋体",Arial, Helvetica, sans-serif;
+ scrollbar-face-color:#cfdee7;
+ scrollbar-highlight-coror:#6c6c90;
+ scrollbar-shadow-color:#ffffff;                                  
+ scrollbar-3dlight-color:#accce0;
+ scrollbar-arrow-color:#ffffff;
+ scrollbar-track-color:#eaf1f5;
+ scrollbar-darkshadow-color:#aec7d7;
+ }
+ 
+table{    
+ border-collapse: collapse;    
+ border-spacing: 0; 
+ }    
+ol,ul,li {    
+ list-style: none;    
+ }
+ 
+h1,h2,h3,h4,h5,h6 {    
+ font-weight: normal;    
+ font-size: 100%;
+ margin: 0;
+ }   
+ 
+:focus {    
+ outline: 0;    
+ }    
+caption, th, td {    
+ font-weight: normal;    
+ text-align: center;
+ vertical-align: middle;
+ }    
+blockquote:before, blockquote:after, q:before, q:after {    
+ content: ”“;   
+ }   
+
+/*float*/
+.float_l{float:left;}
+.float_r{float:right;}
+
+/*clear float*/
+.clear:before,.clear:after{content:"";display:table;}
+.clear:after{clear:both;}
+.clear{zoom:1;}
+.clear_b{clear:both;}
+
+/* a font */
+a:link,a:visited{color:#2E89CD;text-decoration:underline;}
+a:hover{color:#000;text-decoration:underline;}
+.red_a a:link,.red_a a:visited{color:#f00;text-decoration:underline;}
+
+/* color */
+.gray_f{ color:#999;}
+.white_bg{ background:#fff;}
+.blue_bg{ background:#cbe3f4;}
+.lblue_bg{ background:#e4eff8;}
+.red_bg{ color:#efa8a8;}
+.blue_g{ color:#a2b9ea;}
+
+
+
+/* font */
+.font_b{ font-weight:bold;}
+.blue_f{ color:#007fdc;}
+.red_f{ color:#f00;}
+.align_cen{ text-align:center;}
+
+/* input */
+button{cursor:pointer;margin:0;padding:0;border:0;font-size:12px;}
+select,input,img{vertical-align:middle;}
+
+/*mar pad*/
+.pad_main{ padding:8px;background:#fff;}
+.mar_top8{ margin-top:8px;}
+.mar_left8{ margin-left:8px;}
+.mar_lt8{ margin:8px 0 0 8px;}
+.pad_left30{ padding-left:30px;}
+.pad_top8{ padding-top:8px;}
+.mar_left15{ margin-left:15px;}
+.pad_top3{ padding-top:3px;}
+.pad_r10{ padding-right:12px;}
+.mar_tr{ margin:5px 5px 0 5px;}
+.mar_bt8{ margin-bottom:8px;}
+.mar_r20{ margin-right:20px;}
+.mar_top{ margin-top:1px;}
+.pad_left10{ padding-left:10px;}
+.mar_left9{ margin-left:-9px;}

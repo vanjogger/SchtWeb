@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banksoft.admin.dao.JyqxxDao">
+    <resultMap id="my_jyqxx" type="com.banksoft.admin.entity.Jyqxx">
+        <id column="f_id" property="id"/>
+        <result column="f_bh" property="bh"/>
+        <result column="f_area_id" property="areaId"/>
+        <result column="f_area_name" property="areaName"/>
+        <result column="f_qy_id" property="qyId"/>
+        <result column="f_qy_name" property="qyName"/>
+        <result column="f_yhzh" property="yhzh"/>
+        <result column="f_lxdh" property="lxdh"/>
+        <result column="f_frdb" property="frdb"/>
+        <result column="f_fzr" property="fzr"/>
+        <result column="f_xmmc" property="xmmc"/>
+        <result column="f_xmwz" property="xmwz"/>
+        <result column="f_xmxz" property="xmxz"/>
+        <result column="f_xmqdfs" property="xmqdfs"/>
+        <result column="f_zdmj" property="zdmj"/>
+        <result column="f_ydfs" property="ydfs"/>
+        <result column="f_tze" property="tze"/>
+        <result column="f_ptgjtz" property="ptgjtz"/>
+        <result column="f_zztz" property="zztz"/>
+        <result column="f_fzztz" property="fzztz"/>
+        <result column="f_jzmj" property="jzmj"/>
+        <result column="f_ptgjmj" property="ptgjmj"/>
+        <result column="f_zzmj" property="zzmj"/>
+        <result column="f_fzzmj" property="fzzmj"/>
+        <result column="f_cqmj" property="cqmj"/>
+        <result column="f_zz" property="zz"/>
+        <result column="f_qt" property="qt"/>
+        <result column="f_kgrq" property="kgrq"/>
+        <result column="f_jgrq" property="jgrq"/>
+        <result column="f_bzrq" property="bzrq"/>
+        <result column="f_bz" property="bz"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.banksoft.admin.entity.Jyqxx">
+        insert into t_jyqxx(f_id,f_bh,f_area_id,f_area_name,f_qy_id,f_qy_name,f_yhzh,f_lxdh,f_frdb,f_fzr,f_xmmc,f_xmwz,f_xmxz,f_xmqdfs,f_zdmj,f_ydfs,f_tze,f_ptgjtz,f_zztz,f_fzztz,f_jzmj,f_ptgjmj,f_zzmj,f_fzzmj,f_cqmj,f_zz,f_qt,f_kgrq,f_jgrq,f_bzrq,f_bz)
+        values(#{id},#{bh},#{areaId},#{areaName},#{qyId},#{qyName},#{yhzh},#{lxdh},#{frdb},#{fzr},#{xmmc},#{xmwz},#{xmxz},#{xmqdfs},#{zdmj},#{ydfs},#{tze},#{ptgjtz},#{zztz},#{fzztz},#{jzmj},#{ptgjmj},#{zzmj},#{fzzmj},#{cqmj},#{zz},#{qt},#{kgrq},#{jgrq},#{bzrq},#{bz})
+    </insert>
+    <update id="update" parameterType="com.banksoft.admin.entity.Jyqxx">
+        update t_jyqxx
+        <set>
+            <if test="bh!=null and bh!=''">
+                f_bh = #{bh},
+            </if>
+            <if test="areaId!=null and areaId!=''">
+                f_area_id = #{areaId},
+            </if>
+            <if test="areaName!=null and areaName!=''">
+                f_area_name = #{areaName},
+            </if>
+            <if test="qyId!=null and qyId!=''">
+                f_qy_id = #{qyId},
+            </if>
+            <if test="qyName!=null and qyName!=''">
+                f_qy_name = #{qyName},
+            </if>
+            <if test="yhzh!=null and yhzh!=''">
+                f_yhzh = #{yhzh},
+            </if>
+            <if test="lxdh!=null and lxdh!=''">
+                f_lxdh = #{lxdh},
+            </if>
+            <if test="frdb!=null and frdb!=''">
+                f_frdb = #{frdb},
+            </if>
+            <if test="fzr!=null and fzr!=''">
+                f_fzr = #{fzr},
+            </if>
+            <if test="xmmc!=null and xmmc!=''">
+                f_xmmc = #{xmmc},
+            </if>
+            <if test="xmwz!=null and xmwz!=''">
+                f_xmwz = #{xmwz},
+            </if>
+            <if test="xmxz!=null and xmxz!=''">
+                f_xmxz = #{xmxz},
+            </if>
+            <if test="xmqdfs!=null and xmqdfs!=''">
+                f_xmqdfs = #{xmqdfs},
+            </if>
+            <if test="zdmj!=null and zdmj!=''">
+                f_zdmj = #{zdmj},
+            </if>
+            <if test="ydfs!=null and ydfs!=''">
+                f_ydfs = #{ydfs},
+            </if>
+            <if test="tze!=null and tze!=''">
+                f_tze = #{tze},
+            </if>
+            <if test="ptgjtz!=null and ptgjtz!=''">
+                f_ptgjtz = #{ptgjtz},
+            </if>
+            <if test="zztz!=null and zztz!=''">
+                f_zztz = #{zztz},
+            </if>
+            <if test="fzztz!=null and fzztz!=''">
+                f_fzztz = #{fzztz},
+            </if>
+            <if test="jzmj!=null and jzmj!=''">
+                f_jzmj = #{jzmj},
+            </if>
+            <if test="ptgjmj!=null and ptgjmj!=''">
+                f_ptgjmj = #{ptgjmj},
+            </if>
+            <if test="zzmj!=null and zzmj!=''">
+                f_zzmj = #{zzmj},
+            </if>
+            <if test="fzzmj!=null and fzzmj!=''">
+                f_fzzmj = #{fzzmj},
+            </if>
+            <if test="cqmj!=null and cqmj!=''">
+                f_cqmj = #{cqmj},
+            </if>
+            <if test="zz!=null and zz!=''">
+                f_zz = #{zz},
+            </if>
+            <if test="qt!=null and qt!=''">
+                f_qt = #{qt},
+            </if>
+            <if test="kgrq!=null and kgrq!=''">
+                f_kgrq = #{kgrq},
+            </if>
+            <if test="jgrq!=null and jgrq!=''">
+                f_jgrq = #{jgrq},
+            </if>
+            <if test="bzrq!=null and bzrq!=''">
+                f_bzrq = #{bzrq},
+            </if>
+            <if test="bz!=null and bz!=''">
+                f_bz = #{bz},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+
+
+    <select id="findById" resultMap="my_jyqxx">
+        select * from t_jyqxx where f_id=#{id}
+    </select>
+
+
+    <select id="list" resultMap="my_jyqxx">
+        select * from t_jyqxx where  1=1 order by f_create_time desc limit #{index},#{size}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_jyqxx">
+        select *
+        from t_jyqxx
+        where 1=1
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+      <!--  <if test="status!=null and status!=''">
+            and f_status = #{status}
+        </if>-->
+        <if test="xmmc!=null and xmmc!=''">
+            and f_xmmc like CONCAT("%",#{xmmc},"%")
+        </if>
+
+        limit #{start},#{limit}
+    </select>
+
+    <select id="count4Page" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_jyqxx
+        where 1=1
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+       <!-- <if test="status!=null and status!=''">
+            and f_status = #{status}
+        </if>-->
+        <if test="xmmc!=null and xmmc!=''">
+            and f_xmmc like CONCAT("%",#{xmmc},"%")
+        </if>
+
+    </select>
+
+
+    <select id="findAll" parameterType="HashMap" resultMap="my_jyqxx">
+        select * from t_jyqxx
+    </select>
+
+    <select id="listLastest" parameterType="HashMap" resultMap="my_jyqxx">
+        select * from t_jyqxx limit 0,#{num}
+    </select>
+
+
+    <select id="frontList" parameterType="HashMap" resultMap="my_jyqxx">
+        select *
+        from t_jyqxx
+        where 1=1
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+        <if test="bh!=null and bh!=''">
+            and f_bh like CONCAT("%",#{bh},"%")
+        </if>
+        <if test="areaId!=null and areaId!=''">
+            and f_area_id = #{areaId}
+        </if>
+        <if test="xmmc!=null and xmmc!=''">
+            and f_xmmc like CONCAT("%",#{xmmc},"%")
+        </if>
+        <if test="year!=null and year!=''">
+            and f_bh like CONCAT("%",#{year},"%")
+        </if>
+
+        limit #{start},#{size}
+    </select>
+
+    <select id="countList" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_jyqxx
+        where 1=1
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+        <if test="bh!=null and bh!=''">
+            and f_bh like CONCAT("%",#{bh},"%")
+        </if>
+        <if test="areaId!=null and areaId!=''">
+            and f_area_id = #{areaId}
+        </if>
+        <if test="xmmc!=null and xmmc!=''">
+            and f_xmmc like CONCAT("%",#{xmmc},"%")
+        </if>
+        <if test="year!=null and year!=''">
+            and f_bh like CONCAT("%",#{year},"%")
+        </if>
+
+    </select>
+</mapper>

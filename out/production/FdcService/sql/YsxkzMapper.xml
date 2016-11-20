@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banksoft.admin.dao.YsxkzDao">
+    <resultMap id="my_ysxkz" type="com.banksoft.admin.entity.Ysxkz">
+        <id column="f_id" property="id"/>
+        <result column="f_xkzh" property="xkzh"/>
+        <result column="f_lpmc" property="lpmc"/>
+        <result column="f_kprq" property="kprq"/>
+        <result column="f_xmlb" property="xmlb"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.banksoft.admin.entity.Ysxkz">
+        insert into t_ysxkz(f_id,f_xkzh,f_lpmc,f_kprq,f_xmlb)
+        values(#{id},#{xkzh},#{lpmc},#{kprq},#{xmlb})
+    </insert>
+    <update id="update" parameterType="com.banksoft.admin.entity.Ysxkz">
+        update t_ysxkz
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="xkzh!=null and xkzh!=''">
+                f_xkzh = #{xkzh},
+            </if>
+            <if test="lpmc!=null and lpmc!=''">
+                f_lpmc = #{lpmc},
+            </if>
+            <if test="kprq!=null and kprq!=''">
+                f_kprq = #{kprq},
+            </if>
+            <if test="xmlb!=null and xmlb!=''">
+                f_xmlb = #{xmlb},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_ysxkz">
+        select * from t_ysxkz where f_id=#{id}
+    </select>
+    <select id="list" resultMap="my_ysxkz">
+        select * from t_ysxkz where 1=1 order by f_create_time desc limit #{index},#{size}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_ysxkz">
+        select *
+        from t_ysxkz
+        where 1=1
+        <if test="xkzh!=null and xkzh!=''">
+            and f_xkzh like CONCAT("%",#{xkzh},"%")
+        </if>
+        <if test="lpmc!=null and lpmc!=''">
+            and f_lpmc  like CONCAT("%",#{lpmc},"%")
+        </if>
+        <if test="xmlb!=null and xmlb!=''">
+            and f_xmlb = #{xmlb}
+        </if>
+        limit #{start},#{limit}
+    </select>
+
+    <select id="count4Page" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_ysxkz
+        where 1=1
+        <if test="xkzh!=null and xkzh!=''">
+            and f_xkzh like CONCAT("%",#{xkzh},"%")
+        </if>
+        <if test="lpmc!=null and lpmc!=''">
+            and f_lpmc  like CONCAT("%",#{lpmc},"%")
+        </if>
+        <if test="xmlb!=null and xmlb!=''">
+            and f_xmlb = #{xmlb}
+        </if>
+    </select>
+
+
+    <select id="findAll" parameterType="HashMap" resultMap="my_ysxkz">
+        select * from t_ysxkz
+    </select>
+
+    <delete id="delete" parameterType="HashMap">
+        delete from t_ysxkz where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+
+    <select id="frontList" parameterType="HashMap" resultMap="my_ysxkz">
+        select *
+        from t_ysxkz
+        where 1=1
+        <if test="xkzh!=null and xkzh!=''">
+            and f_xkzh like CONCAT("%",#{xkzh},"%")
+        </if>
+        <if test="lpmc!=null and lpmc!=''">
+            and f_lpmc  like CONCAT("%",#{lpmc},"%")
+        </if>
+        <if test="xmlb!=null and xmlb!=''">
+            and f_xmlb = #{xmlb}
+        </if>
+        limit #{start},#{size}
+    </select>
+
+    <select id="countList" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_ysxkz
+        where 1=1
+        <if test="xkzh!=null and xkzh!=''">
+            and f_xkzh like CONCAT("%",#{xkzh},"%")
+        </if>
+        <if test="lpmc!=null and lpmc!=''">
+            and f_lpmc  like CONCAT("%",#{lpmc},"%")
+        </if>
+        <if test="xmlb!=null and xmlb!=''">
+            and f_xmlb = #{xmlb}
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banksoft.admin.dao.QyXyXxDao">
+    <resultMap id="my_qy_xy_xx" type="com.banksoft.admin.entity.QyXyXx">
+        <id column="f_id" property="id"/>
+        <result column="f_qy_id" property="qyId"/>
+        <result column="f_qy_name" property="qyName"/>
+        <result column="f_summary" property="summary"/>
+        <result column="f_details" property="details"/>
+        <result column="f_xyfl" property="xyfl"/>
+        <result column="f_mark" property="mark"/>
+        <result column="f_xxly" property="xxly"/>
+        <result column="f_cldw" property="cldw"/>
+        <result column="f_xxyj" property="xxyj"/>
+        <result column="f_qssj" property="qssj"/>
+        <result column="f_zzsj" property="zzsj"/>
+        <result column="f_xfzk" property="xfzk"/>
+        <result column="f_clyj" property="clyj"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="com.banksoft.admin.entity.QyXyXx">
+        insert into t_qy_xyxx(f_id,f_qy_id,f_qy_name,f_summary,f_details,f_xyfl,f_mark,f_xxly,f_cldw,f_xxyj,f_qssj,f_zzsj,f_xfzk,f_clyj,f_create_time)
+        values(#{id},#{qyId},#{qyName},#{summary},#{details},#{xyfl},#{mark},#{xxly},#{cldw},#{xxyj},#{qssj},#{zzsj},#{xfzk},#{clyj},#{createTime})
+    </insert>
+
+    <update id="update" parameterType="com.banksoft.admin.entity.QyXyXx">
+        update t_qy_xyxx
+        <set>
+            <if test="qyId!=null and qyId!=''">
+                f_qy_id = #{qyId},
+            </if>
+            <if test="qyName!=null and qyName!=''">
+                f_qy_name = #{qyName},
+            </if>
+            <if test="summary!=null and summary!=''">
+                f_summary = #{summary},
+            </if>
+            <if test="details!=null and details!=''">
+                f_details = #{details},
+            </if>
+            <if test="xyfl!=null and xyfl!=''">
+                f_xyfl = #{xyfl},
+            </if>
+            <if test="mark!=null and mark!=''">
+                f_mark = #{mark},
+            </if>
+            <if test="xxly!=null and xxly!=''">
+                f_xxly = #{xxly},
+            </if>
+            <if test="cldw!=null and cldw!=''">
+                f_cldw = #{cldw},
+            </if>
+            <if test="xxyj!=null and xxyj!=''">
+                f_xxyj = #{xxyj},
+            </if>
+            <if test="qssj!=null and qssj!=''">
+                f_qssj = #{qssj},
+            </if>
+            <if test="zzsj!=null and zzsj!=''">
+                f_zzsj = #{zzsj},
+            </if>
+            <if test="xfzk!=null and xfzk!=''">
+                f_xfzk = #{xfzk},
+            </if>
+            <if test="clyj!=null and clyj!=''">
+                f_clyj = #{clyj},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+
+
+    <select id="findById" resultMap="my_qy_xy_xx">
+        select * from t_qy_xyxx where f_id=#{id}
+    </select>
+
+    <select id="list" resultMap="my_qy_xy_xx">
+        select * from t_qy_xyxx where 1=1 order by f_create_time desc limit #{index},#{size}
+    </select>
+
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_qy_xy_xx">
+        select *
+        from t_qy_xyxx
+        where 1=1
+        <if test="qyId!=null and qyId!=''">
+            and f_qy_id = #{qyId}
+        </if>
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+        <if test="summary!=null and summary!=''">
+            and f_summary like CONCAT("%",#{summary},"%")
+        </if>
+        <if test="xyfl!=null and xyfl!=''">
+            and f_xyfl = #{xyfl}
+        </if>
+        order by f_create_time DESC
+        limit #{start},#{limit}
+    </select>
+
+    <select id="count4Page" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_qy_xyxx
+        where 1=1
+        <if test="qyId!=null and qyId!=''">
+            and f_qy_id = #{qyId}
+        </if>
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+        <if test="summary!=null and summary!=''">
+            and f_summary like CONCAT("%",#{summary},"%")
+        </if>
+        <if test="xyfl!=null and xyfl!=''">
+            and f_xyfl = #{xyfl}
+        </if>
+
+    </select>
+
+
+    <delete id="delete" parameterType="HashMap">
+        delete from t_qy_xyxx where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+    <select id="listLastest" parameterType="HashMap" resultMap="my_qy_xy_xx">
+          select * from t_qy_xyxx where 1=1 order by f_create_time desc limit 0,#{num}
+    </select>
+
+    <select id="listByQyId" parameterType="HashMap" resultMap="my_qy_xy_xx">
+        select * from t_qy_xyxx where f_qy_id = #{qyId} order by f_create_time desc
+    </select>
+
+    <select id="listByQyIdAndFl" parameterType="HashMap" resultMap="my_qy_xy_xx">
+        select * from t_qy_xyxx where f_qy_id = #{qyId} and f_xyfl=#{xyfl} order by f_create_time desc
+    </select>
+
+    <select id="frontList" parameterType="HashMap" resultMap="my_qy_xy_xx">
+        select *
+        from t_qy_xyxx
+        where 1=1
+        <if test="qyId!=null and qyId!=''">
+            and f_qy_id = #{qyId}
+        </if>
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+        <if test="summary!=null and summary!=''">
+            and f_summary like CONCAT("%",#{summary},"%")
+        </if>
+        <if test="xyfl!=null and xyfl!=''">
+            and f_xyfl = #{xyfl}
+        </if>
+        order by f_create_time DESC
+        limit #{start},#{size}
+    </select>
+
+    <select id="countList" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_qy_xyxx
+        where 1=1
+        <if test="qyId!=null and qyId!=''">
+            and f_qy_id = #{qyId}
+        </if>
+        <if test="qyName!=null and qyName!=''">
+            and f_qy_name like CONCAT("%",#{qyName},"%")
+        </if>
+        <if test="summary!=null and summary!=''">
+            and f_summary like CONCAT("%",#{summary},"%")
+        </if>
+        <if test="xyfl!=null and xyfl!=''">
+            and f_xyfl = #{xyfl}
+        </if>
+
+    </select>
+
+</mapper>

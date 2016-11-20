@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banksoft.admin.dao.QyDao">
+    <resultMap id="my_qy" type="com.banksoft.admin.entity.Qy">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_kfxm" property="kfxm"/>
+        <result column="f_szqy" property="szqy"/>
+        <result column="f_zzdj" property="zzdj"/>
+        <result column="f_zsbm" property="zsbm"/>
+        <result column="f_lxdh" property="lxdh"/>
+        <result column="f_bgdd" property="bgdd"/>
+        <result column="f_qywz" property="qywz"/>
+        <result column="f_bz" property="bz"/>
+        <result column="f_status" property="status"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.banksoft.admin.entity.Qy">
+        insert into t_qy(f_id,f_name,f_kfxm,f_szqy,f_zzdj,f_zsbm,f_lxdh,f_bgdd,f_qywz,f_bz,f_status,f_create_time)
+        values(#{id},#{name},#{kfxm},#{szqy},#{zzdj},#{zsbm},#{lxdh},#{bgdd},#{qywz},#{bz},#{status},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.banksoft.admin.entity.Qy">
+        update t_qy
+        <set>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="kfxm!=null and kfxm!=''">
+                f_kfxm = #{kfxm},
+            </if>
+            <if test="szqy!=null and szqy!=''">
+                f_szqy = #{szqy},
+            </if>
+            <if test="zzdj!=null and zzdj!=''">
+                f_zzdj = #{zzdj},
+            </if>
+            <if test="zsbm!=null and zsbm!=''">
+                f_zsbm = #{zsbm},
+            </if>
+            <if test="lxdh!=null and lxdh!=''">
+                f_lxdh = #{lxdh},
+            </if>
+            <if test="bgdd!=null and bgdd!=''">
+                f_bgdd = #{bgdd},
+            </if>
+            <if test="qywz!=null and qywz!=''">
+                f_qywz = #{qywz},
+            </if>
+            <if test="bz!=null and bz!=''">
+                f_bz = #{bz},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="HashMap">
+        delete from t_qy where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+    <select id="findById" resultMap="my_qy">
+        select * from t_qy where f_id=#{id}
+    </select>
+
+
+    <select id="listByName" parameterType="HashMap" resultMap="my_qy">
+        select * from t_qy where f_name = #{name}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_qy">
+        select *
+        from t_qy
+        where 1=1
+        <if test="name!=null and name!=''">
+            and f_name like CONCAT("%",#{name},"%")
+        </if>
+        <if test="status!=null and status!=''">
+            and f_status = #{status}
+        </if>
+        <if test="szqy!=null and szqy!=''">
+            and f_szqy = #{szqy}
+        </if>
+        <if test="zzdj!=null and zzdj!=''">
+            and f_zzdj = #{zzdj}
+        </if>
+        order by f_create_time DESC
+        limit #{start},#{limit}
+    </select>
+
+    <select id="count4Page" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_qy
+        where 1=1
+        <if test="name!=null and name!=''">
+            and f_name like CONCAT("%",#{name},"%")
+        </if>
+        <if test="status!=null and status!=''">
+            and f_status = #{status}
+        </if>
+        <if test="szqy!=null and szqy!=''">
+            and f_szqy = #{szqy}
+        </if>
+        <if test="zzdj!=null and zzdj!=''">
+            and f_zzdj = #{zzdj}
+        </if>
+    </select>
+
+
+    <select id="findAll" parameterType="HashMap" resultMap="my_qy">
+        select * from t_qy where f_status = 'NORMAL'  order by f_create_time DESC
+    </select>
+
+    <select id="list" parameterType="HashMap" resultMap="my_qy">
+        select *
+        from t_qy
+        where 1=1
+        <if test="status!=null and status!=''">
+            and f_status = #{status}
+        </if>
+        <if test="name!=null and name!=''">
+            and f_name like CONCAT("%",#{name},"%")
+        </if>
+    </select>
+
+    <select id="listLastest" parameterType="HashMap" resultMap="my_qy">
+        select * from t_qy where f_status = 'NORMAL'  order by f_create_time DESC limit 0,#{num}
+    </select>
+
+
+    <select id="frontList" parameterType="HashMap" resultMap="my_qy">
+        select *
+        from t_qy
+        where f_status = 'NORMAL'
+        <if test="name!=null and name!=''">
+            and f_name like CONCAT("%",#{name},"%")
+        </if>
+        <if test="zzdj!=null and zzdj!=''">
+            and f_zzdj = #{zzdj}
+        </if>
+        <if test="szqy!=null and szqy!=''">
+            and f_szqy = #{szqy}
+        </if>
+        order by f_create_time desc limit #{start},#{size}
+    </select>
+
+    <select id="countList" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_qy
+        where f_status = 'NORMAL'
+        <if test="name!=null and name!=''">
+            and f_name like CONCAT("%",#{name},"%")
+        </if>
+        <if test="zzdj!=null and zzdj!=''">
+            and f_zzdj = #{zzdj}
+        </if>
+        <if test="szqy!=null and szqy!=''">
+            and f_szqy = #{szqy}
+        </if>
+    </select>
+</mapper>

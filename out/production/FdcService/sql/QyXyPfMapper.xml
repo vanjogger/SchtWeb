@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banksoft.admin.dao.QyXyPfDao">
+    <resultMap id="my_qy_xy_pf" type="com.banksoft.admin.entity.QyXyPf">
+        <id column="f_id" property="id"/>
+        <result column="f_qy_id" property="qyId"/>
+        <result column="f_year" property="year"/>
+        <result column="f_mark" property="mark"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.banksoft.admin.entity.QyXyPf">
+        insert into t_qy_xypf(f_id,f_qy_id,f_year,f_mark)
+        values(#{id},#{qyId},#{year},#{mark})
+    </insert>
+    <update id="update" parameterType="com.banksoft.admin.entity.QyXyPf">
+        update t_qy_xypf
+        <set>
+            <if test="qyId!=null and qyId!=''">
+                f_qy_id = #{qyId},
+            </if>
+            <if test="year!=null and year!=''">
+                f_year = #{year},
+            </if>
+            <if test="mark!=null and mark!=''">
+                f_mark = #{mark},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="my_qy_xy_pf">
+        select * from t_qy_xypf where f_id=#{id}
+    </select>
+
+    <select id="listByQyId" parameterType="HashMap" resultMap="my_qy_xy_pf">
+        select * from t_qy_xypf where f_qy_id = #{qyId}
+         order by f_year desc
+    </select>
+
+    <select id="listByQyIdAndYear" parameterType="HashMap" resultMap="my_qy_xy_pf">
+        select * from t_qy_xypf where f_qy_id = #{qyId} and f_year = #{year}
+        order by f_year desc
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_qy_xy_pf">
+        select *
+        from t_qy_xypf
+        where 1=1
+        <if test="qyId!=null and qyId!=''">
+            and f_qy_id = #{qyId}
+        </if>
+        order by f_year DESC
+        limit #{start},#{limit}
+    </select>
+
+    <select id="count4Page" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_qy_xypf
+        where 1=1
+        <if test="qyId!=null and qyId!=''">
+            and f_qy_id = #{qyId}
+        </if>
+
+    </select>
+
+
+    <delete id="delete" parameterType="HashMap">
+        delete from t_qy_xypf where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+</mapper>

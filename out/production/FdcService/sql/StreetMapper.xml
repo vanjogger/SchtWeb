@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banksoft.admin.dao.StreetDao">
+    <resultMap id="my_street" type="com.banksoft.admin.entity.Street">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_area_id" property="areaId"/>
+        <result column="f_area_name" property="areaName"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.banksoft.admin.entity.Street">
+        insert into t_street(f_id,f_name,f_area_id,f_area_name)
+        values(#{id},#{name},#{areaId},#{areaName})
+    </insert>
+    <update id="update" parameterType="com.banksoft.admin.entity.Street">
+        update t_street
+        <set>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="areaId!=null and areaId!=''">
+                f_area_id = #{areaId},
+            </if>
+            <if test="areaName!=null and areaName!=''">
+                f_area_name = #{areaName},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+
+    <delete id="delete" parameterType="HashMap">
+        delete from t_street where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+    <select id="findById" parameterType="HashMap" resultMap="my_street">
+        select * from t_street where f_id=#{id}
+    </select>
+
+
+    <select id="listByAreaId" parameterType="HashMap" resultMap="my_street">
+        select * from t_street where f_area_id = #{areaId}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_street">
+        select *
+        from t_street
+        where 1=1
+        <if test="name!=null and name!=''">
+            and f_name like CONCAT("%",#{name},"%")
+        </if>
+        <if test="areaId!=null and areaId!=''">
+            and f_area_id = #{areaId}
+        </if>
+        limit #{start},#{limit}
+    </select>
+
+    <select id="count4Page" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_street
+        where 1=1
+        <if test="name!=null and name!=''">
+            and f_name like CONCAT("%",#{name},"%")
+        </if>
+        <if test="areaId!=null and areaId!=''">
+            and f_area_id = #{areaId}
+        </if>
+    </select>
+
+    <select id="findAll" parameterType="HashMap" resultMap="my_street">
+        select * from t_street
+    </select>
+</mapper>
