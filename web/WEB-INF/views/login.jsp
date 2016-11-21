@@ -145,7 +145,6 @@
   <div id="login-box">
     <div id="login_top">
       <div id="version">
-ssss
       </div>
     </div>
     <form id="login" method="post" onsubmit="return check()"  action="login">
