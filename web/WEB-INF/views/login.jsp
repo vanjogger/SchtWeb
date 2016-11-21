@@ -145,7 +145,7 @@
   <div id="login-box">
     <div id="login_top">
       <div id="version">
-<!-- commit test123 -->
+<!-- commit test123  laowang -->
       </div>
     </div>
     <form id="login" method="post" onsubmit="return check()"  action="login">
