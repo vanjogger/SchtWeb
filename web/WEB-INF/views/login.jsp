@@ -152,7 +152,7 @@
       <table border="0" width="100%" cellpadding="3" cellspacing="3">
         <tbody>
         <tr>
-          <td align="right" height="42" width="30%">账号：</td>
+          <td align="right" height="42" width="30%">用户名：</td>
           <td width="70%">
             <input autocomplete="off" name="userName" id="userName" value="admin" onblur="checkData(this,1)" style="width: 200px;font-size:14px;font-family:Arial;" type="text">
             <span id="tip_1" style="color: Red;"></span>
