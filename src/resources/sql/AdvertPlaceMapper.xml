@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.AdvertPlaceDao">
+    <resultMap id="my_advert_place" type="com.scht.admin.entity.AdvertPlace">
+        <id column="f_id" property="id"/>
+        <result property="title" column="f_title"/>
+        <result column="f_width" property="width"/>
+        <result column="f_height" property="height"/>
+        <result column="f_code" property="code"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_remark" property="remark"/>
+    </resultMap>
+
+    <insert id="save" parameterType="com.scht.admin.entity.AdvertPlace">
+        insert into base_advert_place(f_id, f_title,f_width,f_height,f_code,f_create_time,f_remark)
+        VALUES (#{id},#{title},#{width},#{height},#{code},#{createTime},#{remark})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.AdvertPlace">
+        update base_advert_place set f_title=#{title},
+        f_width=#{width},f_height=#{height},f_code=#{code},
+        f_remark=#{remark} where f_id=#{id}
+    </update>
+    <select id="find" resultMap="my_advert_place">
+        select * from base_advert_place where f_id=#{id}
+    </select>
+    <select id="findByCode" resultMap="my_advert_place">
+        SELECT * from base_advert_place where f_code=#{code}
+    </select>
+    <delete id="delete">
+        delete from base_advert_place WHERE f_id=#{id}
+    </delete>
+    <select id="list" resultMap="my_advert_place">
+        select * from base_advert_place
+        <where>
+            <if test="code != null and code != ''">
+                f_code = #{code}
+            </if>
+        </where>
+        limit #{index},#{size}
+    </select>
+    <select id="count" resultType="int">
+        select count(f_id) from base_advert_place
+        <where>
+            <if test="code != null and code != ''">
+                f_code = #{code}
+            </if>
+        </where>
+    </select>
+</mapper>

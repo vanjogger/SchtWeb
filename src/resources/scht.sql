@@ -122,3 +122,14 @@ INSERT INTO `base_role_permission` VALUES ('ec4ef7b7784542da8d7db4830c3d278e', '
 INSERT INTO `base_role_permission` VALUES ('f48756ffaff9410f9f9f7a319af5ab01', '1', 'b0f43c76f9274cc19ee3379de4f9ce4a');
 INSERT INTO `base_role_permission` VALUES ('f73d7468057141e288a39f5e3b9a2051', '1', 'ef52c0639d594122b0278e5096da5104');
 INSERT INTO `base_role_permission` VALUES ('fbae75f2e8b14218b345c3c6ff738979', '1', '1dab92c627d245dd91522f024c7e60ac');
+
+--- advertPlace
+create table base_advert_place(
+  f_id varchar(32) PRIMARY key,
+  f_title VARCHAR (256) DEFAULT '',
+  f_width int DEFAULT 0,
+  f_height int DEFAULT 0,
+  f_code VARCHAR (32) not null,
+  f_create_time bigint DEFAULT 0,
+  f_remark varchar(1000) DEFAULT ''
+ );
