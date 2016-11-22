@@ -11,6 +11,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by Administrator on 2016/11/21.
  */
@@ -41,11 +43,12 @@ public class AdvertPlaceController extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    public JSONObject save(AdvertPlace data){
+    public JSONObject save(AdvertPlace data,HttpServletRequest request){
         int result = this.advertPlaceService.save(data);
         if(result == -1) {
             return this.FmtResult(false,"广告位编号被占用",null);
         }
+        this.saveLog("添加广告位置("+data.getTitle()+")", request);
         return FmtResult(true,"添加广告为成功",null);
     }
 
@@ -57,21 +60,23 @@ public class AdvertPlaceController extends BaseController {
 
     @RequestMapping("update")
     @ResponseBody
-    public JSONObject update(AdvertPlace data){
+    public JSONObject update(AdvertPlace data,HttpServletRequest request){
         int result  = this.advertPlaceService.update(data);
         if(result == -1) {
             return this.FmtResult(false,"广告位编号被占用",null);
         }
+        this.saveLog("修改广告位置("+data.getTitle()+")", request);
         return this.FmtResult(true,"修改成功",null);
     }
 
     @RequestMapping("delete")
     @ResponseBody
-    public JSONObject delete(String id){
+    public JSONObject delete(String id,HttpServletRequest request){
         int result = this.advertPlaceService.delete(id);
         if(result == -1) {
             return this.FmtResult(false,"广告位下有广告，不可删除",null);
         }
+        this.saveLog("删除广告位置", request);
         return this.FmtResult(true,"广告位删除成功",null);
     }
 }

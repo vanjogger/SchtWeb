@@ -48,4 +48,7 @@
             </if>
         </where>
     </select>
+    <select id="findAll" resultMap="my_advert_place">
+          select * from base_advert_place order by f_create_time desc
+    </select>
 </mapper>

@@ -21,4 +21,5 @@ public interface AdvertPlaceService {
     AdvertPlace findByCode(String code);
 
     int delete(String id);
+
 }

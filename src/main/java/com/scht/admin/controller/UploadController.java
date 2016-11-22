@@ -55,6 +55,18 @@ public class UploadController extends BaseController {
             return json.toString();
     }
 
+    @RequestMapping(value = "/buiUpload")
+    @ResponseBody
+    public String buiUpload(@RequestParam(value = "Filedata") MultipartFile file, HttpServletRequest request,
+                              HttpSession session) {
+        JSONObject json = saveUploadImage(session, file);
+        if(json.getBoolean("success")) {
+            json.put("url", json.get("data"));
+            json.put("name", file.getOriginalFilename());
+            json.put("msg", "上传成功");
+        }
+        return json.toString();
+    }
 
 
     public JSONObject saveUploadImage(HttpSession session, MultipartFile file){

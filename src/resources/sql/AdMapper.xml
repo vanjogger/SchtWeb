@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.AdvertDao">
+    <resultMap id="my_advert" type="com.scht.admin.entity.Advert">
+        <id column="f_id" property="id"/>
+        <result column="f_title" property="title"/>
+        <result column="f_url" property="url"/>
+        <result column="f_image" property="image"/>
+        <result column="f_status" property="status"/>
+        <result column="f_place_id" property="placeId"/>
+        <result column="f_start_time" property="startTime"/>
+        <result column="f_end_time" property="endTime"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_sort" property="sort"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.scht.admin.entity.Advert">
+        insert into base_advert(f_id,f_title,f_url,f_image,f_status,f_place_id,f_start_time,f_end_time,f_create_time,f_sort,f_remark)
+         VALUES (#{id},#{title},#{url},#{image},#{status},#{placeId},#{startTime},#{endTime},#{createTime},#{sort},#{remark})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Advert">
+        update base_advert set f_title=#{title},
+        f_url = #{url},f_image=#{image},f_status=#{status},f_place_id=#{placeId},f_start_time=#{startTime},f_end_time=#{endTime},
+        f_sort=#{sort},f_remark=#{remark} where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="my_advert">
+        select * from base_advert where f_id = #{id}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_advert">
+        select * from base_advert
+        <where>
+            <if test="placeId != null and placeId != ''">
+                and f_place_id=#{placeId}
+            </if>
+            <if test="time != null and time > 0">
+                <![CDATA[and f_start_time<=#{time}
+                and f_end_time>=#{time}]]>
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+            <if test="title != null and title != ''">
+                and f_title like "%"#{title}"%"
+            </if>
+        </where>
+        order by f_sort,f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(f_id) from base_advert
+        <where>
+            <if test="placeId != null and placeId != ''">
+                and f_place_id=#{placeId}
+            </if>
+            <if test="time != null and time > 0">
+                <![CDATA[and f_start_time<=#{time}
+                and f_end_time>=#{time}]]>
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+            <if test="title != null and title != ''">
+                and f_title like "%"#{title}"%"
+            </if>
+        </where>
+    </select>
+    <delete id="delete">
+        DELETE  from base_advert where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+</mapper>

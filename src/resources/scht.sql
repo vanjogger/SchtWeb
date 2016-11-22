@@ -133,3 +133,18 @@ create table base_advert_place(
   f_create_time bigint DEFAULT 0,
   f_remark varchar(1000) DEFAULT ''
  );
+
+ -- advert
+   create table base_advert (
+   f_id varchar(32) PRIMARY key,
+   f_title varchar(256) DEFAULT '',
+   f_url VARCHAR (512) DEFAULT '',
+   f_image varchar(512) DEFAULT '',
+   f_status varchar(32) not null,
+   f_place_id varchar(32) not null,
+   f_start_time bigint,
+   f_end_time bigint,
+   f_create_time bigint,
+   f_sort int,
+   f_remark VARCHAR (1000) DEFAULT ''
+ );

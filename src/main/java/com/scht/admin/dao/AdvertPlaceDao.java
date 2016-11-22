@@ -25,4 +25,6 @@ public interface AdvertPlaceDao {
     int count(@Param("code")String code);
 
     AdvertPlace findByCode(@Param("code")String code);
+
+    List<AdvertPlace> findAll();
 }
