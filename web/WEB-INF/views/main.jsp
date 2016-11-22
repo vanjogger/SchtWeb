@@ -21,9 +21,9 @@
 <div class="content">
   <div class="dl-main-nav">
     <ul id="J_Nav"  class="nav-list ks-clear">
-      <%--<li class="nav-item dl-selected"><div class="nav-item-inner nav-home">企业管理</div></li>
-      <li class="nav-item"><div class="nav-item-inner nav-inventory">项目管理</div></li>
-      <li class="nav-item"><div class="nav-item-inner nav-storage">财务管理</div></li>--%>
+     <%--<li class="nav-item dl-selected"><div class="nav-item-inner nav-home">企业管理</div></li>--%>
+      <%--<li class="nav-item"><div class="nav-item-inner nav-inventory">项目管理</div></li>--%>
+      <%--<li class="nav-item"><div class="nav-item-inner nav-storage">财务管理</div></li>--%>
 
       <li class="nav-item"><div class="nav-item-inner nav-certification">系统设置</div></li>
     </ul>
@@ -55,6 +55,9 @@
           <shiro:hasPermission name="permission:list">
           {id:'permission_list',text:'权限管理',href:'/permission/list',closeable:true},
                 </shiro:hasPermission>
+                <shiro:hasPermission name="advertPlace:list">
+          {id:'advert_place_list', text:'广告位管理',href:'/advertPlace/list', closeable:true},
+          </shiro:hasPermission>
           <shiro:hasPermission name="log:list">
           {id:'log_list',text:'日志管理',href:'/log/list',closeable:true}
           </shiro:hasPermission>
