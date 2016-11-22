@@ -42,7 +42,7 @@ public class LoginController extends BaseController {
         if(!StringUtil.isNotNull(userName)&&!StringUtil.isNotNull(password)&&!StringUtil.isNotNull(validateCode)){
                 logger.info("首次进入登录");
         }else{
-            if (validateCode.equals(session_yzm)) {//�ж���֤��
+            if (validateCode.equals(session_yzm)) {
                 Subject user = SecurityUtils.getSubject();
                 String key = userName+"|Admin";
                 UsernamePasswordToken token = new UsernamePasswordToken(key, MD5Util.getMD5ofStr(password));
@@ -67,7 +67,7 @@ public class LoginController extends BaseController {
                     message_login = "授权失败";
                 }
                 if(user.isAuthenticated()){
-                    logger.info("user: "+userName+" ��¼�ɹ�!");
+                    logger.info("user: "+userName+" 认证通过!");
                     Admin admin = (Admin) this.adminService.listAdminbyName(userName).get(0);
                     admin.setLastLoginTime(new Date().getTime());
                     admin.setLoginIP(request.getRemoteHost());
@@ -77,8 +77,8 @@ public class LoginController extends BaseController {
                         admin.setLoginCnt(1);
                     }
                     this.adminService.updateAdmin(admin);
-                    //������־
-                    this.saveLog("��¼",request);
+                    //保存日志
+                    this.saveLog("用户登录",request);
                 }
 
             } else {
