@@ -148,3 +148,22 @@ create table base_advert_place(
    f_sort int,
    f_remark VARCHAR (1000) DEFAULT ''
  );
+
+ --notice type
+ CREATE TABLE base_notice_type(
+ f_id VARCHAR (32) PRIMARY key,
+ f_name varchar(256) DEFAULT '',
+ f_no VARCHAR (32) DEFAULT '',
+ f_sort int DEFAULT 0,
+ f_create_time bigint
+ );
+ -- notice
+ CREATE  table base_notice(
+  f_id VARCHAR (32) PRIMARY key,
+  f_type_id varchar(32) not null,
+  f_title varchar(256) DEFAULT '',
+  f_content longtext ,
+  f_create_time bigint,
+  f_sort int,
+  f_view_count int
+ );

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.NoticeDao">
+    <resultMap id="base_notice" type="com.scht.admin.entity.Notice">
+        <id column="f_id" property="id"/>
+        <result column="f_title" property="title"/>
+        <result column="f_type_id" property="typeId"/>
+        <result column="f_content" property="content"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_sort" property="sort"/>
+        <result column="f_view_count" property="viewCount"/>
+
+        <result column="typeName" property="typeName"/>
+        <result column="typeNo" property="typeNo"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.scht.admin.entity.Notice">
+       insert into base_notice(f_id,f_title,f_type_id,f_content,f_create_time,f_sort,f_view_count)
+       VALUES (#{id},#{title},#{typeId},#{content},#{createTime},#{sort},#{viewCount})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Notice">
+       update base_notice set f_title=#{title},f_type_id=#{typeId},
+       f_content=#{content},f_sort=#{sort}
+        <if test="viewCount > 0">
+            ,f_view_count=#{viewCount}
+        </if>
+        where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="base_notice">
+        select n.*, t.f_name as typeName,t.f_no as typeNo from base_notice n left join base_notice_type t
+        on t.f_id = n.f_type_id where n.f_id = #{id}
+    </select>
+    <select id="searchByPage" parameterType="HashMap" resultMap="base_notice">
+        select n.*, t.f_name as typeName,t.f_no as typeNo from base_notice n left join base_notice_type t
+        on t.f_id = n.f_type_id
+        <where>
+            <if test="typeId != null and typeId != ''">
+                and n.f_type_id=#{typeId}
+            </if>
+             <if test="typeNo != null and typeNo != ''">
+                 and t.f_no like #{typeNo}"%"
+             </if>
+            <if test="title != null and title != ''">
+                and n.f_title like "%"#{title}"%"
+            </if>
+        </where>
+        order by n.f_sort,n.f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(n.f_id) from base_notice n left join base_notice_type t
+        on t.f_id = n.f_type_id
+        <where>
+            <if test="typeId != null and typeId != ''">
+                and n.f_type_id=#{typeId}
+            </if>
+            <if test="typeNo != null and typeNo != ''">
+                and t.f_no like #{typeNo}"%"
+            </if>
+            <if test="title != null and title != ''">
+                and n.f_title like "%"#{title}"%"
+            </if>
+        </where>
+    </select>
+    <delete id="delete">
+        DELETE  from base_notice where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+
+</mapper>

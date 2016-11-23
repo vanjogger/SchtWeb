@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.NoticeTypeDao">
+    <resultMap id="my_notice_type" type="com.scht.admin.entity.NoticeType">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_no" property="no"/>
+        <result column="f_sort" property="sort"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.NoticeType">
+        insert into base_notice_type(f_id,f_name,f_no,f_create_time,f_sort)
+         VALUES (#{id},#{name},#{no},#{createTime},#{sort})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.NoticeType">
+        update base_notice_type set f_name=#{name},f_sort=#{sort} where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="my_notice_type">
+        select * from base_notice_type where f_id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="my_notice_type">
+        SELECT * from base_notice_type order by f_sort, f_create_time desc
+    </select>
+    <select id="listOrderByNo" resultMap="my_notice_type">
+        SELECT * from base_notice_type order by f_no asc, f_create_time desc
+    </select>
+
+    <delete id="delete">
+        DELETE  from base_notice_type where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+</mapper>

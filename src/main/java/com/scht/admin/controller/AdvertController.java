@@ -92,8 +92,9 @@ public class AdvertController extends BaseController {
     @RequestMapping(value = "delete")
     @ResponseBody
     public JSONObject delete(String id, HttpServletRequest request){
+        Advert data = this.baseService.findById(AdvertDao.class, id);
         this.baseService.delete(AdvertDao.class, new String[]{id});
-        this.saveLog("删除广告",request);
+        this.saveLog("删除广告:"+data.getTitle(),request);
         return this.FmtResult(true,"删除广告成功",null);
     }
 

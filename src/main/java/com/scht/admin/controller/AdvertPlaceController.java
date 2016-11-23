@@ -72,11 +72,12 @@ public class AdvertPlaceController extends BaseController {
     @RequestMapping("delete")
     @ResponseBody
     public JSONObject delete(String id,HttpServletRequest request){
+        AdvertPlace place = this.advertPlaceService.find(id);
         int result = this.advertPlaceService.delete(id);
         if(result == -1) {
             return this.FmtResult(false,"广告位下有广告，不可删除",null);
         }
-        this.saveLog("删除广告位置", request);
+        this.saveLog("删除广告位置:"+place.getTitle(), request);
         return this.FmtResult(true,"广告位删除成功",null);
     }
 }

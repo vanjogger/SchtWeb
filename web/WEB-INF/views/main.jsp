@@ -65,6 +65,16 @@
           {id:'log_list',text:'日志管理',href:'/log/list',closeable:true}
           </shiro:hasPermission>
         ]
+      },{
+        text:'公告管理',
+        items:[
+          <shiro:hasPermission name="notice:list">
+          {id:'notice_list',text:'公告管理',href:'/notice/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="notice:typeList">
+          {id:'notice_type_list',text:'公告分类',href:'/noticeType/list',closeable:true}
+          </shiro:hasPermission>
+        ]
       }]
     }];
     new PageUtil.MainPage({
