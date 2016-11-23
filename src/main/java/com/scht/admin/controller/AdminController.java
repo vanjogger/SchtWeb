@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/4/6.
@@ -45,9 +47,15 @@ public class AdminController extends BaseController {
     @RequestMapping("/listData")
     @ResponseBody
     public Object listData(String loginName,String status,PageInfo page){
-       PageInfo pageInfo = this.adminService.listAdmin(loginName,status,page);
+        Map<String,Object> params = new HashMap<>();
+        if(StringUtil.isNotNull(loginName))
+            params.put("loginName",loginName);
+        if(StringUtil.isNotNull(status))
+            params.put("status",status);
+        page.setParams(params);
+        this.page(AdminDao.class,page);
 
-        return this.getPageResult(pageInfo);
+        return this.getPageResult(page);
     }
 
     @RequestMapping("/beforeUpdatePwd")
@@ -62,7 +70,7 @@ public class AdminController extends BaseController {
         Admin  admin = (Admin) this.getCurrentUser(request);
         if(admin.getPassword().equals(MD5Util.getMD5ofStr(old_pwd))){
             admin.setPassword(MD5Util.getMD5ofStr(new_pwd));
-            this.adminService.updateAdmin(admin);
+            this.baseService.update(AdminDao.class, admin);
             return this.FmtResult(true,"保存成功",null);
         }else{
             return this.FmtResult(false,"保存失败",null);
@@ -111,14 +119,14 @@ public class AdminController extends BaseController {
             }
             if (StringUtil.isNotNull(admin.getId())) {
                 this.saveLog("编辑管理员"+admin.getLoginName()+"("+admin.getId()+")",request);
-                adminService.updateAdmin(admin);
+                this.baseService.update(AdminDao.class,admin);
             } else {
                     admin.setId(UUIDFactory.random());
                     admin.setPassword(MD5Util.getMD5ofStr(admin.getPassword()));
                     admin.setLoginCnt(0);
                     admin.setStatus(UserStatus.NORMAL.name());
-                    this.adminService.saveAdmin(admin);
-
+                    //this.adminService.saveAdmin(admin);
+                    this.baseService.insert(AdminDao.class,admin);
                     this.saveLog("保存管理员"+admin.getLoginName(),request);
 
             }
@@ -133,14 +141,14 @@ public class AdminController extends BaseController {
     @ResponseBody
     public JSONObject updateStatus(String id,String status,HttpServletRequest request){
         try {
-            Admin admin = this.adminService.get(id);
+            Admin admin =  this.baseService.findById(AdminDao.class,id);
             if(admin!=null) {
                 admin.setStatus(status);
                 String content = "冻结管理员"+admin.getLoginName();
                 if(status.equals("NORMAL")){
                     content = "解冻管理员"+admin.getLoginName();
                 }
-                this.adminService.updateAdmin(admin);
+                this.baseService.update(AdminDao.class, admin);
                 this.saveLog(content,request);
                 return this.FmtResult(true,"操作成功",null);
             }
@@ -164,7 +172,7 @@ public class AdminController extends BaseController {
             Admin admin = this.baseService.findById(AdminDao.class,id);
             if(admin!=null){
                 admin.setPassword(MD5Util.getMD5ofStr(pwd));
-                this.adminService.updateAdmin(admin);
+                this.baseService.update(AdminDao.class, admin);
                 return this.FmtResult(true,"修改成功",null);
             }
             return this.FmtResult(false,"没有找到数据",null);

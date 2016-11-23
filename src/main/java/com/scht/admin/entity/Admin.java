@@ -18,12 +18,14 @@ public class Admin {
      */
     private String roleId;
 
-    private String type;//0:分公司管理员  1:系统管理员
-
+    private String type;//0:商城管理员  1:代理商
 
     private String roleName;
     //真实姓名
     private String realName;
+
+    //联系电话
+    private String mobile;
 
     //最后登录时间
     private Long lastLoginTime;
@@ -42,7 +44,13 @@ public class Admin {
      */
     private String status;
 
+    public String getMobile() {
+        return mobile;
+    }
 
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
     public String getType() {
         return type;

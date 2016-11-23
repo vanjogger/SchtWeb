@@ -21,10 +21,12 @@
 <div class="content">
   <div class="dl-main-nav">
     <ul id="J_Nav"  class="nav-list ks-clear">
-     <%--<li class="nav-item dl-selected"><div class="nav-item-inner nav-home">企业管理</div></li>--%>
-      <%--<li class="nav-item"><div class="nav-item-inner nav-inventory">项目管理</div></li>--%>
-      <%--<li class="nav-item"><div class="nav-item-inner nav-storage">财务管理</div></li>--%>
-
+     <li class="nav-item dl-selected"><div class="nav-item-inner nav-home">商城管理</div></li>
+      <li class="nav-item"><div class="nav-item-inner nav-user">会员管理</div></li>
+      <li class="nav-item"><div class="nav-item-inner nav-product">商品管理</div></li>
+      <li class="nav-item"><div class="nav-item-inner nav-supplier">商家管理</div></li>
+      <li class="nav-item"><div class="nav-item-inner nav-order">交易管理</div></li>
+      <li class="nav-item"><div class="nav-item-inner nav-storage">配置管理</div></li>
       <li class="nav-item"><div class="nav-item-inner nav-certification">系统设置</div></li>
     </ul>
   </div>
@@ -41,6 +43,133 @@
 <script>
   BUI.use('common/main',function(){
     var config = [{
+      id:'home_manage',
+      homePage:"ad_place_list",
+      menu:[{
+        text:'广告管理',
+        items:[
+          <shiro:hasPermission name="adplace:list">
+          {id:'ad_place_list',text:'广告位管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="ad:list">
+          {id:'ad_list',text:'广告管理',href:'/admin/list',closeable:true}
+          </shiro:hasPermission>
+        ]},
+        {
+          text:'公告管理',
+          items:[
+            <shiro:hasPermission name="notice:typeList">
+            {id:'notice_type_list',text:'公告分类',href:'/noticeType/list',closeable:true},
+            </shiro:hasPermission>
+            <shiro:hasPermission name="notice:list">
+            {id:'notice_list',text:'公告管理',href:'/notice/list',closeable:true}
+            </shiro:hasPermission>
+
+          ]
+      }]
+    },{
+        id:'member_manage',
+        homePage:"member_list",
+        menu:[{
+          text:'会员管理',
+          items:[
+            <shiro:hasPermission name="member:list">
+            {id:'member_list',text:'会员信息管理',href:'/admin/list',closeable:true}
+            </shiro:hasPermission>
+          ]}
+        ]
+      },{
+      id:'product_manage',
+      homePage:"product_category_list",
+      menu:[{
+        text:'商品管理',
+        items:[
+          <shiro:hasPermission name="product:typelist">
+          {id:'product_category_list',text:'商品分类管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="product:list">
+          {id:'product_list',text:'普通商品管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="wzproduct:list">
+          {id:'wz_product_list',text:'五折商品管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="tgproduct:list">
+          {id:'tg_product_list',text:'推广商品管理',href:'/admin/list',closeable:true}
+          </shiro:hasPermission>
+        ]}
+      ]
+    },{
+      id:'shop_manage',
+      homePage:"shop_category_list",
+      menu:[{
+        text:'商家分类管理',
+        items:[
+          <shiro:hasPermission name="shop:typelist">
+          {id:'shop_category_list',text:'商家分类管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="shopinfo:list">
+          {id:'shop_list',text:'商家信息管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="chainshop:list">
+          {id:'chain_shop_list',text:'连锁商家管理',href:'/admin/list',closeable:true}
+          </shiro:hasPermission>
+        ]},{
+        text:'商家资金管理',
+        items:[
+          <shiro:hasPermission name="shopzj:list">
+          {id:'shop_zj_list',text:'商家资金管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="shopflow:list">
+          {id:'shop_ls_list',text:'商家资金流水',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="shoptx:list">
+          {id:'shop_tx_list',text:'商家提现记录',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="shopbank:list">
+          {id:'shop_bankcard_list',text:'商家银行卡管理',href:'/admin/list',closeable:true}
+          </shiro:hasPermission>
+        ]}
+      ]
+    },{
+      id:'trade_manage',
+      homePage:"order_list",
+      menu:[{
+        text:'订单管理',
+        items:[
+          <shiro:hasPermission name="order:list">
+          {id:'order_list',text:'订单管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="xfm:list">
+          {id:'xfm_list',text:'消费码管理',href:'/admin/list',closeable:true}
+          </shiro:hasPermission>
+        ]},
+        {
+          text:'推送管理',
+          items:[
+            <shiro:hasPermission name="tsjl:list">
+            {id:'ts_list',text:'推送记录管理',href:'/admin/list',closeable:true}
+                  </shiro:hasPermission>
+          ]}
+      ]
+    },{
+      id:'config_manage',
+      homePage:"pay_list",
+      menu:[{
+        text:'配置管理',
+        items:[
+          <shiro:hasPermission name="zfxx:list">
+          {id:'pay_list',text:'支付信息管理',href:'/admin/list',closeable:true},
+                </shiro:hasPermission>
+          <shiro:hasPermission name="txfl:list">
+          {id:'tx_rate_list',text:'提现费率管理',href:'/admin/list',closeable:true},
+                </shiro:hasPermission>
+          <shiro:hasPermission name="tssz:list">
+          {id:'tg_list',text:'推送设置',href:'/admin/list',closeable:true}
+                </shiro:hasPermission>
+        ]}
+
+      ]
+    },{
       id:'system',
       homePage:"admin_list",
       menu:[{
@@ -63,16 +192,6 @@
           </shiro:hasPermission>
           <shiro:hasPermission name="log:list">
           {id:'log_list',text:'日志管理',href:'/log/list',closeable:true}
-          </shiro:hasPermission>
-        ]
-      },{
-        text:'公告管理',
-        items:[
-          <shiro:hasPermission name="notice:list">
-          {id:'notice_list',text:'公告管理',href:'/notice/list',closeable:true},
-          </shiro:hasPermission>
-          <shiro:hasPermission name="notice:typeList">
-          {id:'notice_type_list',text:'公告分类',href:'/noticeType/list',closeable:true}
           </shiro:hasPermission>
         ]
       }]

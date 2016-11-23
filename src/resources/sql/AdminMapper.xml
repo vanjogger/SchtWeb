@@ -15,19 +15,20 @@
         <result column="f_status" property="status"/>
         <result column="f_realName" property="realName"/>
         <result column="f_type" property="type"/>
+        <result column="f_mobile" property="mobile"/>
     </resultMap>
 
-    <insert id="saveAdmin" parameterType="com.scht.admin.entity.Admin">
+    <insert id="insert" parameterType="com.scht.admin.entity.Admin">
         insert into base_admin (f_id, f_loginName, f_password,
-        f_roleId,f_last_login_time,f_login_ip,f_login_cnt,f_status,f_roleName,f_realName,f_type) values (
-        #{id}, #{loginName}, #{password}, #{roleId},#{lastLoginTime},#{loginIP},#{loginCnt},#{status},#{roleName},#{realName},#{type})
+        f_roleId,f_last_login_time,f_login_ip,f_login_cnt,f_status,f_roleName,f_realName,f_type,f_mobile) values (
+        #{id}, #{loginName}, #{password}, #{roleId},#{lastLoginTime},#{loginIP},#{loginCnt},#{status},#{roleName},#{realName},#{type},#{mobile})
     </insert>
 
     <delete id="delete" parameterType="HashMap">
         delete from base_admin where f_id = #{id}
     </delete>
 
-    <update id="updateAdmin" parameterType="com.scht.admin.entity.Admin" flushCache="true">
+    <update id="update" parameterType="com.scht.admin.entity.Admin" flushCache="true">
         update base_admin
         <set>
             <if test="loginName!=null">
@@ -60,6 +61,9 @@
             <if test="type!=null">
                 f_type = #{type} ,
             </if>
+            <if test="mobile!=null and mobile!=''">
+                f_mobile = #{mobile} ,
+            </if>
         </set>
         where f_id = #{id}
     </update>
@@ -73,7 +77,7 @@
     </select>
 
 
-    <select id="listAdmin" parameterType="HashMap" resultMap="my_admin">
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_admin">
         select *
         from base_admin
         where 1=1
@@ -83,9 +87,9 @@
         <if test="status!=null and status!=''">
             and f_status = #{status}
         </if>
-        limit #{pageIndex},#{pageSize}
+        limit #{start},#{limit}
     </select>
-    <select id="countAdmin" parameterType="HashMap" resultType="Integer">
+    <select id="count4Page" parameterType="HashMap" resultType="Integer">
         select count(f_id)
         from base_admin
         where 1=1

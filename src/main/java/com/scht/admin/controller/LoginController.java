@@ -1,8 +1,10 @@
 package com.scht.admin.controller;
 
 import com.scht.admin.SystemCache;
+import com.scht.admin.dao.AdminDao;
 import com.scht.admin.entity.Admin;
 import com.scht.admin.service.AdminService;
+import com.scht.admin.service.BaseService;
 import com.scht.common.BaseController;
 import com.scht.util.MD5Util;
 import com.scht.util.StringUtil;
@@ -30,6 +32,8 @@ public class LoginController extends BaseController {
 
     @Autowired
     AdminService adminService;
+    @Autowired
+    BaseService baseService;
 
 
     @RequestMapping("/login")
@@ -60,9 +64,7 @@ public class LoginController extends BaseController {
                 } catch (LockedAccountException lae) {
                     logger.debug("account[" + userName + "] is locked");
                     message_login = "账号被锁定";
-                }/* catch (ExcessiveAttemptsException eae) {
-                message_login = "�û���������ʧ�ܴ�������";
-            } */catch (AuthenticationException ae) {
+                } catch (AuthenticationException ae) {
                     ae.printStackTrace();
                     message_login = "授权失败";
                 }
@@ -76,7 +78,7 @@ public class LoginController extends BaseController {
                     }else{
                         admin.setLoginCnt(1);
                     }
-                    this.adminService.updateAdmin(admin);
+                    this.baseService.update(AdminDao.class,admin);
                     //保存日志
                     this.saveLog("用户登录",request);
                 }

@@ -45,15 +45,15 @@
        </div>
       </div>
     </div>
-   <%-- <div class="row">
+    <div class="row">
       <div class="control-group span20">
-        <label class="control-label">管理员类型：</label>
+        <label class="control-label">用户类型：</label>
         <div class="controls">
-           <input type="radio" name="type" id="type0" value="0" <c:if test="${data==null or (admin.type eq '0')}">checked</c:if>>分公司管理员
-          <input type="radio" name="type" id="type1" value="1"  <c:if test="${admin.type eq '1'}">checked</c:if>>系统管理员
+           <input type="radio" name="type" id="type0" value="0" <c:if test="${admin==null or (admin.type eq '0')}">checked</c:if>>商城管理员
+          <input type="radio" name="type" id="type1" value="1"  <c:if test="${admin.type eq '1'}">checked</c:if>>代理商
         </div>
       </div>
-    </div>--%>
+    </div>
   <%--  <div class="row">
       <div class="control-group span20">
         <label class="control-label">所属公司：</label>
@@ -71,6 +71,14 @@
         <label class="control-label">真实姓名：</label>
         <div class="controls">
           <input name="realName" type="text" data-rules="{maxlength:20}" value="${admin.realName}" class="input-normal control-text">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">联系电话：</label>
+        <div class="controls">
+          <input name="mobile" type="text" data-rules="{maxlength:20}" value="${admin.mobile}" class="input-normal control-text">
         </div>
       </div>
     </div>
