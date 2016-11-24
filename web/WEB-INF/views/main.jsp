@@ -48,11 +48,11 @@
       menu:[{
         text:'广告管理',
         items:[
-          <shiro:hasPermission name="adplace:list">
-          {id:'ad_place_list',text:'广告位管理',href:'/admin/list',closeable:true},
+          <shiro:hasPermission name="advertPlace:list">
+          {id:'advert_place_list', text:'广告位管理',href:'/advertPlace/list', closeable:true},
           </shiro:hasPermission>
-          <shiro:hasPermission name="ad:list">
-          {id:'ad_list',text:'广告管理',href:'/admin/list',closeable:true}
+          <shiro:hasPermission name="advert:list">
+          {id:'advert_list', text:'广告管理',href:'/advert/list',closeable:true},
           </shiro:hasPermission>
         ]},
         {
@@ -184,12 +184,7 @@
           <shiro:hasPermission name="permission:list">
           {id:'permission_list',text:'权限管理',href:'/permission/list',closeable:true},
                 </shiro:hasPermission>
-                <shiro:hasPermission name="advertPlace:list">
-          {id:'advert_place_list', text:'广告位管理',href:'/advertPlace/list', closeable:true},
-          </shiro:hasPermission>
-                <shiro:hasPermission name="advert:list">
-          {id:'advert_list', text:'广告管理',href:'/advert/list',closeable:true},
-          </shiro:hasPermission>
+
           <shiro:hasPermission name="log:list">
           {id:'log_list',text:'日志管理',href:'/log/list',closeable:true}
           </shiro:hasPermission>
