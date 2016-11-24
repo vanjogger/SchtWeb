@@ -44,8 +44,13 @@
   BUI.use('common/main',function(){
     var config = [{
       id:'home_manage',
-      homePage:"ad_place_list",
+      homePage:"data_list",
       menu:[{
+        text:"工作台",
+        items:[
+          {id:'data_list', text:'数据统计',href:'/workspace', closeable:true}
+        ]
+      },{
         text:'广告管理',
         items:[
           <shiro:hasPermission name="adplace:list">
@@ -139,8 +144,11 @@
           <shiro:hasPermission name="order:list">
           {id:'order_list',text:'订单管理',href:'/admin/list',closeable:true},
           </shiro:hasPermission>
-          <shiro:hasPermission name="xfm:list">
-          {id:'xfm_list',text:'消费码管理',href:'/admin/list',closeable:true}
+          <shiro:hasPermission name="wzorder:list">
+          {id:'wzorder_list',text:'五折订单管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="tgorder:list">
+          {id:'tgorder_list',text:'推广订单管理',href:'/admin/list',closeable:true}
           </shiro:hasPermission>
         ]},
         {
@@ -157,7 +165,7 @@
       menu:[{
         text:'配置管理',
         items:[
-          <shiro:hasPermission name="zfxx:list">
+          <shiro:hasPermission name="xfxx:list">
           {id:'pay_list',text:'支付信息管理',href:'/admin/list',closeable:true},
                 </shiro:hasPermission>
           <shiro:hasPermission name="txfl:list">
@@ -176,7 +184,10 @@
         text:'系统管理',
         items:[
           <shiro:hasPermission name="admin:list">
-          {id:'admin_list',text:'管理员管理',href:'/admin/list',closeable:true},
+          {id:'admin_list',text:'用户管理',href:'/admin/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="dlszj:list">
+          {id:'dlszj_list',text:'代理商资金管理',href:'/admin/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="role:list">
           {id:'role_list',text:'角色管理',href:'/role/list',closeable:true},
@@ -184,7 +195,6 @@
           <shiro:hasPermission name="permission:list">
           {id:'permission_list',text:'权限管理',href:'/permission/list',closeable:true},
                 </shiro:hasPermission>
-
           <shiro:hasPermission name="log:list">
           {id:'log_list',text:'日志管理',href:'/log/list',closeable:true}
           </shiro:hasPermission>
