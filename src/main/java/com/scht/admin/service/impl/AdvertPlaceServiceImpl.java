@@ -1,5 +1,6 @@
 package com.scht.admin.service.impl;
 
+import com.scht.admin.dao.AdvertDao;
 import com.scht.admin.dao.AdvertPlaceDao;
 import com.scht.admin.entity.AdvertPlace;
 import com.scht.admin.service.AdvertPlaceService;
@@ -8,7 +9,9 @@ import com.scht.util.UUIDFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/11/21.
@@ -17,6 +20,9 @@ import java.util.List;
 public class AdvertPlaceServiceImpl implements AdvertPlaceService {
     @Autowired
     AdvertPlaceDao advertPlaceDao;
+
+    @Autowired
+    AdvertDao advertDao;
     @Override
     public PageInfo list(String code, PageInfo pageInfo) {
         List<AdvertPlace> list = advertPlaceDao.list(code,pageInfo.getStart(), pageInfo.getLimit());
@@ -59,7 +65,11 @@ public class AdvertPlaceServiceImpl implements AdvertPlaceService {
 
     @Override
     public int delete(String id) {
-        //todo:判断广告位下是否有广告
+        Map<String,Object> map = new HashMap<>();
+        map.put("placeId", id);
+        if(advertDao.count4Page(map)>0){
+            return -1;
+        }
         this.advertPlaceDao.delete(id);
         return 0;
     }

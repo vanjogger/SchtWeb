@@ -48,10 +48,10 @@
       menu:[{
         text:'广告管理',
         items:[
-          <shiro:hasPermission name="advertPlace:list">
-          {id:'advert_place_list', text:'广告位管理',href:'/advertPlace/list', closeable:true},
+          <shiro:hasPermission name="adplace:list">
+          {id:'ad_place_list', text:'广告位管理',href:'/advertPlace/list', closeable:true},
           </shiro:hasPermission>
-          <shiro:hasPermission name="advert:list">
+          <shiro:hasPermission name="ad:list">
           {id:'advert_list', text:'广告管理',href:'/advert/list',closeable:true},
           </shiro:hasPermission>
         ]},

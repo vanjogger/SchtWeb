@@ -84,10 +84,10 @@
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'advert_place_list',
+              id : 'ad_place_list',
               isClose : true
             });
-            top.topManager.reloadPage('advert_place_list');
+            top.topManager.reloadPage('ad_place_list');
           }
         },'info');
       }
