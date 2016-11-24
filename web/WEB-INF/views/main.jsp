@@ -166,13 +166,13 @@
         text:'配置管理',
         items:[
           <shiro:hasPermission name="xfxx:list">
-          {id:'pay_list',text:'支付信息管理',href:'/admin/list',closeable:true},
+          {id:'pay_list',text:'支付信息管理',href:'/paySet/ali',closeable:true},
                 </shiro:hasPermission>
           <shiro:hasPermission name="txfl:list">
           {id:'tx_rate_list',text:'提现费率管理',href:'/admin/list',closeable:true},
                 </shiro:hasPermission>
           <shiro:hasPermission name="tssz:list">
-          {id:'tg_list',text:'推送设置',href:'/admin/list',closeable:true}
+          {id:'tg_list',text:'推送设置',href:'/pushSet/find',closeable:true}
                 </shiro:hasPermission>
         ]}
 

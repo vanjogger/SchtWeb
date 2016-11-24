@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.AliPaySetDao">
+
+    <resultMap id="base_ali_pay_set" type="com.scht.admin.entity.AliPaySet">
+        <id column="f_id" property="id"/>
+        <result column="f_account" property="account"/>
+        <result column="f_app_key" property="appKey"/>
+        <result column="f_mch_no" property="mchNo"/>
+        <result column="f_rsa_key" property="rsaKey"/>
+        <result column="f_status" property="status"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.AliPaySet">
+        insert into base_ali_pay_set (f_id, f_account,f_app_key,f_mch_no,f_rsa_key,f_status)
+        VALUES (#{id},#{account},#{appKey},#{mchNo},#{rsaKey},#{status})
+    </insert>
+    <select id="findById" resultMap="base_ali_pay_set">
+        SELECT * from base_ali_pay_set
+    </select>
+    <update id="update" parameterType="com.scht.admin.entity.AliPaySet">
+        update base_ali_pay_set set f_app_key=#{appKey},f_account=#{account},
+        f_mch_no=#{mchNo},f_rsa_key=#{rsaKey},f_status=#{status} where f_id=#{id}
+    </update>
+
+</mapper>

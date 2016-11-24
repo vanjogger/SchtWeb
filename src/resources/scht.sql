@@ -245,3 +245,31 @@ create table base_advert_place(
   f_sort int,
   f_view_count int
  );
+
+ -- push set
+ create table base_push_set(
+ f_id varchar(32) PRIMARY key,
+ f_app_key varchar(32),
+ f_master_secret varchar(64),
+ f_status varchar(32)
+ );
+
+ -- alipay set
+ create table base_ali_pay_set(
+ f_id varchar(32) PRIMARY key,
+ f_account varchar(256) DEFAULT '',
+ f_app_key varchar(32) DEFAULT '',
+ f_mch_no varchar(32) DEFAULT '',
+ f_rsa_key VARCHAR (512) DEFAULT '',
+ f_status varchar(32) DEFAULT ''
+ );
+
+ -- weixin pay
+ CREATE table base_weixin_pay_set(
+ f_id varchar(32) PRIMARY key,
+ f_app_id varchar(32) DEFAULT '',
+ f_mch_no varchar(32) DEFAULT '',
+ f_secret varchar(32) DEFAULT '',
+ f_pay_key varchar(32) DEFAULT '',
+ f_status varchar(32) DEFAULT ''
+ );

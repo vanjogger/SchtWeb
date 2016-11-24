@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.PushSetDao">
+
+    <resultMap id="base_push_set" type="com.scht.admin.entity.PushSet">
+        <id column="f_id" property="id"/>
+        <result column="f_app_key" property="appKey"/>
+        <result column="f_master_secret" property="masterSecret"/>
+        <result column="f_status" property="status"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.PushSet">
+        insert into base_push_set (f_id, f_app_key,f_master_secret,f_status)
+        VALUES (#{id},#{appKey},#{masterSecret},#{status})
+    </insert>
+    <select id="findById" resultMap="base_push_set">
+        SELECT * from base_push_set
+    </select>
+    <update id="update" parameterType="com.scht.admin.entity.PushSet">
+        update base_push_set set f_app_key=#{appKey},f_master_secret=#{masterSecret},f_status=#{status} where f_id=#{id}
+    </update>
+
+</mapper>
