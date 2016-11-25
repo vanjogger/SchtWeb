@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.MemberDao">
+    <resultMap id="base_member" type="com.scht.admin.entity.Member">
+        <id column="f_id" property="id"/>
+        <result column="f_account" property="account"/>
+        <result column="f_password" property="password"/>
+        <result column="f_nick" property="nick"/>
+        <result column="f_head_icon" property="headIcon"/>
+        <result column="f_address" property="address"/>
+        <result column="f_telephone" property="telephone"/>
+        <result column="f_qq" property="qq"/>
+        <result column="f_weixin" property="weixin"/>
+        <result column="f_status" property="status"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.scht.admin.entity.Member">
+       insert into base_member(f_id,f_account,f_password,f_nick,f_head_icon,f_address,f_telephone,f_qq,f_weixin,f_status,f_create_time)
+       values(#{id},#{account},#{password},#{nick},#{headIcon},#{address},#{telephone},#{qq},#{weixin},#{status},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Member">
+        update base_member set
+         <if test="password != null and password != ''">
+             f_password=#{password},
+         </if>
+        <if test="status != null and status !=''">
+            f_status=#{status},
+        </if>
+        f_nick=#{nick},f_head_icon=#{headIcon},f_address=#{address},f_telephone=#{telephone},f_qq=#{qq},f_weixin=#{weixin}
+         where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="base_member">
+        select * from base_member where f_id = #{id}
+    </select>
+    <select id="findByAccount" resultMap="base_member">
+        select * from base_member where f_account=#{account}
+    </select>
+    <select id="searchByPage" parameterType="HashMap" resultMap="base_member">
+        select * from base_member
+        <where>
+             <if test="account != null and account != ''">
+                 and f_account like "%"#{account}"%"
+             </if>
+            <if test="nick != null and nick != ''">
+                and f_nick like "%"#{nick}"%"
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and f_telephone like "%"#{telephone}"%"
+            </if>
+        </where>
+        order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(f_id) from base_member
+        <where>
+            <if test="account != null and account != ''">
+                and f_account like "%"#{account}"%"
+            </if>
+            <if test="nick != null and nick != ''">
+                and f_nick like "%"#{nick}"%"
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and f_telephone like "%"#{telephone}"%"
+            </if>
+        </where>
+    </select>
+
+</mapper>

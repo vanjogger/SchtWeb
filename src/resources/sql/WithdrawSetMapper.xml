@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.WithdrawSetDao">
+    <resultMap id="base_withdraw_set" type="com.scht.admin.entity.WithdrawSet">
+        <id column="f_id" property="id"/>
+        <result column="f_agent_min" property="agentMin"/>
+        <result column="f_agent_rate" property="agentRate"/>
+        <result column="f_shop_min" property="shopMin"/>
+        <result column="f_shop_rate" property="shopRate"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.scht.admin.entity.WithdrawSet">
+        insert into base_withdraw_set(f_id,f_agent_min,f_agent_rate,f_shop_min,f_shop_rate)
+         VALUES (#{id},#{agentMin},#{agentRate},#{shopMin},#{shopRate})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.WithdrawSet">
+        update base_withdraw_set set f_agent_min=#{agentMin},f_agent_rate=#{agentRate},
+         f_shop_min=#{shopMin},f_shop_rate=#{shopRate} where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="base_withdraw_set">
+        select * from base_withdraw_set
+    </select>
+
+</mapper>

@@ -273,3 +273,25 @@ create table base_advert_place(
  f_pay_key varchar(32) DEFAULT '',
  f_status varchar(32) DEFAULT ''
  );
+-- withdraw set
+create table base_withdraw_set(
+f_id varchar(32) PRIMARY  key,
+f_agent_min varchar(32) DEFAULT '0',
+f_agent_rate VARCHAR (32) DEFAULT '0',
+f_shop_min varchar(32) DEFAULT '0',
+f_shop_rate varchar(32) DEFAULT '0'
+);
+ --member
+ create table base_member(
+ f_id varchar(32) PRIMARY key,
+ f_account varchar(256) not null,
+  f_password  varchar(32) not null,
+  f_nick varchar(256) DEFAULT '',
+  f_head_icon varchar(512) DEFAULT '',
+  f_address varchar(512) DEFAULT  '',
+  f_telephone varchar(32) DEFAULT '',
+  f_qq varchar(32) DEFAULT  '',
+  f_weixin varchar(256) DEFAULT '',
+  f_status varchar(32) not null,
+  f_create_time bigint
+ );
