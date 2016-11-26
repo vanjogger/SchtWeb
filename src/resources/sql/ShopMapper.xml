@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ShopDao">
+    <resultMap id="my_shop" type="com.scht.admin.entity.Shop">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_account" property="account"/>
+        <result column="f_password" property="password"/>
+        <result column="f_shop_type_id" property="shopTypeId"/>
+        <result column="f_type" property="type"/>
+        <result column="f_icon" property="icon"/>
+        <result column="f_status" property="status"/>
+        <result column="f_link_name" property="linkName"/>
+        <result column="f_link_mobile" property="linkMobile"/>
+        <result column="f_link_address" property="linkAddress"/>
+        <result column="f_agent_id" property="agentId"/>
+        <result column="f_remark" property="remark"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_lng" property="lng"/>
+        <result column="f_lnt" property="lnt"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.Shop">
+        insert into t_shop(f_id,f_name,f_account,f_password,f_shop_type_id,f_type,f_icon,f_status,f_link_name,f_link_mobile,f_link_address,f_agent_id,f_remark,f_create_time,f_lng,f_lnt)
+        values(#{id},#{name},#{account},#{password},#{shopTypeId},#{type},#{icon},#{status},#{linkName},#{linkMobile},#{linkAddress},#{agentId},#{remark},#{createTime},#{lng},#{lnt})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Shop">
+        update t_shop
+        <set>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="account!=null and account!=''">
+                f_account = #{account},
+            </if>
+            <if test="password!=null and password!=''">
+                f_password = #{password},
+            </if>
+            <if test="shopTypeId!=null and shopTypeId!=''">
+                f_shop_type_id = #{shopTypeId},
+            </if>
+            <if test="type!=null and type!=''">
+                f_type = #{type},
+            </if>
+            <if test="icon!=null and icon!=''">
+                f_icon = #{icon},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+            <if test="linkName!=null and linkName!=''">
+                f_link_name = #{linkName},
+            </if>
+            <if test="linkMobile!=null and linkMobile!=''">
+                f_link_mobile = #{linkMobile},
+            </if>
+            <if test="linkAddress!=null and linkAddress!=''">
+                f_link_address = #{linkAddress},
+            </if>
+            <if test="agentId!=null and agentId!=''">
+                f_agent_id = #{agentId},
+            </if>
+            <if test="remark!=null and remark!=''">
+                f_remark = #{remark},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+            <if test="lng!=null and lng!=''">
+                f_lng = #{lng},
+            </if>
+            <if test="lnt!=null and lnt!=''">
+                f_lnt = #{lnt},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_shop">
+        select * from t_shop where f_id=#{id} and f_status='NORMAL'
+    </select>
+
+    <select id="findAll" resultMap="my_shop">
+        select * from t_shop where  f_status='NORMAL'
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_shop">
+        select * from t_shop
+        <where>
+            f_status='NORMAL'
+            <if test="name != null and name != ''">
+                and f_name like CONCAT("%",#{name},"%")
+            </if>
+            <if test="shopTypeId!=null and shopTypeId!=''">
+                and f_shop_type_id = #{shopTypeId}
+            </if>
+        </where>
+        order by f_create_time asc
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(f_id) from t_shop
+        <where>
+            f_status='NORMAL'
+            <if test="name != null and name != ''">
+                and f_name like CONCAT("%",#{name},"%")
+            </if>
+            <if test="shopTypeId!=null and shopTypeId!=''">
+                and f_shop_type_id = #{shopTypeId}
+            </if>
+        </where>
+    </select>
+    <update id="delete" parameterType="HashMap">
+       update t_shop set f_status='FROZEN' where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </update>
+
+    <select id="listByAccount" parameterType="HashMap" resultMap="my_shop">
+        select * from t_shop where f_account = #{account}
+    </select>
+</mapper>

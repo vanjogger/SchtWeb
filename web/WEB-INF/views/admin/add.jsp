@@ -82,6 +82,14 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">地址：</label>
+        <div class="controls">
+          <input name="address" type="text" data-rules="{maxlength:100}" value="${admin.address}" class="input-normal control-text" style="width:300px;">
+        </div>
+      </div>
+    </div>
     <div class="row form-actions actions-bar">
       <div class="span13 offset3 ">
         <button type="submit" class="button button-primary">保存</button>

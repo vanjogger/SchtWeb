@@ -16,12 +16,13 @@
         <result column="f_realName" property="realName"/>
         <result column="f_type" property="type"/>
         <result column="f_mobile" property="mobile"/>
+        <result column="f_address" property="address"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.scht.admin.entity.Admin">
         insert into base_admin (f_id, f_loginName, f_password,
-        f_roleId,f_last_login_time,f_login_ip,f_login_cnt,f_status,f_roleName,f_realName,f_type,f_mobile) values (
-        #{id}, #{loginName}, #{password}, #{roleId},#{lastLoginTime},#{loginIP},#{loginCnt},#{status},#{roleName},#{realName},#{type},#{mobile})
+        f_roleId,f_last_login_time,f_login_ip,f_login_cnt,f_status,f_roleName,f_realName,f_type,f_mobile,f_address) values (
+        #{id}, #{loginName}, #{password}, #{roleId},#{lastLoginTime},#{loginIP},#{loginCnt},#{status},#{roleName},#{realName},#{type},#{mobile},#{address})
     </insert>
 
     <delete id="delete" parameterType="HashMap">
@@ -63,6 +64,9 @@
             </if>
             <if test="mobile!=null and mobile!=''">
                 f_mobile = #{mobile} ,
+            </if>
+            <if test="address!=null and address!=''">
+                f_address = #{address} ,
             </if>
         </set>
         where f_id = #{id}

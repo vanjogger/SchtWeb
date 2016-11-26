@@ -110,28 +110,28 @@
         text:'商家分类管理',
         items:[
           <shiro:hasPermission name="shop:typelist">
-          {id:'shop_category_list',text:'商家分类管理',href:'/admin/list',closeable:true},
+          {id:'shop_category_list',text:'商家分类管理',href:'/shopType/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="shopinfo:list">
-          {id:'shop_list',text:'商家信息管理',href:'/admin/list',closeable:true},
+          {id:'shop_list',text:'商家信息管理',href:'/shop/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="chainshop:list">
-          {id:'chain_shop_list',text:'连锁商家管理',href:'/admin/list',closeable:true}
+          {id:'chain_shop_list',text:'连锁商家管理',href:'/chainShop/list',closeable:true}
           </shiro:hasPermission>
         ]},{
         text:'商家资金管理',
         items:[
           <shiro:hasPermission name="shopzj:list">
-          {id:'shop_zj_list',text:'商家资金管理',href:'/admin/list',closeable:true},
+          {id:'shop_zj_list',text:'商家资金管理',href:'/shopMoney/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="shopflow:list">
-          {id:'shop_ls_list',text:'商家资金流水',href:'/admin/list',closeable:true},
+          {id:'shop_ls_list',text:'商家资金流水',href:'/shopFlow/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="shoptx:list">
-          {id:'shop_tx_list',text:'商家提现记录',href:'/admin/list',closeable:true},
+          {id:'shop_tx_list',text:'商家提现记录',href:'/shopTx/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="shopbank:list">
-          {id:'shop_bankcard_list',text:'商家银行卡管理',href:'/admin/list',closeable:true}
+          {id:'shop_bankcard_list',text:'商家银行卡管理',href:'/shopBankCard/list',closeable:true}
           </shiro:hasPermission>
         ]}
       ]
@@ -187,7 +187,7 @@
           {id:'admin_list',text:'用户管理',href:'/admin/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="dlszj:list">
-          {id:'dlszj_list',text:'代理商资金管理',href:'/admin/list',closeable:true},
+          {id:'dlszj_list',text:'代理商资金管理',href:'/agentMoney/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="role:list">
           {id:'role_list',text:'角色管理',href:'/role/list',closeable:true},

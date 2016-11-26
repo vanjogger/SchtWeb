@@ -8,6 +8,10 @@ package com.scht.util; /**
 
 
 
+import com.scht.admin.entity.AgentMoney;
+import com.scht.admin.entity.Shop;
+import com.scht.admin.entity.ShopType;
+
 import java.lang.reflect.Field;
 
 /**
@@ -21,13 +25,13 @@ public class XmlMapUtil {
     private static String Mapper_PreFix = "my";
 
     public static void main(String[] args) {
-        /*Class clazz = LpPic.class;
+        Class clazz = Shop.class;
         System.out.println(createTableSql(clazz));
         System.out.println(createResultMapper(clazz));
         System.out.println(createSaveSql(clazz));
         System.out.println(createUpdateSql(clazz));
         System.out.println(createFindSql(clazz));
-        System.out.println(createListSql(clazz));*/
+        System.out.println(createListSql(clazz));
     }
 
     private static String getSQLName(String name, String pre) {
@@ -172,7 +176,7 @@ public class XmlMapUtil {
     private static String createListSql(Class clazz) {
         String simpleName = clazz.getSimpleName();
         StringBuffer buffer = new StringBuffer();
-        buffer.append(" <select id=\"list\" resultMap=\"").append(getSQLName(simpleName, Mapper_PreFix)).append("\">\n");
+        buffer.append(" <select id=\"findAll\" resultMap=\"").append(getSQLName(simpleName, Mapper_PreFix)).append("\">\n");
         buffer.append("select * from ").append(getSQLName(simpleName, TABLE_PREFIX)).append(" where f_status='OPEN'").append("order by f_create_time desc limit #{index},#{size}\n");
         buffer.append("</select>");
         return buffer.toString();

@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.AgentMoneyDao">
+    <resultMap id="my_agent_money" type="com.scht.admin.entity.AgentMoney">
+        <id column="f_id" property="id"/>
+        <result column="f_agent_id" property="agentId"/>
+        <result column="f_agent_name" property="agentName"/>
+        <result column="f_avail_amount" property="availAmount"/>
+        <result column="f_frozen_amount" property="frozenAmount"/>
+        <result column="f_total_amount" property="totalAmount"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.AgentMoney">
+        insert into t_agent_money(f_id,f_agent_id,f_agent_name,f_avail_amount,f_frozen_amount,f_total_amount)
+        values(#{id},#{agentId},#{agentName},#{availAmount},#{frozenAmount},#{totalAmount})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.AgentMoney">
+        update t_agent_money
+        <set>
+            <if test="agentId!=null and agentId!=''">
+                f_agent_id = #{agentId},
+            </if>
+            <if test="agentName!=null and agentName!=''">
+                f_agent_name = #{agentName},
+            </if>
+            <if test="availAmount!=null and availAmount!=''">
+                f_avail_amount = #{availAmount},
+            </if>
+            <if test="frozenAmount!=null and frozenAmount!=''">
+                f_frozen_amount = #{frozenAmount},
+            </if>
+            <if test="totalAmount!=null and totalAmount!=''">
+                f_total_amount = #{totalAmount},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_agent_money">
+        select * from t_agent_money where f_id=#{id}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_agent_money">
+        select * from t_agent_money
+        <where>
+            <if test="agentName != null and agentName != ''">
+                and f_agent_name like CONCAT("%",#{agentName},"%")
+            </if>
+        </where>
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(f_id) from t_agent_money
+        <where>
+            <if test="agentName != null and agentName != ''">
+                and f_agent_name like CONCAT("%",#{agentName},"%")
+            </if>
+        </where>
+    </select>
+    <delete id="delete">
+        DELETE  from t_agent_money where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="findByAgentId" parameterType="HashMap" resultMap="my_agent_money">
+        select * from t_agent_money where f_agent_id = #{agentId}
+    </select>
+</mapper>

@@ -3,8 +3,11 @@ package com.scht.admin.controller;
 
 import com.scht.admin.bean.UserStatus;
 import com.scht.admin.dao.AdminDao;
+import com.scht.admin.dao.AgentMoneyDao;
 import com.scht.admin.entity.Admin;
+import com.scht.admin.entity.AgentMoney;
 import com.scht.admin.service.AdminService;
+import com.scht.admin.service.AgentMoneyService;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.RoleService;
 import com.scht.common.BaseController;
@@ -38,6 +41,8 @@ public class AdminController extends BaseController {
     RoleService roleService;
     @Autowired
     BaseService baseService;
+    @Autowired
+    AgentMoneyService agentMoneyService;
 
     @RequestMapping("/list")
     public String list(){
@@ -119,7 +124,8 @@ public class AdminController extends BaseController {
             }
             if (StringUtil.isNotNull(admin.getId())) {
                 this.saveLog("编辑管理员"+admin.getLoginName()+"("+admin.getId()+")",request);
-                this.baseService.update(AdminDao.class,admin);
+                this.baseService.update(AdminDao.class, admin);
+                saveAgentMoney(admin);
             } else {
                     admin.setId(UUIDFactory.random());
                     admin.setPassword(MD5Util.getMD5ofStr(admin.getPassword()));
@@ -127,14 +133,37 @@ public class AdminController extends BaseController {
                     admin.setStatus(UserStatus.NORMAL.name());
                     //this.adminService.saveAdmin(admin);
                     this.baseService.insert(AdminDao.class,admin);
-                    this.saveLog("保存管理员"+admin.getLoginName(),request);
-
+                    this.saveLog("保存管理员" + admin.getLoginName(), request);
+                    saveAgentMoney(admin);
             }
             return this.FmtResult(true, "保存成功", null);
         }catch (Exception e){
             e.printStackTrace();
         }
         return this.FmtResult(false,"保存失败",null);
+    }
+
+    /**
+     * 保存或更新代理商资金表
+     * @param admin
+     */
+    private void saveAgentMoney(Admin admin) {
+        if(admin.getType().equals("1")){//是代理商
+            AgentMoney money = this.agentMoneyService.findByAgentId(admin.getId());
+            if(money!=null){
+                money.setAgentName(admin.getLoginName());
+                this.baseService.update(AgentMoneyDao.class,money);
+            }else{
+                money = new AgentMoney();
+                money.setId(UUIDFactory.random());
+                money.setAgentId(admin.getId());
+                money.setAgentName(admin.getLoginName());
+                money.setAvailAmount("0");
+                money.setFrozenAmount("0");
+                money.setTotalAmount("0");
+                this.baseService.insert(AgentMoneyDao.class,money);
+            }
+        }
     }
 
     @RequestMapping("/updateStatus")

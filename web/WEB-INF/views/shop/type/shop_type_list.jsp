@@ -16,12 +16,12 @@
   <form id="searchForm" class="form-horizontal">
     <div class="row">
       <div class="control-group span8">
-        <label class="control-label">登录名：</label>
+        <label class="control-label">分类名称：</label>
         <div class="controls">
-          <input type="text" class="control-text" name="loginName">
+          <input type="text" class="control-text" name="name">
         </div>
       </div>
-
+<%--
       <div class="control-group span8">
         <label class="control-label">状态：</label>
         <div class="controls" >
@@ -31,7 +31,7 @@
             <option value="FROZEN">冻结</option>
           </select>
         </div>
-      </div>
+      </div>--%>
       <div class="span3 offset2">
         <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
       </div>
@@ -51,52 +51,31 @@
     var del_url = "/admin/updateStatus";
   BUI.use(['common/search','common/page','bui/grid','bui/overlay','bui/form'],function (Search,Page,Grid,Overlay,Form) {
     var  columns = [
-              {title:'登录名',dataIndex:'loginName',width:150},
-              {title:'所属角色',dataIndex:'roleName',width:80},
-              {title:'真实姓名',dataIndex:'realName',width:120},
-              {title:'用户类型',dataIndex:'type',width:120,renderer:function(value,obj){
-                  if(obj.type=='1'){
-                      return "代理商";
-                  }else{
-                      return "商城管理员";
-                  }
-              }},
-              {title:'最近登录时间',dataIndex:'formatLoginTime',width:130},
-              {title:'登录次数',dataIndex:'loginCnt',width:80},
-              {title:'状态',dataIndex:'status',width:60,renderer:function(value,obj){
-                if(obj.status=='NORMAL'){
-                  return "正常";
-                }else if(obj.status=='FROZEN'){
-                  return "已冻结";
-                }
+              {title:'分类名称',dataIndex:'name',width:150},
+              {title:'分类key',dataIndex:'key',width:80},
+              {title:'分类排序',dataIndex:'sort',width:120},
+              {title:'分类图标',dataIndex:'icon',width:200,renderer:function(value,obj){
+                 return  "<img src='"+obj.icon+"' style=\"width:80px;height:80px\" />"
               }},
               {title:'操作',dataIndex:'aaa',width:200,renderer : function(value,obj){
                 var editStr =  Search.createLink({ //链接使用 此方式
                           id : 'edit' + obj.id,
                           title : '编辑',
                           text : '编辑',
-                          href : '/admin/beforeEdit?id='+obj.id
+                          href : '/shopType/beforeEdit?id='+obj.id
                         });
-                  var updateStr = "<a href=\"javascript:void(0);\" onclick=\"updateStatus('"+obj.id+"','FROZEN')\">冻结</a>";
-                  if(obj.status=='FROZEN'){
-                      updateStr = "<a href=\"javascript:void(0);\" onclick=\"updateStatus('"+obj.id+"','NORMAL')\">解冻</a>";
-                  }
-                  var delStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"del('"+obj.id+"')\">删除</a>&nbsp;&nbsp;";
-                  var pwdStr =  Search.createLink({ //链接使用 此方式
-                      id : 'pwd' + obj.id,
-                      title : '修改密码',
-                      text : '修改密码',
-                      href : '/admin/beforeChangePwd?id='+obj.id
-                  });
-                return editStr+updateStr+delStr+pwdStr;
+                  var delStr = "";
+                  if(obj.status=='NORMAL')
+                     delStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"del('"+obj.id+"')\">删除</a>&nbsp;&nbsp;";
+                return editStr+delStr;
               }}
             ];
-            store = Search.createStore('/admin/listData');
+            store = Search.createStore('/shopType/listData');
             gridCfg = Search.createGridCfg(columns,{
               tbar : {
                 items : [
                   {text : '<i class="icon-plus"></i>新建',btnCls : 'button button-small',handler:function(){
-                      top.topManager.openPage({id:"admin_add",href:"/admin/beforeAdd",title:"新增管理员"});
+                      top.topManager.openPage({id:"shopType_add",href:"/shopType/beforeEdit",title:"新增"});
                   }}
                 ]
               },
@@ -105,28 +84,11 @@
 
   });
 
-    function updateStatus(id,status){
-        var msg = "确定冻结该账号吗？";
-        if(status=='NORMAL')
-            msg = "确定解冻改账号吗？";
-        BUI.Message.Confirm(msg,function(){
-            $.ajax({
-                url :"/admin/updateStatus",
-                type : 'post',
-                data : {id:id,status:status},
-                success : function(data){
-                    BUI.Message.Alert(data.msg);
-                    if(data.success){ //删除成功
-                        top.topManager.reloadPage();
-                    }
-                }
-            });
-        },'question');
-    }
+
     function del(id){
-        BUI.Message.Confirm("确定删除该管理员吗？",function(){
+        BUI.Message.Confirm("确定删除吗？",function(){
             $.ajax({
-                url :"/admin/delete?r="+Math.random(),
+                url :"/shopType/delete?r="+Math.random(),
                 type : 'post',
                 data : {id:id},
                 success : function(data){

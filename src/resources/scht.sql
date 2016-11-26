@@ -295,3 +295,40 @@ f_shop_rate varchar(32) DEFAULT '0'
   f_status varchar(32) not null,
   f_create_time bigint
  );
+-- 代理商资金表
+CREATE TABLE t_agent_money(
+f_id varchar(32) primary key,
+f_agent_id varchar(32) default '',
+f_agent_name varchar(50) default '',
+f_avail_amount varchar(20) default '',
+f_frozen_amount varchar(20) default '',
+f_total_amount varchar(20) default ''
+);
+-- 商家类型
+CREATE TABLE t_shop_type(
+  f_id varchar(32) primary key,
+  f_name varchar(50) not null,
+  f_key varchar(20) default '',
+  f_sort int default 0,
+  f_icon varchar(255) default '',
+  f_status varchar(10) not null
+);
+--商家
+CREATE TABLE t_shop(
+  f_id varchar(32) primary key,
+  f_name varchar(50) not null,
+  f_account varchar(50) default '',
+  f_password varchar(50) default '',
+  f_shop_type_id varchar(32) default '',
+  f_type varchar(20) default '',
+  f_icon varchar(255) default '',
+  f_status varchar(10) not null,
+  f_link_name varchar(50) default '',
+  f_link_mobile varchar(20) default '',
+  f_link_address varchar(255) default '',
+  f_agent_id varchar(32) default '',
+  f_remark varchar(1000) default '',
+  f_create_time bigint default 0,
+  f_lng FLOAT  ,
+  f_lnt FLOAT
+);

@@ -43,6 +43,16 @@ public class Admin {
      * 1：已删除
      */
     private String status;
+    private String address;
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public String getMobile() {
         return mobile;
