@@ -12,4 +12,6 @@ public interface ShopTypeService {
     List<ShopType> listBySort(int sort);
 
     List<ShopType> listMap();
+
+    List<ShopType> listByKey(String key);
 }

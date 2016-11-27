@@ -67,8 +67,14 @@ public class ShopTypeController extends BaseController{
     @ResponseBody
     public Object save(ShopType data,HttpServletRequest request){
         try {
+            List<ShopType> types = listByKey(data.getKey());
             List<ShopType> list = listBySort(data.getSort());
             if(StringUtil.isNotNull(data.getId())){
+                if(StringUtil.isNotEmpty(types)){
+                    ShopType type = types.get(0);
+                    if(!type.getId().equals(data.getId()))
+                        return this.FmtResult(false,"已存在相同key的数据，请重新输入",null);
+                }
                 if(StringUtil.isNotEmpty(list)){
                     ShopType type = list.get(0);
                     if(!type.getId().equals(data.getId()))
@@ -77,6 +83,8 @@ public class ShopTypeController extends BaseController{
                 this.baseService.update(ShopTypeDao.class,data);
                 this.saveLog("更新商家分类",request);
             }else{
+                if(StringUtil.isNotEmpty(types))
+                    return this.FmtResult(false,"已存在相同key的数据，请重新输入",null);
                 if(StringUtil.isNotEmpty(list))
                     return this.FmtResult(false,"排序位置上已存在数据，请重新输入",null);
                 data.setId(UUIDFactory.random());
@@ -90,6 +98,11 @@ public class ShopTypeController extends BaseController{
             e.printStackTrace();
         }
         return this.FmtResult(false,"保存失败",null);
+    }
+
+    private List<ShopType> listByKey(String key) {
+        List<ShopType> list = this.shopTypeService.listByKey(key);
+        return list;
     }
 
     private List<ShopType> listBySort(int sort){

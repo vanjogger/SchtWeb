@@ -77,22 +77,25 @@
         where f_id=#{id}
     </update>
     <select id="findById" resultMap="my_shop">
-        select * from t_shop where f_id=#{id} and f_status='NORMAL'
+        select * from t_shop where f_id=#{id}
     </select>
 
     <select id="findAll" resultMap="my_shop">
-        select * from t_shop where  f_status='NORMAL'
+        select * from t_shop where f_type='0'
     </select>
 
     <select id="searchByPage" parameterType="HashMap" resultMap="my_shop">
         select * from t_shop
         <where>
-            f_status='NORMAL'
+            f_type = '0'
             <if test="name != null and name != ''">
                 and f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="shopTypeId!=null and shopTypeId!=''">
                 and f_shop_type_id = #{shopTypeId}
+            </if>
+            <if test="agentId!=null and agentId!=''">
+                and f_agent_id = #{agentId}
             </if>
         </where>
         order by f_create_time asc
@@ -101,12 +104,15 @@
     <select id="count4Page" parameterType="HashMap" resultType="int">
         select count(f_id) from t_shop
         <where>
-            f_status='NORMAL'
+            f_type = '0'
             <if test="name != null and name != ''">
                 and f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="shopTypeId!=null and shopTypeId!=''">
                 and f_shop_type_id = #{shopTypeId}
+            </if>
+            <if test="agentId!=null and agentId!=''">
+                and f_agent_id = #{agentId}
             </if>
         </where>
     </select>

@@ -1,5 +1,7 @@
 package com.scht.admin.entity;
 
+import java.util.List;
+
 /**
  * Created by vanjoger on 2016/11/26.
  */
@@ -22,6 +24,27 @@ public class Shop {
     private Float lng;//经度
     private Float lnt;//纬度
 
+
+    private List<SubShop> list;
+    private int subSize;
+
+    public int getSubSize() {
+        if(!list.isEmpty())
+            return list.size();
+        return 0;
+    }
+
+    public void setSubSize(int subSize) {
+        this.subSize = subSize;
+    }
+
+    public List<SubShop> getList() {
+        return list;
+    }
+
+    public void setList(List<SubShop> list) {
+        this.list = list;
+    }
 
     public String getId() {
         return id;

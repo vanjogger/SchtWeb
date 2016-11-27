@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2015/12/23.
@@ -66,5 +67,10 @@ public class AdminServiceImpl implements AdminService {
         pageInfo.setTotal(total);
 
         return pageInfo;
+    }
+
+    @Override
+    public List<Admin> query(Map<String, Object> map) {
+        return this.adminDao.query(map);
     }
 }

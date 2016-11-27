@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2015/12/23.
@@ -24,4 +25,6 @@ public interface AdminDao {
     Admin get(String id);
 
     void delete(String id);
+
+    List<Admin> query(Map<String, Object> map);
 }

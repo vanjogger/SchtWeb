@@ -8,9 +8,7 @@ package com.scht.util; /**
 
 
 
-import com.scht.admin.entity.AgentMoney;
-import com.scht.admin.entity.Shop;
-import com.scht.admin.entity.ShopType;
+import com.scht.admin.entity.*;
 
 import java.lang.reflect.Field;
 
@@ -25,7 +23,7 @@ public class XmlMapUtil {
     private static String Mapper_PreFix = "my";
 
     public static void main(String[] args) {
-        Class clazz = Shop.class;
+        Class clazz = ShopMoney.class;
         System.out.println(createTableSql(clazz));
         System.out.println(createResultMapper(clazz));
         System.out.println(createSaveSql(clazz));

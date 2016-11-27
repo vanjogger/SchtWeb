@@ -1,7 +1,10 @@
 package com.scht.admin.service;
 
+import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.Shop;
+import net.sf.json.JSONObject;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -9,4 +12,6 @@ import java.util.List;
  */
 public interface ShopService {
     List<Shop> listByAccount(String account);
+
+    String save(Shop data, Admin admin);
 }

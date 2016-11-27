@@ -2,15 +2,15 @@ package com.scht.admin.controller;
 
 import com.scht.admin.bean.Status;
 import com.scht.admin.dao.ShopDao;
-import com.scht.admin.dao.ShopMoneyDao;
-import com.scht.admin.dao.ShopTypeDao;
+import com.scht.admin.dao.SubShopDao;
 import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.Shop;
-import com.scht.admin.entity.ShopMoney;
 import com.scht.admin.entity.ShopType;
+import com.scht.admin.entity.SubShop;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.ShopService;
 import com.scht.admin.service.ShopTypeService;
+import com.scht.admin.service.SubShopService;
 import com.scht.common.BaseController;
 import com.scht.common.ConfigHelper;
 import com.scht.common.PageInfo;
@@ -34,30 +34,30 @@ import java.util.Map;
  * Created by vanjoger on 2016/11/26.
  */
 @Controller
-@RequestMapping("/shop")
-public class ShopController extends BaseController {
+@RequestMapping("/chainShop")
+public class ShopChainController extends BaseController {
     @Autowired
     ShopService shopService;
     @Autowired
     BaseService baseService;
     @Autowired
     ShopTypeService shopTypeService;
+    @Autowired
+    SubShopService subShopService;
 
     @RequestMapping("/list")
     public String list(){
-        return "shop/info/shop_info_list";
+        return "shop/chain/shop_chain_list";
     }
 
     @RequestMapping("/listData")
     @ResponseBody
-    public Object listData(String name,String shopTypeId,String agentId,PageInfo page){
+    public Object listData(String name,String shopTypeId,PageInfo page){
         Map<String,Object> params = new HashMap<>();
         if(StringUtil.isNotNull(name))
             params.put("name",name);
         params.put("shopTypeId", shopTypeId);
-        params.put("agentId",agentId);
-        params.put("type","0");
-
+        params.put("type","1");
         page.setParams(params);
         this.page(ShopDao.class, page);
 
@@ -78,13 +78,14 @@ public class ShopController extends BaseController {
         if(!list.isEmpty()){
             for(Shop shop:list){
                 shop.setShopTypeId(map.get(shop.getShopTypeId()));
+                shop.setList(subShopService.listByShopId(shop.getId()));
             }
         }
     }
 
     @RequestMapping("/beforeAdd")
     public String beforeAdd(Model model){
-        return "shop/info/shop_info_add";
+        return "shop/chain/shop_chain_add";
     }
 
     @RequestMapping("/beforeEdit")
@@ -94,25 +95,41 @@ public class ShopController extends BaseController {
             model.addAttribute("dto",data);
         }
 
-        return "shop/info/shop_info_edit";
+        return "shop/chain/shop_chain_edit";
     }
 
     @RequestMapping("/save")
     @ResponseBody
     public Object save(Shop data,HttpServletRequest request){
         try {
-            Admin admin = (Admin) this.getCurrentUser(request);
-           String result =  this.shopService.save(data,admin);
-            if(result.equals("0")) {
-                if(StringUtil.isNotNull(data.getId())){
-                    this.saveLog("更新商家信息",request);
-                }else{
-                    this.saveLog("新增商家信息",request);
+            List<Shop> list = this.shopService.listByAccount(data.getAccount());
+
+            if(StringUtil.isNotNull(data.getId())){
+                if(!list.isEmpty()){
+                    Shop shop = list.get(0);
+                    if(!shop.getId().equals(data.getId()))
+                        return this.FmtResult(false,"已存在相同账号的商家！",null);
                 }
-                return this.FmtResult(true, "保存成功", null);
-            }else if(result.equals("-1")){
-                return this.FmtResult(false,"已存在相同账号的商家",null);
+
+                this.baseService.update(ShopDao.class,data);
+                this.saveLog("更新商家信息",request);
+            }else{
+                if(!list.isEmpty())
+                    return this.FmtResult(false,"已存在相同账号的商家！",null);
+
+                data.setId(UUIDFactory.random());
+                data.setStatus(Status.NORMAL.name());
+                data.setCreateTime(new Date().getTime());
+                data.setPassword(MD5Util.getMD5ofStr(data.getPassword()));
+
+                Admin admin = (Admin) this.getCurrentUser(request);
+                data.setAgentId(admin.getId());
+
+                this.baseService.insert(ShopDao.class, data);
+
+                this.saveLog("新增商家信息", request);
             }
+            return this.FmtResult(true, "保存成功", null);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -149,7 +166,7 @@ public class ShopController extends BaseController {
         }catch (Exception e){
             e.printStackTrace();
         }
-        return this.FmtResult(false,"操作失败",null);
+        return this.FmtResult(false, "操作失败", null);
     }
 
     @RequestMapping("/resetPwd")
@@ -168,5 +185,84 @@ public class ShopController extends BaseController {
         }
         return this.FmtResult(false,"重置密码失败",null);
     }
+
+
+    /**
+     * 连锁子商家页面  **************************
+     */
+
+    @RequestMapping("/listSub")
+    public String listSub(String shopId,Model model){
+        model.addAttribute("shopId",shopId);
+        return "shop/chain/shop_sub_list";
+    }
+
+    @RequestMapping("/listSubData")
+    @ResponseBody
+    public Object listSubData(String name,String shopId,PageInfo page){
+        Map<String,Object> params = new HashMap<>();
+        if(StringUtil.isNotNull(name))
+            params.put("name",name);
+        params.put("shopId", shopId);
+
+        page.setParams(params);
+        this.page(SubShopDao.class, page);
+
+      /*  List<Shop> list = page.getResult();
+        formatdata(list);
+        page.setResult(list);*/
+
+        return this.getPageResult(page);
+    }
+
+  /*  private void formatdata(List<Shop> list){
+        List<ShopType> data = shopTypeService.listMap();
+        Map<String,String> map = new HashMap<>();
+        for(ShopType type:data){
+            map.put(type.getId(),type.getName());
+        }
+
+        if(!list.isEmpty()){
+            for(Shop shop:list){
+                shop.setShopTypeId(map.get(shop.getShopTypeId()));
+                shop.setList(subShopService.listByShopId(shop.getId()));
+            }
+        }
+    }*/
+
+
+    @RequestMapping("/beforeAddEdit")
+    public String beforeAddEdit(String id,String shopId,Model model){
+        if(StringUtil.isNotNull(id)){
+            Shop data = this.baseService.findById(ShopDao.class,id);
+            model.addAttribute("dto",data);
+        }
+        model.addAttribute("shopId",shopId);
+        return "shop/chain/shop_sub_edit";
+    }
+
+    @RequestMapping("/saveSub")
+    @ResponseBody
+    public Object saveSub(SubShop data,HttpServletRequest request){
+        try {
+
+            if(StringUtil.isNotNull(data.getId())){
+                this.baseService.update(ShopDao.class,data);
+                this.saveLog("更新连锁商家信息",request);
+            }else{
+                data.setId(UUIDFactory.random());
+                data.setStatus(Status.NORMAL.name());
+
+                this.baseService.insert(ShopDao.class, data);
+
+                this.saveLog("新增连锁商家信息", request);
+            }
+            return this.FmtResult(true, "保存成功", null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return this.FmtResult(false,"保存失败",null);
+    }
+
 
 }

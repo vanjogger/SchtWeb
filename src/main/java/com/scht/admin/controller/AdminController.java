@@ -1,6 +1,7 @@
 package com.scht.admin.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
 import com.scht.admin.bean.UserStatus;
 import com.scht.admin.dao.AdminDao;
 import com.scht.admin.dao.AgentMoneyDao;
@@ -256,6 +257,30 @@ public class AdminController extends BaseController {
             e.printStackTrace();
             return this.FmtResult(false,"删除失败"+e.getMessage(),null);
         }
+    }
+
+
+    @RequestMapping("/query")
+    @ResponseBody
+    public Object query(String type){
+        try{
+            Map<String,Object> map = new HashMap<>();
+            map.put("type",type);
+            List<Admin> list = this.adminService.query(map);
+            JSONArray array = new JSONArray();
+            if(!list.isEmpty()){
+                for(Admin admin:list){
+                    JSONObject json = new JSONObject();
+                    json.put("text",admin.getLoginName());
+                    json.put("value",admin.getId());
+                    array.add(json);
+                }
+            }
+            return array;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -109,4 +109,10 @@
         select * from base_admin where f_id = #{id}
     </select>
 
+    <select id="query"  parameterType="HashMap" resultMap="my_admin">
+        select * from base_admin where 1=1
+        <if test="type!=null and type!=''">
+            and f_type = #{type}
+        </if>
+    </select>
 </mapper>

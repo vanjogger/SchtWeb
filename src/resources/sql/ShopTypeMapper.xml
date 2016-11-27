@@ -74,6 +74,10 @@
         select * from t_shop_type where f_sort = #{sort} and  f_status = 'NORMAL'
     </select>
 
+    <select id="listByKey" parameterType="HashMap" resultMap="my_shop_type">
+        select * from t_shop_type where f_key = #{key} and  f_status = 'NORMAL'
+    </select>
+
     <select id="listMap"  parameterType="HashMap" resultMap="my_shop_type">
         select * from t_shop_type where  f_status = 'NORMAL'
     </select>

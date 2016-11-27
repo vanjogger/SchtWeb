@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ShopMoneyDao">
+    <resultMap id="my_shop_money" type="com.scht.admin.entity.ShopMoney">
+        <id column="f_id" property="id"/>
+        Disconnected from the target VM, address: '127.0.0.1:58598', transport: 'socket'
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_shop_name" property="shopName"/>
+        <result column="f_avail_amount" property="availAmount"/>
+        <result column="f_frozen_amount" property="frozenAmount"/>
+        <result column="f_total_amount" property="totalAmount"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ShopMoney">
+        insert into t_shop_money(f_id,f_shop_id,f_shop_name,f_avail_amount,f_frozen_amount,f_total_amount)
+        values(#{id},#{shopId},#{shopName},#{availAmount},#{frozenAmount},#{totalAmount})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ShopMoney">
+        update t_shop_money
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="shopName!=null and shopName!=''">
+                f_shop_name = #{shopName},
+            </if>
+            <if test="availAmount!=null and availAmount!=''">
+                f_avail_amount = #{availAmount},
+            </if>
+            <if test="frozenAmount!=null and frozenAmount!=''">
+                f_frozen_amount = #{frozenAmount},
+            </if>
+            <if test="totalAmount!=null and totalAmount!=''">
+                f_total_amount = #{totalAmount},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_shop_money">
+        select * from t_shop_money where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_shop_money">
+        select * from t_shop_money where f_status='OPEN'order by f_create_time desc limit #{index},#{size}
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_shop_money">
+        select * from t_shop_money
+        <where>
+            <if test="shopName != null and shopName != ''">
+                and f_shop_name like CONCAT("%",#{shopName},"%")
+            </if>
+        </where>
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(f_id) from t_shop_money
+        <where>
+            <if test="shopName != null and shopName != ''">
+                and f_shop_name like CONCAT("%",#{shopName},"%")
+            </if>
+
+        </where>
+    </select>
+
+    <update id="delete" parameterType="HashMap">
+       update t_shop_money set f_status='FROZEN' where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </update>
+
+ </mapper>

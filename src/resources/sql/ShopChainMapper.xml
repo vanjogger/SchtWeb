@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.SubShopDao">
+    <resultMap id="my_sub_shop" type="com.scht.admin.entity.SubShop">
+        <id column="f_id" property="id"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_icon" property="icon"/>
+        <result column="f_name" property="name"/>
+        <result column="f_sort" property="sort"/>
+        <result column="f_link_name" property="linkName"/>
+        <result column="f_link_mobile" property="linkMobile"/>
+        <result column="f_link_address" property="linkAddress"/>
+        <result column="f_lng" property="lng"/>
+        <result column="f_lnt" property="lnt"/>
+        <result column="f_status" property="status"/>
+        <result column="f_remark" property="remark"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.SubShop">
+        insert into t_sub_shop(f_id,f_shop_id,f_icon,f_name,f_sort,f_link_name,f_link_mobile,f_link_address,f_lng,f_lnt,f_status,f_remark)
+        values(#{id},#{shopId},#{icon},#{name},#{sort},#{linkName},#{linkMobile},#{linkAddress},#{lng},#{lnt},#{status},#{remark})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.SubShop">
+        update t_sub_shop
+        <set>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="icon!=null and icon!=''">
+                f_icon = #{icon},
+            </if>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="sort!=null and sort!=''">
+                f_sort = #{sort},
+            </if>
+            <if test="linkName!=null and linkName!=''">
+                f_link_name = #{linkName},
+            </if>
+            <if test="linkMobile!=null and linkMobile!=''">
+                f_link_mobile = #{linkMobile},
+            </if>
+            <if test="linkAddress!=null and linkAddress!=''">
+                f_link_address = #{linkAddress},
+            </if>
+            <if test="lng!=null and lng!=''">
+                f_lng = #{lng},
+            </if>
+            <if test="lnt!=null and lnt!=''">
+                f_lnt = #{lnt},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+            <if test="remark!=null and remark!=''">
+                f_remark = #{remark},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_sub_shop">
+        select * from t_sub_shop where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_sub_shop">
+        select * from t_sub_shop
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_sub_shop">
+        select * from t_sub_shop
+        <where>
+            <if test="name != null and name != ''">
+                and f_name like CONCAT("%",#{name},"%")
+            </if>
+            <if test="shopTypeId!=null and shopTypeId!=''">
+                and f_shop_type_id = #{shopTypeId}
+            </if>
+        </where>
+        order by f_create_time asc
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(f_id) from t_sub_shop
+        <where>
+            <if test="name != null and name != ''">
+                and f_name like CONCAT("%",#{name},"%")
+            </if>
+            <if test="shopTypeId!=null and shopTypeId!=''">
+                and f_shop_type_id = #{shopTypeId}
+            </if>
+        </where>
+    </select>
+    <update id="delete" parameterType="HashMap">
+       update t_sub_shop set f_status='FROZEN' where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </update>
+
+    <select id="listByShopId" parameterType="HashMap" resultMap="my_sub_shop">
+        select * from t_sub_shop where f_shop_id  = #{shopId}
+    </select>
+</mapper>

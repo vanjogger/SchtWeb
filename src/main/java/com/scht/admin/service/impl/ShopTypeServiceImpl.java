@@ -27,4 +27,9 @@ public class ShopTypeServiceImpl implements ShopTypeService {
     public List<ShopType> listMap() {
         return this.shopTypeDao.listMap();
     }
+
+    @Override
+    public List<ShopType> listByKey(String key) {
+        return this.shopTypeDao.listByKey(key);
+    }
 }

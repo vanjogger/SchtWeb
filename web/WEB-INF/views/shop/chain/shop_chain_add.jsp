@@ -25,7 +25,7 @@
 
 <div class="container">
   <form id="J_Form" class="form-horizontal" action="/shop/save">
-    <input type="hidden" name="type" value="0"/>
+    <input type="hidden" name="type" value="1"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>商家名称：</label>

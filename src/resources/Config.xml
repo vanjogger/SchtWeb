@@ -2,6 +2,6 @@
 <root>
     <!-- 上传图片目录-->
     <Upload_Path>/upload</Upload_Path>
-
+    <InitPwd>111111</InitPwd>
     <Lisence>8mrQrRTkn7PaGSb+Tt3vavM8g6Na3HlEQ7/lIoL+QI273rIwS9K7DMw0NLPj03pJ2k2Npt6mR5G+gMoz+2XGRw==</Lisence>
 </root>

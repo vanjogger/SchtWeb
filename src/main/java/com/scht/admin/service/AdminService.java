@@ -5,6 +5,7 @@ import com.scht.common.PageInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2015/12/23.
@@ -27,4 +28,6 @@ public interface AdminService {
     void delete(String id);
 
     PageInfo listAdmin(String loginName, String status, PageInfo pageInfo);
+
+    List<Admin> query(Map<String, Object> map);
 }
