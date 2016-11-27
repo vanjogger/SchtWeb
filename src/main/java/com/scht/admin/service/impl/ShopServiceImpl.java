@@ -86,4 +86,14 @@ public class ShopServiceImpl implements ShopService {
         money.setTotalAmount("0");
         this.baseMyBatisDao.insert(ShopMoneyDao.class, money);
     }
+
+    @Override
+    public List<Shop> listByIds(String[] strings) {
+        return shopDao.listByIds(strings);
+    }
+
+    @Override
+    public List<Shop> listByName(String name) {
+        return shopDao.listByName(name);
+    }
 }

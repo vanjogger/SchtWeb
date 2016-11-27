@@ -14,4 +14,10 @@ public interface ShopService {
     List<Shop> listByAccount(String account);
 
     String save(Shop data, Admin admin);
+
+    //根据ids查询商家列表
+    List<Shop> listByIds(String[] strings);
+
+    //根据名称查询列表
+    List<Shop> listByName(String name);
 }

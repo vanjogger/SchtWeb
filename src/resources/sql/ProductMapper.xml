@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ProductDao">
+
+    <resultMap id="my_product" type="com.scht.admin.entity.Product">
+        <id column="f_id" property="id"/>
+        <result column="f_title" property="title"/>
+        <result column="f_product_type" property="productType"/>
+        <result column="f_type_id" property="typeId"/>
+        <result column="f_description" property="description"/>
+        <result column="f_price" property="price"/>
+        <result column="f_market_price" property="marketPrice"/>
+        <result column="f_agent_id" property="agentId"/>
+        <result column="f_images" property="images"/>
+        <result column="f_stock" property="stock"/>
+        <result column="f_sale_count" property="saleCount"/>
+        <result column="f_virtual_count" property="virtualCount"/>
+        <result column="f_comment_count" property="commentCount"/>
+        <result column="f_content" property="content"/>
+        <result column="f_status" property="status"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_sort" property="sort"/>
+        <result column="f_self" property="self"/>
+        <result column="f_shop_id" property="shopId"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.Product">
+        insert into t_product(f_id,f_title,f_product_type,f_type_id,f_description,f_price,f_market_price,f_agent_id,f_images,f_stock,f_sale_count,f_virtual_count,f_comment_count,f_content,f_status,f_create_time,f_sort,f_self,f_shop_id)
+        values(#{id},#{title},#{productType},#{typeId},#{description},#{price},#{marketPrice},#{agentId},#{images},#{stock},#{saleCount},#{virtualCount},#{commentCount},#{content},#{status},#{createTime},#{sort},#{self},#{shopId})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Product">
+        update t_product
+        <set>
+
+            <if test="title!=null and title!=''">
+                f_title = #{title},
+            </if>
+            <if test="typeId!=null and typeId!=''">
+                f_type_id = #{typeId},
+            </if>
+            <if test="description!=null and description!=''">
+                f_description = #{description},
+            </if>
+            <if test="price!=null and price!=''">
+                f_price = #{price},
+            </if>
+            <if test="marketPrice!=null and marketPrice!=''">
+                f_market_price = #{marketPrice},
+            </if>
+            <if test="images!=null and images!=''">
+                f_images = #{images},
+            </if>
+            <if test="stock!=null and stock!=''">
+                f_stock = #{stock},
+            </if>
+
+            <if test="virtualCount!=null and virtualCount!=''">
+                f_virtual_count = #{virtualCount},
+            </if>
+
+            <if test="content!=null and content!=''">
+                f_content = #{content},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+            <if test="sort!=null and sort!=''">
+                f_sort = #{sort},
+            </if>
+            <if test="self!=null and self!=''">
+                f_self = #{self},
+            </if>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_product">
+        select * from t_product where f_id=#{id}
+    </select>
+    <select id="searchByPage" resultMap="my_product" parameterType="HashMap">
+        SELECT  * from t_product
+        <where>
+            <if test="title != null and title != ''">
+                and f_title like "%"#{title}"%"
+            </if>
+            <if test="type != null and type != ''">
+                and f_product_type=#{type}
+            </if>
+            <if test="typeId != null and typeId != ''">
+                and f_type_id=#{typeId}
+            </if>
+            <if test="status != null and status != ''">
+                and f_status =#{status}
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
+            <if test="shopId !=null and shopId !=''">
+                and f_shop_id=#{shopId}
+            </if>
+        </where>
+        order by
+        <if test="order != null and order != ''">
+            <if test='order == "price_asc"'>
+              CONVERT (f_price, DECIMAL ) asc,
+            </if>
+            <if test='order == "price_desc"'>
+                CONVERT (f_price, DECIMAL ) desc,
+            </if>
+            <if test='order == "saleCount_asc"'>
+                f_sale_count asc,
+            </if>
+            <if test='order == "saleCount_desc"'>
+                f_sale_count desc,
+            </if>
+        </if>
+        <if test="front != null and front != ''">
+            f_sort asc,
+        </if>
+        f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        SELECT  count(f_id) from t_product
+        <where>
+            <if test="title != null and title != ''">
+                and f_title like "%"#{title}"%"
+            </if>
+            <if test="typeId != null and typeId != ''">
+                and f_type_id=#{typeId}
+            </if>
+            <if test="status != null and status != ''">
+                and f_status =#{status}
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
+            <if test="shopId !=null and shopId !=''">
+                and f_shop_id=#{shopId}
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete">
+        DELETE from t_product where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+    <update id="updateSaleCount">
+        update t_product set f_sale_count=f_sale_count + #{count} where f_id=#{id}
+    </update>
+    <update id="updateStock">
+        update t_product set f_stock=f_stock+#{count} where f_id=#{id}
+    </update>
+    <update id="updateCommentCount">
+        update t_product set f_comment_count=f_comment_count+#{count} where f_id=#{id}
+    </update>
+</mapper>

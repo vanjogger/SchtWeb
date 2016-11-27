@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ProductTypeDao">
+
+    <resultMap id="my_product_type" type="com.scht.admin.entity.ProductType">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_key" property="key"/>
+        <result column="f_sort" property="sort"/>
+        <result column="f_icon" property="icon"/>
+        <result column="f_status" property="status"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ProductType">
+        insert into t_product_type(f_id,f_name,f_key,f_sort,f_icon,f_status)
+        values(#{id},#{name},#{key},#{sort},#{icon},#{status})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ProductType">
+        update t_product_type
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="key!=null and key!=''">
+                f_key = #{key},
+            </if>
+            <if test="sort!=null and sort!=''">
+                f_sort = #{sort},
+            </if>
+            <if test="icon!=null and icon!=''">
+                f_icon = #{icon},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_product_type">
+        select * from t_product_type where f_id=#{id}
+    </select>
+    <select id="searchByPage" resultMap="my_product_type" parameterType="HashMap">
+        select * from t_product_type 
+        <where>
+            <if test="name != null and name != ''">
+                and f_name like "%"#{name}"%"
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+        </where>
+        order by f_sort limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        select count(4) from t_product_type
+        <where>
+            <if test="name != null and name != ''">
+                and f_name like "%"#{name}"%"
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+        </where>
+    </select>
+    <select id="delete">
+        delete from t_product_type where f_id in
+        <foreach collection="array" item="ids" open="(" close=")" separator=",">#{ids}</foreach>
+    </select>
+    
+    <select id="findAll" resultMap="my_product_type">
+        select * from t_product_type order by f_sort asc
+    </select>
+
+    <select id="findByKey" resultMap="my_product_type">
+        SELECT * from t_product_type where f_key=#{key}
+    </select>
+
+</mapper>
