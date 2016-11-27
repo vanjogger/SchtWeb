@@ -39,7 +39,7 @@ CREATE TABLE `base_admin` (
 -- ----------------------------
 -- Records of base_admin
 -- ----------------------------
-INSERT INTO `base_admin` VALUES ('1', 'admin', 'c4ca4238a0b923820dcc509a6f75849b', '1', '1479608989592', '127.0.0.1', '204', 'NORMAL', '系统管理员', '', '1');
+INSERT INTO `base_admin` VALUES ('1', 'admin', 'c4ca4238a0b923820dcc509a6f75849b', '1', '1479608989592', '127.0.0.1', '204', 'NORMAL', '系统管理员', '', '1','','');
 
 -- ----------------------------
 -- Table structure for base_log
