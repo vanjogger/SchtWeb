@@ -102,7 +102,7 @@ public class ShopController extends BaseController {
     public Object save(Shop data,HttpServletRequest request){
         try {
             Admin admin = (Admin) this.getCurrentUser(request);
-           String result =  this.shopService.save(data,admin);
+           String result =  this.shopService.save(data, admin);
             if(result.equals("0")) {
                 if(StringUtil.isNotNull(data.getId())){
                     this.saveLog("更新商家信息",request);
@@ -124,7 +124,7 @@ public class ShopController extends BaseController {
     @ResponseBody
     public JSONObject frozen(String id){
         try{
-            Shop shop = this.baseService.findById(ShopDao.class,id);
+            Shop shop = this.baseService.findById(ShopDao.class, id);
             if(shop!=null){
                 shop.setStatus(Status.FROZEN.name());
                 this.baseService.update(ShopDao.class,shop);
@@ -169,4 +169,11 @@ public class ShopController extends BaseController {
         return this.FmtResult(false,"重置密码失败",null);
     }
 
+
+    //根据名称模糊检索所有商家
+    @RequestMapping("/ajaxList")
+    @ResponseBody
+    public JSONObject searchShop(String name){
+        return this.FmtResult(true,"", shopService.listByName(name));
+    }
 }

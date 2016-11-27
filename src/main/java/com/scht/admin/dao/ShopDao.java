@@ -12,4 +12,8 @@ import java.util.List;
 @Repository
 public interface ShopDao {
     List<Shop> listByAccount(@Param("account")String account);
+
+    List<Shop> listByIds(String[] ids);
+
+    List<Shop> listByName(@Param("name")String name);
 }

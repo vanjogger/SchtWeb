@@ -90,16 +90,16 @@
         text:'商品管理',
         items:[
           <shiro:hasPermission name="product:typelist">
-          {id:'product_category_list',text:'商品分类管理',href:'/admin/list',closeable:true},
+          {id:'product_category_list',text:'商品分类管理',href:'/productType/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="product:list">
-          {id:'product_list',text:'普通商品管理',href:'/admin/list',closeable:true},
+          {id:'product_list',text:'普通商品管理',href:'/product/list?type=NORMAL',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="wzproduct:list">
-          {id:'wz_product_list',text:'五折商品管理',href:'/admin/list',closeable:true},
+          {id:'wz_product_list',text:'五折商品管理',href:'/product/list?type=DISCOUNT',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="tgproduct:list">
-          {id:'tg_product_list',text:'推广商品管理',href:'/admin/list',closeable:true}
+          {id:'tg_product_list',text:'推广商品管理',href:'/product/list?type=EXTEND',closeable:true}
           </shiro:hasPermission>
         ]}
       ]

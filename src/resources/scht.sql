@@ -356,3 +356,35 @@ CREATE TABLE t_shop_money(
   f_frozen_amount varchar(20) default '',
   f_total_amount varchar(20) default ''
 );
+-- product type
+
+CREATE TABLE t_product_type(
+f_id varchar(32) primary key,
+f_name varchar(256) not null,
+f_key varchar(100) default '',
+f_sort int default 0,
+f_icon varchar(512) default '',
+f_status varchar(100) not null
+);
+-- product
+CREATE TABLE t_product(
+f_id varchar(32) primary key,
+f_title varchar(512) default '',
+f_product_type varchar(32) default '',
+f_type_id varchar(32) default '',
+f_description varchar(1000) default '',
+f_price varchar(32) default '',
+f_market_price varchar(32) default '',
+f_agent_id varchar(32) default '',
+f_images varchar(2000) default '',
+f_stock int default 0,
+f_sale_count int default 0,
+f_virtual_count int default 0,
+f_comment_count int default 0,
+f_content longtext,
+f_status varchar(32) not null,
+f_create_time bigint default 0,
+f_sort int default 0,
+f_self varchar(2) default '',
+f_shop_id varchar(32) default ''
+);

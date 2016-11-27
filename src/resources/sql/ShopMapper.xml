@@ -98,7 +98,7 @@
                 and f_agent_id = #{agentId}
             </if>
         </where>
-        order by f_create_time asc
+        order by f_create_time desc
         limit #{start},#{limit}
     </select>
     <select id="count4Page" parameterType="HashMap" resultType="int">
@@ -123,5 +123,22 @@
 
     <select id="listByAccount" parameterType="HashMap" resultMap="my_shop">
         select * from t_shop where f_account = #{account}
+    </select>
+
+    <select id="listByIds" resultMap="my_shop">
+        SELECT * from t_shop where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </select>
+    <select id="listByName" resultMap="my_shop">
+        select * from t_shop
+        <where>
+            f_type = '0'
+          <if test="name != null and name != ''">
+              and f_name like CONCAT("%",#{name},"%")
+          </if>
+        </where>
+        order by f_create_time desc
     </select>
 </mapper>
