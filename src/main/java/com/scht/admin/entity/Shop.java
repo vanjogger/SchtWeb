@@ -1,5 +1,7 @@
 package com.scht.admin.entity;
 
+import com.scht.util.StringUtil;
+
 import java.util.List;
 
 /**
@@ -29,7 +31,7 @@ public class Shop {
     private int subSize;
 
     public int getSubSize() {
-        if(!list.isEmpty())
+        if(StringUtil.isNotEmpty(list))
             return list.size();
         return 0;
     }
