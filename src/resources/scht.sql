@@ -332,3 +332,27 @@ CREATE TABLE t_shop(
   f_lng FLOAT  ,
   f_lnt FLOAT
 );
+-- 连锁商家
+CREATE TABLE t_sub_shop(
+  f_id varchar(32) primary key,
+  f_shop_id varchar(32) default '',
+  f_icon varchar(255) default '',
+  f_name varchar(100) not null,
+  f_sort int default 0,
+  f_link_name varchar(50) default '',
+  f_link_mobile varchar(50) default '',
+  f_link_address varchar(255) default '',
+  f_lng Float default '',
+  f_lnt Float default '',
+  f_status varchar(10) not null,
+  f_remark varchar(1000) default ''
+);
+--商家资金
+CREATE TABLE t_shop_money(
+  f_id varchar(32) primary key,
+  f_shop_id varchar(32) default '',
+  f_shop_name varchar(100) default '',
+  f_avail_amount varchar(20) default '',
+  f_frozen_amount varchar(20) default '',
+  f_total_amount varchar(20) default ''
+);
