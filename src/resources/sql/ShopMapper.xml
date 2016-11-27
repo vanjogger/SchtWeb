@@ -87,7 +87,9 @@
     <select id="searchByPage" parameterType="HashMap" resultMap="my_shop">
         select * from t_shop
         <where>
-            f_type = '0'
+            <if test="type!=null and type!=''">
+                and f_type= #{type}
+            </if>
             <if test="name != null and name != ''">
                 and f_name like CONCAT("%",#{name},"%")
             </if>
@@ -104,7 +106,9 @@
     <select id="count4Page" parameterType="HashMap" resultType="int">
         select count(f_id) from t_shop
         <where>
-            f_type = '0'
+            <if test="type!=null and type!=''">
+                and f_type= #{type}
+            </if>
             <if test="name != null and name != ''">
                 and f_name like CONCAT("%",#{name},"%")
             </if>
