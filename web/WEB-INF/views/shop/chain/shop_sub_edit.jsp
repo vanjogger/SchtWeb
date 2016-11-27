@@ -24,9 +24,9 @@
 <body>
 
 <div class="container">
-  <form id="J_Form" class="form-horizontal" action="/shop/save">
+  <form id="J_Form" class="form-horizontal" action="/chainShop/saveSub">
     <input type="hidden" name="id" value="${dto.id}"/>
-    <input type="hidden" name="type" value="${dto.type}"/>
+    <input type="hidden" name="shopId" value="${shopId}"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>商家名称：</label>
@@ -35,30 +35,14 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="control-group span20">
-        <label class="control-label"><s>*</s>商家账号：</label>
-        <div class="controls">
-          <input name="account" type="text" data-rules="{required:true,maxlength:20}" value="${dto.account}" class="input-large"/>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="control-group">
-        <label class="control-label"><s>*</s>商家分类：</label>
-        <div class="controls">
-          <select name="shopTypeId" value="${dto.shopTypeId}"  data-rules="{required:true}" data-loader="{url:'/shopType/listAll',property:'items',dataType:'json'}"></select>
-      </div>
-    </div>
 
     <div class="control-group" style="height:120px;">
       <label class="control-label">商家图标：</label>
       <div class="controls">
-        <c:if test="${dto.icon!=''}">
+        <c:if test="${dto!=null && dto.icon!=''}">
           <img src="${dto.icon}" style="width: 80px;height: 80px;"/>
         </c:if>
-        <div id="J_Uploader" style="margin-left: 100px;">
+        <div id="J_Uploader" style="margin-left: 100px;float:right;">
         </div>
         <input type="hidden" name="icon" id="icon" value="${dto.icon}"/>
       </div>
@@ -82,8 +66,6 @@
       </div>
     </div>
 
-
-
     <div class="control-group">
       <label class="control-label">地&nbsp;&nbsp;&nbsp;&nbsp;址：</label>
       <div class="controls  control-row-auto">
@@ -91,7 +73,14 @@
       </div>
     </div>
 
-
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">排&nbsp;&nbsp;&nbsp;&nbsp;序：</label>
+        <div class="controls">
+          <input name="sort" type="text" data-rules="{maxlength:10,number:true}" value="${dto.sort}" class="input-large"/>
+        </div>
+      </div>
+    </div>
 
     <div class="row">
       <div class="control-group span20">
@@ -160,10 +149,10 @@
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'shop_list',
+              id : 'sub${shopId}',
               isClose : true
             });
-            top.topManager.reloadPage('shop_list');
+            top.topManager.reloadPage('sub${shopId}');
           }
         },'info');
       }

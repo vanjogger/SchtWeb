@@ -52,12 +52,16 @@ public class ShopChainController extends BaseController {
 
     @RequestMapping("/listData")
     @ResponseBody
-    public Object listData(String name,String shopTypeId,PageInfo page){
+    public Object listData(String name,String shopTypeId,String agentId,PageInfo page,HttpServletRequest request){
         Map<String,Object> params = new HashMap<>();
         if(StringUtil.isNotNull(name))
             params.put("name",name);
         params.put("shopTypeId", shopTypeId);
         params.put("type","1");
+        Admin admin = (Admin) this.getCurrentUser(request);
+        if(admin.getType().equals("1")){//代理商
+            params.put("agentId", admin.getId());
+        }
         page.setParams(params);
         this.page(ShopDao.class, page);
 
@@ -178,7 +182,7 @@ public class ShopChainController extends BaseController {
                 String initPwd = ConfigHelper.GetInstance().GetConfig("InitPwd");
                 shop.setPassword(MD5Util.getMD5ofStr(initPwd));
                 this.baseService.update(ShopDao.class,shop);
-                return this.FmtResult(true,"重置密码成功",null);
+                return this.FmtResult(true,"密码已重置为:"+initPwd,null);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -192,8 +196,8 @@ public class ShopChainController extends BaseController {
      */
 
     @RequestMapping("/listSub")
-    public String listSub(String shopId,Model model){
-        model.addAttribute("shopId",shopId);
+    public String listSub(String id,Model model){
+        model.addAttribute("shopId", id);
         return "shop/chain/shop_sub_list";
     }
 
@@ -231,10 +235,10 @@ public class ShopChainController extends BaseController {
     }*/
 
 
-    @RequestMapping("/beforeAddEdit")
-    public String beforeAddEdit(String id,String shopId,Model model){
+    @RequestMapping("/beforeSubEdit")
+    public String beforeSubEdit(String id,String shopId,Model model){
         if(StringUtil.isNotNull(id)){
-            Shop data = this.baseService.findById(ShopDao.class,id);
+            SubShop data = this.baseService.findById(SubShopDao.class,id);
             model.addAttribute("dto",data);
         }
         model.addAttribute("shopId",shopId);
@@ -247,13 +251,13 @@ public class ShopChainController extends BaseController {
         try {
 
             if(StringUtil.isNotNull(data.getId())){
-                this.baseService.update(ShopDao.class,data);
+                this.baseService.update(SubShopDao.class,data);
                 this.saveLog("更新连锁商家信息",request);
             }else{
                 data.setId(UUIDFactory.random());
                 data.setStatus(Status.NORMAL.name());
 
-                this.baseService.insert(ShopDao.class, data);
+                this.baseService.insert(SubShopDao.class, data);
 
                 this.saveLog("新增连锁商家信息", request);
             }
@@ -262,6 +266,52 @@ public class ShopChainController extends BaseController {
             e.printStackTrace();
         }
         return this.FmtResult(false,"保存失败",null);
+    }
+
+
+    @RequestMapping("/subshop/frozen")
+    @ResponseBody
+    public JSONObject frozenSub(String id){
+        try{
+            SubShop subShop = this.baseService.findById(SubShopDao.class,id);
+            if(subShop!=null){
+                subShop.setStatus(Status.FROZEN.name());
+                this.baseService.update(SubShopDao.class, subShop);
+                return this.FmtResult(true,"操作成功",null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return this.FmtResult(false,"操作失败",null);
+    }
+
+    @RequestMapping("/subshop/unfrozen")
+    @ResponseBody
+    public JSONObject unfrozenSub(String id){
+        try{
+            SubShop subShop = this.baseService.findById(SubShopDao.class,id);
+            if(subShop!=null){
+                subShop.setStatus(Status.NORMAL.name());
+                this.baseService.update(SubShopDao.class,subShop);
+                return this.FmtResult(true,"操作成功",null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return this.FmtResult(false,"操作失败",null);
+    }
+
+
+    @RequestMapping("/subshop/deleteSub")
+    @ResponseBody
+    public JSONObject deleteSub(String id){
+        try{
+            this.baseService.delete(SubShopDao.class,new String[]{id});
+            return this.FmtResult(true,"删除成功",null);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return this.FmtResult(false,"删除失败",null);
     }
 
 

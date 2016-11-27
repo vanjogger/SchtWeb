@@ -29,12 +29,12 @@
         </div>
       </div>
 
-        <div class="control-group span8">
+     <%--   <div class="control-group span8">
             <label class="control-label">代理商：</label>
             <div class="controls" >
                 <select name="agentId"   data-loader="{url:'/admin/query?type=1',property:'items',dataType:'json'}"></select>
             </div>
-        </div>
+        </div>--%>
 
       <div class="span3 offset2">
         <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
@@ -56,13 +56,21 @@
   BUI.use(['common/search','common/page','bui/grid','bui/overlay','bui/form'],function (Search,Page,Grid,Overlay,Form) {
     var  columns = [
               {title:'商家名称',dataIndex:'name',width:150},
+              {title:'商家账号',dataIndex:'account',width:150},
               {title:'所属分类',dataIndex:'shopTypeId',width:120},
+                {title:'当前状态',dataIndex:'status',width:80,renderer:function(value,obj){
+                    if(obj.status=='NORMAL'){
+                        return "正常";
+                    }else{
+                        return "冻结";
+                    }
+                }},
               {title:'联系人',dataIndex:'linkName',width:120},
               {title:'联系电话',dataIndex:'linkMobile',width:120},
               {title:'商家图标',dataIndex:'icon',width:200,renderer:function(value,obj){
                  return  "<img src='"+obj.icon+"' style=\"width:80px;height:80px\" />"
               }},
-              {title:'操作',dataIndex:'aaa',width:200,renderer : function(value,obj){
+              {title:'操作',dataIndex:'aaa',width:180,renderer : function(value,obj){
                 var editStr =  Search.createLink({ //链接使用 此方式
                           id : 'edit' + obj.id,
                           title : '编辑',

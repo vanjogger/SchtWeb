@@ -58,7 +58,7 @@
         <c:if test="${dto.icon!=''}">
           <img src="${dto.icon}" style="width: 80px;height: 80px;"/>
         </c:if>
-        <div id="J_Uploader" style="margin-left: 100px;">
+        <div id="J_Uploader" style="margin-left: 100px;float:right;">
         </div>
         <input type="hidden" name="icon" id="icon" value="${dto.icon}"/>
       </div>
@@ -160,10 +160,10 @@
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'shop_list',
+              id : 'chain_shop_list',
               isClose : true
             });
-            top.topManager.reloadPage('shop_list');
+            top.topManager.reloadPage('chain_shop_list');
           }
         },'info');
       }

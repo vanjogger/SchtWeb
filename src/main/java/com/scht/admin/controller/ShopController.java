@@ -50,13 +50,18 @@ public class ShopController extends BaseController {
 
     @RequestMapping("/listData")
     @ResponseBody
-    public Object listData(String name,String shopTypeId,String agentId,PageInfo page){
+    public Object listData(String name,String shopTypeId,String agentId,PageInfo page,HttpServletRequest request){
         Map<String,Object> params = new HashMap<>();
         if(StringUtil.isNotNull(name))
             params.put("name",name);
         params.put("shopTypeId", shopTypeId);
-        params.put("agentId",agentId);
-        params.put("type","0");
+        params.put("type", "0");
+
+        Admin admin = (Admin) this.getCurrentUser(request);
+        if(admin.getType().equals("1")){//代理商
+            params.put("agentId", admin.getId());
+        }
+
 
         page.setParams(params);
         this.page(ShopDao.class, page);
@@ -161,7 +166,7 @@ public class ShopController extends BaseController {
                 String initPwd = ConfigHelper.GetInstance().GetConfig("InitPwd");
                 shop.setPassword(MD5Util.getMD5ofStr(initPwd));
                 this.baseService.update(ShopDao.class,shop);
-                return this.FmtResult(true,"重置密码成功",null);
+                return this.FmtResult(true,"密码已重置为:"+initPwd,null);
             }
         }catch (Exception e){
             e.printStackTrace();

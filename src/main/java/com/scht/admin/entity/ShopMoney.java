@@ -11,6 +11,25 @@ public class ShopMoney {
     private String availAmount;
     private String frozenAmount;
     private String totalAmount;
+    //不映射数据库 从shop表中获取
+    private String type;
+    private String shopAccount;
+
+    public String getShopAccount() {
+        return shopAccount;
+    }
+
+    public void setShopAccount(String shopAccount) {
+        this.shopAccount = shopAccount;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;

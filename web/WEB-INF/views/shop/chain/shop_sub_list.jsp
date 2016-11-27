@@ -22,12 +22,7 @@
         </div>
       </div>
         <input type="hidden" name="shopId" value="${shopId}"/>
-      <div class="control-group span8">
-        <label class="control-label">商家分类：</label>
-        <div class="controls" >
-            <select name="shopTypeId"   data-loader="{url:'/shopType/listAll',property:'items',dataType:'json'}"></select>
-        </div>
-      </div>
+
       <div class="span3 offset2">
         <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
       </div>
@@ -47,43 +42,42 @@
     var del_url = "/admin/updateStatus";
   BUI.use(['common/search','common/page','bui/grid','bui/overlay','bui/form'],function (Search,Page,Grid,Overlay,Form) {
     var  columns = [
-              {title:'总店名称',dataIndex:'name',width:150},
-              {title:'所属分类',dataIndex:'shopTypeId',width:120},
+              {title:'连锁商家名称',dataIndex:'name',width:150},
+            {title:'当前状态',dataIndex:'status',width:80,renderer:function(value,obj){
+                if(obj.status=='NORMAL'){
+                    return "正常";
+                }else{
+                    return "冻结";
+                }
+            }},
               {title:'联系人',dataIndex:'linkName',width:120},
               {title:'联系电话',dataIndex:'linkMobile',width:120},
               {title:'商家图标',dataIndex:'icon',width:200,renderer:function(value,obj){
                  return  "<img src='"+obj.icon+"' style=\"width:80px;height:80px\" />"
               }},
-              {title:'连锁商家数',dataIndex:'subSize',width:120},
               {title:'操作',dataIndex:'aaa',width:200,renderer : function(value,obj){
                 var editStr =  Search.createLink({ //链接使用 此方式
                           id : 'edit' + obj.id,
                           title : '编辑',
                           text : '编辑',
-                          href : '/chainShop/beforeEdit?id='+obj.id
+                          href : '/chainShop/beforeSubEdit?id='+obj.id+"&shopId=${shopId}"
                         });
-                  var delStr = "";
+                  var updateStr = "";
                   if(obj.status=='NORMAL'){
-                     delStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"frozen('"+obj.id+"')\">冻结</a>&nbsp;&nbsp;";
+                      updateStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"frozen('"+obj.id+"')\">冻结</a>&nbsp;&nbsp;";
                   }else if(obj.status=='FROZEN'){
-                      delStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"unfrozen('"+obj.id+"')\">解冻</a>&nbsp;&nbsp;";
+                      updateStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"unfrozen('"+obj.id+"')\">解冻</a>&nbsp;&nbsp;";
                   }
-                  var resetPwd = "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"resetPwd('"+obj.id+"')\">重置密码</a>&nbsp;&nbsp;";
-                  var substr =  Search.createLink({ //链接使用 此方式
-                      id : 'sub' + obj.id,
-                      title : '查看连锁商家',
-                      text : '查看连锁商家',
-                      href : '/chainShop/listSub?id='+obj.id
-                  });
-                return editStr+delStr+resetPwd+substr;
+                var  delStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"del('"+obj.id+"')\">删除</a>&nbsp;&nbsp;";
+                return editStr+updateStr+delStr;
               }}
             ];
-            store = Search.createStore('/chainShop/listData');
+            store = Search.createStore('/chainShop/listSubData');
             gridCfg = Search.createGridCfg(columns,{
               tbar : {
                 items : [
                   {text : '<i class="icon-plus"></i>新建',btnCls : 'button button-small',handler:function(){
-                      top.topManager.openPage({id:"chainShop_add",href:"/chainShop/beforeAdd/",title:"新增"});
+                      top.topManager.openPage({id:"chainShop_sub_add",href:"/chainShop/beforeSubEdit?shopId=${shopId}",title:"新增"});
                   }}
                 ]
               },
@@ -96,7 +90,7 @@
     function frozen(id){
         BUI.Message.Confirm("确定冻结吗？",function(){
             $.ajax({
-                url :"/chainShop/frozen?r="+Math.random(),
+                url :"/chainShop/subshop/frozen?r="+Math.random(),
                 type : 'post',
                 data : {id:id},
                 success : function(data){
@@ -113,7 +107,7 @@
     function unfrozen(id){
         BUI.Message.Confirm("确定解冻吗？",function(){
             $.ajax({
-                url :"/chainShop/unfrozen?r="+Math.random(),
+                url :"/chainShop/subshop/unfrozen?r="+Math.random(),
                 type : 'post',
                 data : {id:id},
                 success : function(data){
@@ -126,10 +120,11 @@
             });
         },'question');
     }
-    function resetPwd(id){
-        BUI.Message.Confirm("确定重置密码吗？",function(){
+
+    function del(id){
+        BUI.Message.Confirm("确定删除吗？",function(){
             $.ajax({
-                url :"/chainShop/resetPwd?r="+Math.random(),
+                url :"/chainShop/subshop/deleteSub?r="+Math.random(),
                 type : 'post',
                 data : {id:id},
                 success : function(data){
@@ -142,6 +137,7 @@
             });
         },'question');
     }
+
 
 </script>
 <script type="text/javascript" src="/views/js/list.js"></script>

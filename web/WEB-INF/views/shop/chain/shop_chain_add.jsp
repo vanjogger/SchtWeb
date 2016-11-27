@@ -161,10 +161,10 @@
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'shop_list',
+              id : 'chain_shop_list',
               isClose : true
             });
-            top.topManager.reloadPage('shop_list');
+            top.topManager.reloadPage('chain_shop_list');
           }
         },'info');
       }

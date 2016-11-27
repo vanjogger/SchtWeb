@@ -12,15 +12,15 @@
 <body>
 
 <div class="container">
-  <form id="J_Form" class="form-horizontal" action="/agentMoney/save">
+  <form id="J_Form" class="form-horizontal" action="/shopMoney/save">
     <input type="hidden" name="id" value="${dto.id}"/>
-    <input type="hidden" name="agentId" value="${dto.agentId}"/>
-    <input type="hidden" name="agentName" value="${dto.agentName}"/>
+    <input type="hidden" name="shopId" value="${dto.shopId}"/>
+    <input type="hidden" name="shopName" value="${dto.shopName}"/>
     <div class="row">
       <div class="control-group span20">
-        <label class="control-label">代理商账号：</label>
+        <label class="control-label">商家名称：</label>
         <div class="controls">
-          ${dto.agentName}
+          ${dto.shopName}
         </div>
       </div>
     </div>
@@ -77,10 +77,10 @@
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'dlszj_list',
+              id : 'shop_zj_list',
               isClose : true
             });
-            top.topManager.reloadPage('dlszj_list');
+            top.topManager.reloadPage('shop_zj_list');
           }
         },'info');
       }

@@ -58,7 +58,7 @@
         <c:if test="${dto.icon!=''}">
           <img src="${dto.icon}" style="width: 80px;height: 80px;"/>
         </c:if>
-        <div id="J_Uploader" style="margin-left: 100px;">
+        <div id="J_Uploader" style="margin-left: 100px;float:right;">
         </div>
         <input type="hidden" name="icon" id="icon" value="${dto.icon}"/>
       </div>
