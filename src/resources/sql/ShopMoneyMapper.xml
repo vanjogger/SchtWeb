@@ -5,7 +5,6 @@
 <mapper namespace="com.scht.admin.dao.ShopMoneyDao">
     <resultMap id="my_shop_money" type="com.scht.admin.entity.ShopMoney">
         <id column="f_id" property="id"/>
-        Disconnected from the target VM, address: '127.0.0.1:58598', transport: 'socket'
         <result column="f_shop_id" property="shopId"/>
         <result column="f_shop_name" property="shopName"/>
         <result column="f_avail_amount" property="availAmount"/>
@@ -40,6 +39,7 @@
         </set>
         where f_id=#{id}
     </update>
+
     <select id="findById" resultMap="my_shop_money">
         select * from t_shop_money where f_id=#{id}
     </select>
