@@ -31,6 +31,8 @@ CREATE TABLE `base_admin` (
   `f_roleName` varchar(50) DEFAULT NULL,
   `f_realName` varchar(50) DEFAULT NULL,
   `f_type` varchar(10) DEFAULT NULL,
+  `f_mobile` varchar(20) DEFAULT NULL,
+  `f_address` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`f_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -355,4 +357,25 @@ CREATE TABLE t_shop_money(
   f_avail_amount varchar(20) default '',
   f_frozen_amount varchar(20) default '',
   f_total_amount varchar(20) default ''
+);
+---商家流水
+CREATE TABLE t_shop_flow(
+f_id varchar(32) primary key,
+f_shop_id varchar(100) default '',
+f_type varchar(100) default '',
+f_amount varchar(100) default '',
+f_after_amount varchar(100) default '',
+f_create_time bigint default 0
+);
+--商家提现申请
+CREATE TABLE t_shop_with_drawals(
+f_id varchar(32) primary key,
+f_shop_id varchar(32) default '',
+f_status varchar(10) default '',
+f_amount varchar(20) default '',
+f_bank_name varchar(100) default '',
+f_card_no varchar(100) default '',
+f_card_name varchar(100) default '',
+f_remark varchar(255) DEFAULT '',
+f_create_time bigint default 0
 );
