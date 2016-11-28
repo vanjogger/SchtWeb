@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.OrderLimitSetDao">
+    <resultMap id="my_order_limit_set" type="com.scht.admin.entity.OrderLimitSet">
+        <id column="f_id" property="id"/>
+       <result column="f_pay_limit" property="payLimit"/>
+        <result column="f_success_limit" property="successLimit"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.scht.admin.entity.OrderLimitSet">
+        insert into t_order_limit_set(f_id, f_pay_limit,f_success_limit)
+        VALUES (#{id},#{payLimit},#{successLimit})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.OrderLimitSet">
+        update t_order_limit_set set f_pay_limit=#{payLimit},
+        f_success_limit = #{successLimit}  where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="my_order_limit_set">
+        select * from base_advert
+    </select>
+
+</mapper>

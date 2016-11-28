@@ -150,14 +150,7 @@
           <shiro:hasPermission name="tgorder:list">
           {id:'tgorder_list',text:'推广订单管理',href:'/admin/list',closeable:true}
           </shiro:hasPermission>
-        ]},
-        {
-          text:'推送管理',
-          items:[
-            <shiro:hasPermission name="tsjl:list">
-            {id:'ts_list',text:'推送记录管理',href:'/admin/list',closeable:true}
-                  </shiro:hasPermission>
-          ]}
+        ]}
       ]
     },{
       id:'config_manage',
@@ -171,6 +164,9 @@
           <shiro:hasPermission name="txfl:list">
           {id:'tx_rate_list',text:'提现费率管理',href:'/withdrawSet/find',closeable:true},
                 </shiro:hasPermission>
+          <shiro:hasPermission name="orderLimitSet">
+          {id:'order_limit_list',text:'订单时限设置',href:'/orderLimitSet/find',closeable:true},
+          </shiro:hasPermission>
           <shiro:hasPermission name="tssz:list">
           {id:'tg_list',text:'推送设置',href:'/pushSet/find',closeable:true}
                 </shiro:hasPermission>

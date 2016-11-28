@@ -104,6 +104,15 @@
             <if test="shopId !=null and shopId !=''">
                 and f_shop_id=#{shopId}
             </if>
+            <if test="front != null and front != ''">
+               and (
+                f_self='0' or ( f_self='1' and
+                    f_shop_id in (
+                     select f_id from t_shop where f_status='NORMAL'
+                    )
+                )
+                )
+            </if>
         </where>
         order by
         <if test="order != null and order != ''">
@@ -142,6 +151,15 @@
             </if>
             <if test="shopId !=null and shopId !=''">
                 and f_shop_id=#{shopId}
+            </if>
+            <if test="front != null and front != ''">
+                and (
+                f_self='0' or ( f_self='1' and
+                f_shop_id in (
+                select f_id from t_shop where f_status='NORMAL'
+                )
+                )
+                )
             </if>
         </where>
     </select>
