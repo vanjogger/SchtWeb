@@ -10,6 +10,8 @@
         <result column="f_avail_amount" property="availAmount"/>
         <result column="f_frozen_amount" property="frozenAmount"/>
         <result column="f_total_amount" property="totalAmount"/>
+        <result column="f_type" property="type"/>
+        <result column="f_account" property="shopAccount"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.ShopMoney">
         insert into t_shop_money(f_id,f_shop_id,f_shop_name,f_avail_amount,f_frozen_amount,f_total_amount)
@@ -41,28 +43,35 @@
     </update>
 
     <select id="findById" resultMap="my_shop_money">
-        select * from t_shop_money where f_id=#{id}
+        select t.*,s.f_account,s.f_type from t_shop_money t,t_shop s  where   t.f_shop_id = s.f_id  and  t.f_id=#{id}
     </select>
     <select id="findAll" resultMap="my_shop_money">
-        select * from t_shop_money where f_status='OPEN'order by f_create_time desc limit #{index},#{size}
+        select t.*,s.f_type from t_shop_money t,t_shop s  where   t.f_shop_id = s.f_id  limit #{index},#{size}
     </select>
 
     <select id="searchByPage" parameterType="HashMap" resultMap="my_shop_money">
-        select * from t_shop_money
+        select t.*,s.f_account,s.f_type from t_shop_money t,t_shop s
         <where>
+            t.f_shop_id = s.f_id
             <if test="shopName != null and shopName != ''">
-                and f_shop_name like CONCAT("%",#{shopName},"%")
+                and t.f_shop_name like CONCAT("%",#{shopName},"%")
+            </if>
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
             </if>
         </where>
         limit #{start},#{limit}
     </select>
     <select id="count4Page" parameterType="HashMap" resultType="int">
-        select count(f_id) from t_shop_money
+        select count(t.f_id) from t_shop_money t,t_shop s
         <where>
+            t.f_shop_id = s.f_id
             <if test="shopName != null and shopName != ''">
-                and f_shop_name like CONCAT("%",#{shopName},"%")
+                and t.f_shop_name like CONCAT("%",#{shopName},"%")
             </if>
-
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
+            </if>
         </where>
     </select>
 
@@ -70,5 +79,9 @@
        update t_shop_money set f_status='FROZEN' where f_id IN
         <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
     </update>
+
+    <select id="listByShopId" parameterType="HashMap" resultMap="my_shop_money">
+        select * from t_shop_money where f_shop_id  = #{shopId}
+    </select>
 
  </mapper>

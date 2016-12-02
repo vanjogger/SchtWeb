@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ShopFlowDao">
+    <resultMap id="my_shop_flow" type="com.scht.admin.entity.ShopFlow">
+        <id column="f_id" property="id"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_account" property="shopAccount"/>
+        <result column="f_name" property="shopName"/>
+        <result column="f_type" property="type"/>
+        <result column="f_amount" property="amount"/>
+        <result column="f_after_amount" property="afterAmount"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ShopFlow">
+        insert into t_shop_flow(f_id,f_shop_id,f_amount,f_after_amount,f_create_time,f_type)
+        values(#{id},#{shopId},#{amount},#{afterAmount},#{createTime},#{type})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ShopFlow">
+        update t_shop_flow
+        <set>
+
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="amount!=null and amount!=''">
+                f_amount = #{amount},
+            </if>
+            <if test="afterAmount!=null and afterAmount!=''">
+                f_after_amount = #{afterAmount},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+            <if test="type!=null and type!=''">
+                f_type = #{type},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_shop_flow">
+        select t.*,s.f_account,s.f_name from t_shop_flow t,t_shop s where t.f_shop_id = s.f_id and t.f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_shop_flow">
+        select t.*,s.f_account,s.f_name from t_shop_flow t,t_shop s where t.f_shop_id = s.f_id order by f_create_time desc
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_shop_flow">
+        select t.*,s.f_account,s.f_name from t_shop_flow t,t_shop s
+        <where>
+            t.f_shop_id = s.f_id
+            <if test="shopName != null and shopName != ''">
+                and s.f_name like CONCAT("%",#{shopName},"%")
+            </if>
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and t.f_create_time >= #{startDate}
+                    ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and t.f_create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+        order by t.f_create_time desc
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(t.f_id) from t_shop_flow t,t_shop s
+        <where>
+            t.f_shop_id = s.f_id
+            <if test="shopName != null and shopName != ''">
+                and s.f_name like CONCAT("%",#{shopName},"%")
+            </if>
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and t.f_create_time >= #{startDate}
+                    ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and t.f_create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete" parameterType="HashMap">
+       DELETE t_shop_flow  where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+ </mapper>

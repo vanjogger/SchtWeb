@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ShopWithDrawalsDao">
+    <resultMap id="my_shop_with_drawals" type="com.scht.admin.entity.ShopWithDrawals">
+        <id column="f_id" property="id"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_account" property="shopAccount"/>
+        <result column="f_name" property="shopName"/>
+        <result column="f_status" property="status"/>
+        <result column="f_remark" property="remark"/>
+        <result column="f_amount" property="amount"/>
+        <result column="f_bank_name" property="bankName"/>
+        <result column="f_card_no" property="cardNo"/>
+        <result column="f_card_name" property="cardName"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ShopWithDrawals">
+        insert into t_shop_with_drawals(f_id,f_shop_id,f_status,f_amount,f_bank_name,f_card_no,f_card_name,f_create_time,f_remark)
+        values(#{id},#{shopId},#{status},#{amount},#{bankName},#{cardNo},#{cardName},#{createTime},#{remark})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ShopWithDrawals">
+        update t_shop_with_drawals
+        <set>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+            <if test="amount!=null and amount!=''">
+                f_amount = #{amount},
+            </if>
+            <if test="bankName!=null and bankName!=''">
+                f_bank_name = #{bankName},
+            </if>
+            <if test="cardNo!=null and cardNo!=''">
+                f_card_no = #{cardNo},
+            </if>
+            <if test="cardName!=null and cardName!=''">
+                f_card_name = #{cardName},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+            <if test="remark!=null and remark!=''">
+                f_remark = #{remark},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_shop_with_drawals">
+        select t.*,s.f_account,s.f_name from t_shop_with_drawals t,t_shop s where   t.f_shop_id = s.f_id and  t.f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_shop_with_drawals">
+         select t.*,s.f_account,s.f_name from t_shop_with_drawals t,t_shop s where   t.f_shop_id = s.f_id order by f_create_time desc limit #{index},#{size}
+    </select>
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_shop_with_drawals">
+        select t.*,s.f_account,s.f_name from t_shop_with_drawals t,t_shop s
+        <where>
+            t.f_shop_id = s.f_id
+            <if test="shopName != null and shopName != ''">
+                and s.f_name like CONCAT("%",#{shopName},"%")
+            </if>
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
+            </if>
+            <if test="status != null and status != ''">
+                and t.f_status = #{status}
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and t.f_create_time >= #{startDate}
+                    ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and t.f_create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+        order by t.f_create_time desc
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(t.f_id) from t_shop_with_drawals t,t_shop s
+        <where>
+            t.f_shop_id = s.f_id
+            <if test="shopName != null and shopName != ''">
+                and s.f_name like CONCAT("%",#{shopName},"%")
+            </if>
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
+            </if>
+            <if test="status != null and status != ''">
+                and t.f_status = #{status}
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and t.f_create_time >= #{startDate}
+                    ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and t.f_create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete" parameterType="HashMap">
+       DELETE t_shop_with_drawals  where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+ </mapper>

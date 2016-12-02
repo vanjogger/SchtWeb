@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ShopBankDao">
+    <resultMap id="my_shop_bank" type="com.scht.admin.entity.ShopBank">
+        <id column="f_id" property="id"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_account" property="shopAccount"/>
+        <result column="f_name" property="shopName"/>
+        <result column="f_yhmc" property="yhmc"/>
+        <result column="f_khh" property="khh"/>
+        <result column="f_ckr" property="ckr"/>
+        <result column="f_kh" property="kh"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ShopBank">
+        insert into t_shop_bank(f_id,f_shop_id,f_yhmc,f_khh,f_ckr,f_kh)
+        values(#{id},#{shopId},#{yhmc},#{khh},#{ckr},#{kh})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ShopBank">
+        update t_shop_bank
+        <set>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="yhmc!=null and yhmc!=''">
+                f_yhmc = #{yhmc},
+            </if>
+            <if test="khh!=null and khh!=''">
+                f_khh = #{khh},
+            </if>
+            <if test="ckr!=null and ckr!=''">
+                f_ckr = #{ckr},
+            </if>
+            <if test="kh!=null and kh!=''">
+                f_kh = #{kh},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_shop_bank">
+        select t.*,s.f_account,s.f_name from t_shop_bank t,t_shop s where t.f_shop_id = s.f_id and  t.f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_shop_bank">
+        select t.*,s.f_account,s.f_name from t_shop_bank t,t_shop s where t.f_shop_id = s.f_id
+    </select>
+
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_shop_bank">
+        select t.*,s.f_account,s.f_name from t_shop_bank t,t_shop s
+        <where>
+            t.f_shop_id = s.f_id
+            <if test="shopName != null and shopName != ''">
+                and s.f_name like CONCAT("%",#{shopName},"%")
+            </if>
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
+            </if>
+        </where>
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(t.f_id) from t_shop_bank t,t_shop s
+        <where>
+            t.f_shop_id = s.f_id
+            <if test="shopName != null and shopName != ''">
+                and s.f_name like CONCAT("%",#{shopName},"%")
+            </if>
+            <if test="shopAccount != null and shopAccount != ''">
+                and s.f_account like CONCAT("%",#{shopAccount},"%")
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete">
+       DELETE from t_shop_bank  where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+ </mapper>

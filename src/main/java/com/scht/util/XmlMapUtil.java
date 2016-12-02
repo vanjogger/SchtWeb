@@ -23,7 +23,7 @@ public class XmlMapUtil {
     private static String Mapper_PreFix = "my";
 
     public static void main(String[] args) {
-        Class clazz = ShopFlow.class;
+        Class clazz = MemberAddress.class;
         System.out.println(createTableSql(clazz));
         System.out.println(createResultMapper(clazz));
         System.out.println(createSaveSql(clazz));
@@ -175,7 +175,7 @@ public class XmlMapUtil {
         String simpleName = clazz.getSimpleName();
         StringBuffer buffer = new StringBuffer();
         buffer.append(" <select id=\"findAll\" resultMap=\"").append(getSQLName(simpleName, Mapper_PreFix)).append("\">\n");
-        buffer.append("select * from ").append(getSQLName(simpleName, TABLE_PREFIX)).append(" where f_status='OPEN'").append("order by f_create_time desc limit #{index},#{size}\n");
+        buffer.append("select * from ").append(getSQLName(simpleName, TABLE_PREFIX)).append(" where 1=1").append(" order by f_create_time desc \n");
         buffer.append("</select>");
         return buffer.toString();
     }

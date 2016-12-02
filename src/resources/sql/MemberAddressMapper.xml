@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.MemberAddressDao">
+    <resultMap id="my_member_address" type="com.scht.admin.entity.MemberAddress">
+        <id column="f_id" property="id"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_member_name" property="memberName"/>
+        <result column="f_name" property="name"/>
+        <result column="f_mobile" property="mobile"/>
+        <result column="f_address" property="address"/>
+        <result column="f_details" property="details"/>
+        <result column="f_is_default" property="isDefault"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.MemberAddress">
+        insert into t_member_address(f_id,f_member_id,f_name,f_mobile,f_address,f_details,f_is_default)
+        values(#{id},#{memberId},#{name},#{mobile},#{address},#{details},#{isDefault})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.MemberAddress">
+        update t_member_address
+        <set>
+            <if test="memberId!=null and memberId!=''">
+                f_member_id = #{memberId},
+            </if>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="mobile!=null and mobile!=''">
+                f_mobile = #{mobile},
+            </if>
+            <if test="address!=null and address!=''">
+                f_address = #{address},
+            </if>
+            <if test="details!=null and details!=''">
+                f_details = #{details},
+            </if>
+            <if test="isDefault!=null and isDefault!=''">
+                f_is_default = #{isDefault},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_member_address">
+        select t.*,m.f_nick as f_member_name  from t_member_address t,base_member m where t.f_member_id = m.f_id and t.f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_member_address">
+        select t.*,m.f_nick as f_member_name  from t_member_address t,base_member m where t.f_member_id = m.f_id
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_member_address">
+        select t.*,m.f_nick as f_member_name  from t_member_address t,base_member m
+        <where>
+            t.f_member_id = m.f_id
+            <if test="memberName != null and memberName != ''">
+                and m.f_member_name like CONCAT("%",#{memberName},"%")
+            </if>
+        </where>
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(t.f_id) from t_member_address t,base_member m
+        <where>
+            t.f_member_id = m.f_id
+            <if test="memberName != null and memberName != ''">
+                and m.f_member_name like CONCAT("%",#{memberName},"%")
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete">
+       DELETE from t_member_address  where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+ </mapper>

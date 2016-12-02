@@ -79,7 +79,10 @@
           text:'会员管理',
           items:[
             <shiro:hasPermission name="member:list">
-            {id:'member_list',text:'会员信息管理',href:'/admin/member/list',closeable:true}
+            {id:'member_list',text:'会员信息管理',href:'/admin/member/list',closeable:true},
+            </shiro:hasPermission>
+            <shiro:hasPermission name="memberAddress:list">
+            {id:'member_address_list',text:'收货地址管理',href:'/memberAddress/list',closeable:true}
             </shiro:hasPermission>
           ]}
         ]
@@ -131,7 +134,7 @@
           {id:'shop_tx_list',text:'商家提现记录',href:'/shopTx/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="shopbank:list">
-          {id:'shop_bankcard_list',text:'商家银行卡管理',href:'/shopBankCard/list',closeable:true}
+          {id:'shop_bankcard_list',text:'商家银行卡管理',href:'/shopBank/list',closeable:true}
           </shiro:hasPermission>
         ]}
       ]
