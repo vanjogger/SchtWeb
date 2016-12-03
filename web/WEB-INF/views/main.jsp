@@ -145,13 +145,13 @@
         text:'订单管理',
         items:[
           <shiro:hasPermission name="order:list">
-          {id:'order_list',text:'订单管理',href:'/admin/list',closeable:true},
+          {id:'order_list',text:'订单管理',href:'/order/list?orderType=NORMAL',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="wzorder:list">
-          {id:'wzorder_list',text:'五折订单管理',href:'/admin/list',closeable:true},
+          {id:'wzorder_list',text:'五折订单管理',href:'/order/list?orderType=DISCOUNT',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="tgorder:list">
-          {id:'tgorder_list',text:'推广订单管理',href:'/admin/list',closeable:true}
+          {id:'tgorder_list',text:'推广订单管理',href:'/order/list?orderType=EXTEND',closeable:true}
           </shiro:hasPermission>
         ]}
       ]

@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.OrderDao">
+
+    <resultMap id="my_order" type="com.scht.admin.entity.Order">
+        <id column="f_id" property="id"/>
+        <result column="f_no" property="no"/>
+        <result column="f_order_type" property="orderType"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_member_account" property="memberAccount"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_agent_id" property="agentId"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_pay_time" property="payTime"/>
+        <result column="f_dispatch_time" property="dispatchTime"/>
+        <result column="f_success_time" property="successTime"/>
+        <result column="f_over_time" property="overTime"/>
+        <result column="f_limit_time" property="limitTime"/>
+        <result column="f_status" property="status"/>
+        <result column="f_total_money" property="totalMoney"/>
+        <result column="f_remark" property="remark"/>
+        <result column="f_express" property="express"/>
+        <result column="f_code" property="code"/>
+        <result column="f_user_name" property="userName"/>
+        <result column="f_address" property="address"/>
+        <result column="f_telephone" property="telephone"/>
+        <result column="f_pay_type" property="payType"/>
+        <result column="f_express_name" property="expressName"/>
+        <result column="f_express_no" property="expressNo"/>
+        <result column="f_member_assess" property="memberAssess"/>
+        <result column="f_shop_assess" property="shopAssess"/>
+        <result column="f_shop_name" property="shopName"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.Order">
+        insert into t_order(f_id,f_no,f_order_type,f_member_id,f_member_account,f_shop_id,f_agent_id,f_create_time,f_pay_time,f_dispatch_time,f_success_time,f_over_time,f_limit_time,f_status,f_total_money,f_remark,f_express,f_code,f_user_name,f_address,f_telephone,f_pay_type,f_express_name,f_express_no,f_member_assess,f_shop_assess)
+        values(#{id},#{no},#{orderType},#{memberId},#{memberAccount},#{shopId},#{agentId},#{createTime},#{payTime},#{dispatchTime},#{successTime},#{overTime},#{limitTime},#{status},#{totalMoney},#{remark},#{express},#{code},#{userName},#{address},#{telephone},#{payType},#{expressName},#{expressNo},#{memberAssess},#{shopAssess})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Order">
+        update t_order
+        <set>
+            <if test="payTime>0">
+                f_pay_time = #{payTime},
+            </if>
+            <if test="dispatchTime>0">
+                f_dispatch_time = #{dispatchTime},
+            </if>
+            <if test="successTime>0">
+                f_success_time = #{successTime},
+            </if>
+            <if test="overTime>0">
+                f_over_time = #{overTime},
+            </if>
+            <if test="limitTime>0">
+                f_limit_time = #{limitTime},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+            <if test="code!=null and code!=''">
+                f_code = #{code},
+            </if>
+            <if test="payType!=null and payType!=''">
+                f_pay_type = #{payType},
+            </if>
+            <if test="expressName!=null and expressName!=''">
+                f_express_name = #{expressName},
+            </if>
+            <if test="expressNo!=null and expressNo!=''">
+                f_express_no = #{expressNo},
+            </if>
+            <if test="memberAssess!=null and memberAssess!=''">
+                f_member_assess = #{memberAssess},
+            </if>
+            <if test="shopAssess!=null and shopAssess!=''">
+                f_shop_assess = #{shopAssess}
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_order">
+        select * from t_order where f_id=#{id}
+    </select>
+    <select id="searchByPage" resultMap="my_order" parameterType="HashMap">
+        SELECT * from t_order
+        <where>
+            <if test="orderType != null and orderType != ''">
+                and f_order_type=#{orderType}
+            </if>
+            <if test="no != null and no != ''">
+                and f_no=#{no}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and f_create_time>=#{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[and f_create_time<=#{endTime}]]>
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="memberAccount != null and memberAccount != ''">
+                and f_member_account like "%"#{memberAccount}"%"
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
+            <if test="memberAssess != null and memberAssess != ''">
+                and f_member_assess=#{memberAssess}
+            </if>
+            <if test="shopAssess != null and shopAssess != ''">
+                and f_shop_assess=#{shopAssess}
+            </if>
+            <if test="shopName != null and shopName != ''">
+                and f_shop_id in (select f_id from t_shop where f_name like "%"#{shopName}"%")
+            </if>
+        </where>
+        order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        SELECT count(f_id) from t_order
+        <where>
+            <if test="orderType != null and orderType != ''">
+                and f_order_type=#{orderType}
+            </if>
+            <if test="no != null and no != ''">
+                and f_no=#{no}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                and f_create_time>=#{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[and f_create_time<=#{endTime}]]>
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="memberAccount != null and memberAccount != ''">
+                and f_member_account like "%"#{memberAccount}"%"
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+            <if test="agentId != null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
+            <if test="memberAssess != null and memberAssess != ''">
+                and f_member_assess=#{memberAssess}
+            </if>
+            <if test="shopAssess != null and shopAssess != ''">
+                and f_shop_assess=#{shopAssess}
+            </if>
+            <if test="shopName != null and shopName != ''">
+                and f_shop_id in (select f_id from t_shop where f_name like "%"#{shopName}"%")
+            </if>
+        </where>
+    </select>
+    <select id="findByNo" resultMap="my_order">
+        SELECT * from t_order where f_no = #{no}
+    </select>
+</mapper>

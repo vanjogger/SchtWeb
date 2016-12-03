@@ -448,3 +448,46 @@ CREATE TABLE t_member_address(
   f_details varchar(100) default '',
   f_is_default varchar(10) default ''
 );
+
+
+-- order
+CREATE TABLE t_order(
+f_id varchar(32) primary key,
+f_no varchar(32) default '',
+f_order_type varchar(100) default '',
+f_member_id varchar(32) default '',
+f_member_account varchar(100) default '',
+f_shop_id varchar(32) default '',
+f_agent_id varchar(32) default '',
+f_create_time bigint default 0,
+f_pay_time bigint default 0,
+f_dispatch_time bigint default 0,
+f_success_time bigint default 0,
+f_over_time bigint default 0,
+f_limit_time bigint default 0,
+f_status varchar(100) not null,
+f_total_money varchar(100) default '0',
+f_remark varchar(1000) default '',
+f_express varchar(32) default '',
+f_code varchar(100) default '',
+f_user_name varchar(100) default '',
+f_address varchar(512) default '',
+f_telephone varchar(100) default '',
+f_pay_type varchar(32) default '',
+f_express_name varchar(100) default '',
+f_express_no varchar(100) default '',
+f_member_assess varchar(2) default '',
+f_shop_assess varchar(2) default ''
+);
+
+-- order product
+CREATE TABLE t_order_product(
+f_id varchar(32) primary key,
+f_order_id varchar(32) default '',
+f_product_id varchar(32) default '',
+f_product_name varchar(512) default '',
+f_product_image varchar(512) default '',
+f_price varchar(100) default '',
+f_amount int default 0,
+f_money varchar(100) default '0'
+);
