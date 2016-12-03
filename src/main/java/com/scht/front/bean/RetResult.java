@@ -1,5 +1,7 @@
 package com.scht.front.bean;
 
+import com.scht.common.DictionaryConfigHelper;
+
 import java.io.Serializable;
 
 
@@ -44,7 +46,7 @@ public class RetResult implements Serializable {
 
 	public RetResult(String code) {
 		this.resCode = code;
-		this.resMsg = DictionaryConfigHelper.GetDictionaryValue("RetCode", code, "");
+		this.resMsg = DictionaryConfigHelper.getDictionaryValue("RetCode", code, "");
 	}
 
 	public static class RetCode {
