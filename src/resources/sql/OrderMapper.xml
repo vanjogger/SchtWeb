@@ -52,9 +52,7 @@
             <if test="overTime>0">
                 f_over_time = #{overTime},
             </if>
-            <if test="limitTime>0">
                 f_limit_time = #{limitTime},
-            </if>
             <if test="status!=null and status!=''">
                 f_status = #{status},
             </if>
@@ -168,4 +166,10 @@
     <select id="findByNo" resultMap="my_order">
         SELECT * from t_order where f_no = #{no}
     </select>
+    <delete id="delete">
+        delete from t_order where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
 </mapper>

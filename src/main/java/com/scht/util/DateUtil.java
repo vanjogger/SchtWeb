@@ -194,20 +194,17 @@ public class DateUtil {
         date.setTime(l);
         return date;
     }
-
-    public static void main(String[] args) {
-//	//	System.out.println(gtPassedDayMin());
-//		Date date = new Date(1381470000000L);
-//		System.out.println(getFormatDate(date, null));
-        System.out.println(getFormatDate(new Date(), "yyyyMMddHHmmssSSS"));
-       // System.out.println(diffDays(new Date(),longToDate(1456469874127L)));
-        System.out.println(DateUtil.getDateFromLong(1471417920929L));
-
-        Calendar cal = Calendar.getInstance();
-        //cal.add(Calendar.HOUR,-1);
-
-        //System.out.println(getDateFromLong(cal.getTimeInMillis()));
-        getPassedYear(10);
-        System.out.println(getYear(-1));
+    //增加天数
+    public static long addDays(long l, int days) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(l);
+        c.add(Calendar.DAY_OF_MONTH, days);
+        return c.getTimeInMillis();
     }
+    public static void main(String[] args) {
+//
+        System.out.println(getDateFromLong(addDays(System.currentTimeMillis(),35)));
+    }
+
+
 }

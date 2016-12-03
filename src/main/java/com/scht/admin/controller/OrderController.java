@@ -2,9 +2,12 @@ package com.scht.admin.controller;
 
 import com.scht.admin.bean.OrderStatus;
 import com.scht.admin.dao.OrderDao;
+import com.scht.admin.dao.OrderLimitSetDao;
+import com.scht.admin.dao.OrderProductDao;
 import com.scht.admin.dao.ShopDao;
 import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.Order;
+import com.scht.admin.entity.OrderLimitSet;
 import com.scht.admin.entity.Shop;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.OrderProductService;
@@ -92,12 +95,41 @@ public class OrderController extends BaseController {
     }
     
     //发货操作
-    public String dispatch(String id,String expressName,String expressNo){
+    @RequestMapping("dispatch")
+    @ResponseBody
+    public JSONObject dispatch(String id, String expressName, String expressNo,HttpServletRequest request){
         Order order = this.baseService.findById(OrderDao.class, id);
         if(order == null || !"1".equals(order.getExpress()) || OrderStatus.PAY.name().equals(order.getStatus())){
-            
+            return this.FmtResult(false,"该订单不需要发货",null);
         }
-        return null;
+        order.setExpressName(expressName);
+        order.setExpressNo(expressNo);
+        order.setStatus(OrderStatus.DISPATCH.name());
+        order.setDispatchTime(System.currentTimeMillis());
+        //确认收货时限设置
+        OrderLimitSet set = this.baseService.findById(OrderLimitSetDao.class,"");
+        if(set != null && set.getSuccessLimit() > 0) {
+            order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getSuccessLimit()));
+        }else{
+            order.setLimitTime(0l);
+        }
+        this.baseService.update(OrderDao.class, order);
+        this.saveLog("订单:" + order.getNo() + "进行发货操作", request);
+        return this.FmtResult(true,"发货操作成功",null);
+    }
+
+    //关闭的订单删除
+    @RequestMapping("delete")
+    @ResponseBody
+    public JSONObject delete(String id, HttpServletRequest request){
+        Order order = this.baseService.findById(OrderDao.class,id);
+        if(order != null || !OrderStatus.CLOSE.name().equals(order.getStatus())){
+            return this.FmtResult(false,"订单不是关闭状态，不可删除",null);
+        }
+        this.baseService.delete(OrderProductDao.class, new String[]{id});
+        this.baseService.delete(OrderDao.class, new String[]{id});
+        this.saveLog("删除订单："+ order.getNo(),request);
+        return this.FmtResult(true,"删除成功",null);
     }
 
     private void initList(List<Order> list){
