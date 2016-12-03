@@ -151,7 +151,10 @@
           {id:'wzorder_list',text:'五折订单管理',href:'/order/list?orderType=DISCOUNT',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="tgorder:list">
-          {id:'tgorder_list',text:'推广订单管理',href:'/order/list?orderType=EXTEND',closeable:true}
+          {id:'tgorder_list',text:'推广订单管理',href:'/order/list?orderType=EXTEND',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="xfm:list">
+          {id:'xfm_list',text:'消费码验证管理',href:'/order/list?orderType=EXTEND',closeable:true}
           </shiro:hasPermission>
         ]}
       ]

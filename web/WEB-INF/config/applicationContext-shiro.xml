@@ -56,21 +56,15 @@
                 <!-- anon 表示此地址不需要任何访问权限即可访问 -->
                 /resources/** = anon
                 /views/js/** = anon
-                /views/front/js/** = anon
                 /views/error/** = anon
                 /login = anon
-               /front/index = anon
-                /front/login = anon
+                /res/** = anon
                 /admin = anon
                 /validateCode = anon
                 /upload/** = anon
                 /admin/login = anon
                 /logout = anon
-                /findPwd/** = anon
-                / = anon
                 <!-- 所有的请求（除去配置的静态资源请求或请求地址为anon）都要通过登录验证，若未登录则跳转至/login-->
-
-                /front/** = anon
                /** = authc
             </value>
         </property>
