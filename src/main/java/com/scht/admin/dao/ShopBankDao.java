@@ -1,5 +1,7 @@
 package com.scht.admin.dao;
 
+import com.scht.admin.entity.ShopBank;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -7,4 +9,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ShopBankDao {
+    void insert(ShopBank bank);
+
+    ShopBank findById(@Param("id")String id);
+
+    void update(ShopBank bank);
 }

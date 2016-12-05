@@ -8,6 +8,7 @@ import com.scht.admin.entity.ShopBank;
 import com.scht.admin.entity.ShopFlow;
 import com.scht.admin.entity.ShopMoney;
 import com.scht.admin.service.BaseService;
+import com.scht.admin.service.ShopBankService;
 import com.scht.common.BaseController;
 import com.scht.common.PageInfo;
 import com.scht.util.StringUtil;
@@ -33,6 +34,9 @@ public class ShopBankController extends BaseController {
 
     @Autowired
     BaseService baseService;
+    @Autowired
+    ShopBankService shopBankService;
+
 
     @RequestMapping("/list")
     public String list(){
@@ -59,6 +63,9 @@ public class ShopBankController extends BaseController {
     public String beforeEdit(String id,Model model){
         if(StringUtil.isNotNull(id)){
             ShopBank bank = this.baseService.findById(ShopBankDao.class,id);
+            //ShopBank bank = this.shopBankService.findById(id);
+            //this.shopBankService.testTx();
+
             model.addAttribute("dto",bank);
         }
         return "shop/bank/shop_bank_edit";
@@ -68,7 +75,7 @@ public class ShopBankController extends BaseController {
     @ResponseBody
     public Object save(ShopBank bank,HttpServletRequest request){
         try {
-            this.baseService.update(ShopBankDao.class, bank);
+            this.baseService.update(ShopBankDao.class,bank);
             //保存日志
             this.saveLog("修改商家银行卡信息：" + bank.getShopName(), request);
             return this.FmtResult(true, "修改成功", null);

@@ -1,54 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:task="http://www.springframework.org/schema/task" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="
-            http://www.springframework.org/schema/beans
-            http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.springframework.org/schema/task
-            http://www.springframework.org/schema/task/spring-task.xsd
-             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
-            http://www.springframework.org/schema/context
-            http://www.springframework.org/schema/context/spring-context.xsd">
-
-    <!--	&lt;!&ndash; Root Context: defines shared resources visible to all other web components &ndash;&gt;
-        &lt;!&ndash; 使用 annotation &ndash;&gt;
-        <bean id="mappingJacksonHttpMessageConverter"
-              class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" ></bean>
-
-        &lt;!&ndash; 注解扫描的包 &ndash;&gt;
-        <context:component-scan base-package="com.scht           &lt;!&ndash; 只扫描的对象 &ndash;&gt;
-             <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-        </context:component-scan>
-
-        <context:annotation-config />
-        &lt;!&ndash; 使用 annotation 自动注册bean,并检查 @Service, @Repository注解已被注入 &ndash;&gt;
-
-        &lt;!&ndash; hibernate 属性配置 &ndash;&gt;
-        <context:property-placeholder location="/WEB-INF/config/jdbc.properties" />
-
-        <task:executor id="executor" pool-size="5" />
-        <task:scheduler id="scheduler" pool-size="10" />
-        <task:annotation-driven executor="executor"
-            scheduler="scheduler" />
-
-        &lt;!&ndash; Hibernate 配置管理 &ndash;&gt;
-        <import resource="applicationContext-persistence.xml" />-->
-
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd"
+       default-lazy-init="true">
 
     <context:component-scan base-package="com.scht">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
     <context:property-placeholder location="/WEB-INF/config/jdbc.properties"/>
-
-    <task:executor id="executor" pool-size="5"/>
-    <task:scheduler id="scheduler" pool-size="10"/>
-    <task:annotation-driven executor="executor"
-                            scheduler="scheduler"/>
 
     <!-- druid 数据源 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
@@ -66,34 +38,54 @@
         <property name="minEvictableIdleTimeMillis" value="300000"/>
     </bean>
 
+    <!--  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+          <property name="dataSource" ref="dataSource"/>
+          <property name="mapperLocations" value="classpath*:sql/*Mapper.xml"/>
+          &lt;!&ndash;<property name="typeAliasesPackage" value="com.scht.admin.entity"></property>
+         <property name="configLocation" value="classpath*:com/scht/dao/*Mapper.xml"/>&ndash;&gt;
+      </bean>
+  -->
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory" />
+    </bean>
+
+    <!-- <aop:config>
+         <aop:pointcut id="serviceOption" expression="execution(* com.scht.*.service.*Service.* (..))"/>
+         <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOption"/>
+     </aop:config>-->
+
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--<property name="configLocation" value="classpath:mybatis-configuration.xml"/>-->
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath*:sql/*Mapper.xml"/>
-       <property name="typeAliasesPackage" value="com.scht.admin.entity"></property>
-        <!--<property name="configLocation" value="classpath*:com/scht/dao/*Mapper.xml"/>-->
     </bean>
     <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="dataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-    <aop:config>
-        <aop:pointcut id="serviceOption" expression="execution(* com.scht.*.service.*Service.* (..))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="serviceOption"/>
-    </aop:config>
+
+
+
     <tx:advice id="txAdvice" transaction-manager="dataSourceTransactionManager">
         <tx:attributes>
-            <tx:method name="*" rollback-for="com.scht.common.ServiceException"/>
+            <tx:method name="*"  propagation="REQUIRED" rollback-for="Exception" />
         </tx:attributes>
     </tx:advice>
+
+    <aop:config proxy-target-class="true">
+        <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.scht.admin.service..*.*Service.*(..))" />
+    </aop:config>
+
+    <tx:annotation-driven transaction-manager="dataSourceTransactionManager" />
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
         <property name="basePackage" value="com.scht.admin.dao"/>
     </bean>
 
+    <bean id="baseMyBatisDao" class="com.scht.admin.dao.BaseMyBatisDao"/>
+
     <import resource="applicationContext-shiro.xml"/>
 
-
-
-    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg index="0" ref="sqlSessionFactory" />
-    </bean>
 </beans>
