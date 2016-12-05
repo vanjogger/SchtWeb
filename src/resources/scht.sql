@@ -494,3 +494,31 @@ f_price varchar(100) default '',
 f_amount int default 0,
 f_money varchar(100) default '0'
 );
+
+--  message record
+CREATE TABLE t_message_record(
+f_id varchar(32) primary key,
+f_telephone varchar(100) default '',
+f_message varchar(1000) default '',
+f_create_time bigint default 0,
+f_status varchar(32) not null,
+f_code varchar(32) default '',
+f_err_msg varchar(100) default '',
+f_ip varchar(32) default ''
+);
+
+-- order pay record
+
+CREATE TABLE t_order_pay_record(
+f_id varchar(32) primary key,
+f_no varchar(32) default '',
+f_order_id varchar(32) default '',
+f_order_no varchar(32) default '',
+f_money varchar(100) default '0',
+f_pay_type varchar(32) default '',
+f_status varchar(32) not null,
+f_create_time bigint default 0,
+f_pay_time bigint default 0,
+f_trade_no varchar(100) default '',
+f_buyer varchar(100) default ''
+);

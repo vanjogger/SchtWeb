@@ -3,6 +3,8 @@ package com.scht.admin.dao;
 import com.scht.admin.entity.Order;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2016/11/29.
  */
@@ -11,4 +13,7 @@ public interface OrderDao {
 
     Order findByNo(String no);
 
+    List<Order> listForTask(long time);
+
+    void update(Order order);
 }

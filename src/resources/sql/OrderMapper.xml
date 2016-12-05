@@ -172,4 +172,9 @@
             #{ids}
         </foreach>
     </delete>
+
+    <select id="listForTask" resultMap="my_order">
+        <![CDATA[select * from t_order where f_limit_time<#{time} and
+        f_status in ('CREATE','DISPATCH')]]>
+    </select>
 </mapper>

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.MessageRecordDao">
+
+    <resultMap id="my_message_record" type="com.scht.admin.entity.MessageRecord">
+        <id column="f_id" property="id"/>
+        <result column="f_telephone" property="telephone"/>
+        <result column="f_message" property="message"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_status" property="status"/>
+        <result column="f_code" property="code"/>
+        <result column="f_err_msg" property="errMsg"/>
+        <result column="f_ip" property="ip"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.MessageRecord">
+        insert into t_message_record(f_id,f_telephone,f_message,f_create_time,f_status,f_code,f_err_msg,f_ip)
+        values(#{id},#{telephone},#{message},#{createTime},#{status},#{code},#{errMsg},#{ip})
+    </insert>
+    <select id="findById" resultMap="my_message_record">
+        select * from t_message_record where f_id=#{id}
+    </select>
+    <select id="findByCode" resultMap="my_message_record">
+        SELECT * from t_message_record where f_code=#{code} and f_create_time>#{time} and f_status='0'
+    </select>
+</mapper>

@@ -1,7 +1,10 @@
 package com.scht.admin.dao;
 
+import com.scht.admin.entity.Product;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/11/27.
@@ -18,5 +21,5 @@ public interface ProductDao {
     void updateCommentCount(@Param("id")String id,@Param("count")int count);
 
 
-
+    List<Product> listByIds(String[] ids);
 }

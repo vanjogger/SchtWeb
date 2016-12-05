@@ -179,4 +179,10 @@
     <update id="updateCommentCount">
         update t_product set f_comment_count=f_comment_count+#{count} where f_id=#{id}
     </update>
+    <select id="listByIds" resultMap="my_product">
+        select * from t_product where f_id
+          IN <foreach collection="array" item="ids" open="(" separator="," close=")">
+        #{ids}
+    </foreach>
+        </select>
 </mapper>

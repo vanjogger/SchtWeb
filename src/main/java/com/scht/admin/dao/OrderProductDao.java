@@ -12,4 +12,6 @@ import java.util.List;
 public interface OrderProductDao {
 
     List<OrderProduct> listByOrderId(String orderId);
+
+    List<OrderProduct> listByOrderIds(String[] ids);
 }

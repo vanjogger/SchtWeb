@@ -24,6 +24,12 @@
     <select id="listByOrderId" resultMap="my_order_product">
         SELECT * from t_order_product where f_order_id=#{orderId}
     </select>
+    <select id="listByOrderIds" resultMap="my_order_product">
+        SELECT * from t_order_product where f_order_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </select>
     <delete id="delete">
         DELETE from t_order_product where f_order_id in
         <foreach collection="array" item="ids" open="(" separator="," close=")">

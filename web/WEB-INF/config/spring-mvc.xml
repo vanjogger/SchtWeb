@@ -74,4 +74,11 @@
 
     <!-- 定义aspectj -->
     <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <!-- task -->
+    <task:annotation-driven/>
+    <task:scheduled-tasks>
+        <!-- 定时执行订单关闭、完成 1小时执行1次 -->
+        <task:scheduled ref="orderTask" method="execute" cron="0 0 0/1 * * ?"/>
+    </task:scheduled-tasks>
 </beans>
