@@ -166,6 +166,9 @@
     <select id="findByNo" resultMap="my_order">
         SELECT * from t_order where f_no = #{no}
     </select>
+    <select id="findByCode" resultMap="my_order">
+        SELECT * from t_order where f_code = #{code}
+    </select>
     <delete id="delete">
         delete from t_order where f_id in
         <foreach collection="array" item="ids" open="(" separator="," close=")">

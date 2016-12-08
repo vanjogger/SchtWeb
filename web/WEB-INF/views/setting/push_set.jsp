@@ -8,6 +8,11 @@
   <link href="/resources/css/dpl-min.css" rel="stylesheet" type="text/css" />
   <link href="/resources/css/bui-min.css" rel="stylesheet" type="text/css" />
   <link href="/resources/css/page-min.css" rel="stylesheet" type="text/css" />
+  <style>
+    .control-label{
+
+    }
+  </style>
 </head>
 <body>
 
@@ -15,26 +20,43 @@
   <form id="J_Form" class="form-horizontal" action="/pushSet/save">
     <div class="row">
       <div class="control-group span20">
-        <label class="control-label">AppKey：</label>
+        <label class="control-label" style="width:150px;">Android AppKey：</label>
         <div class="controls">
-          <input name="appKey" type="text" data-tip="{text:'AppKey'}"
-                 value="${data.appKey}" class="input-normal control-text" style="width:200px;">
+          <input name="androidAppKey" type="text" data-tip="{text:'AndroidAppKey'}"
+                 value="${data.androidAppKey}" class="input-normal control-text" style="width:200px;">
         </div>
       </div>
     </div>
     <div class="row">
       <div class="control-group span20">
-        <label class="control-label">MasterSecret：</label>
+        <label class="control-label" style="width:150px;">Android MasterSecret：</label>
         <div class="controls">
-          <input name="masterSecret" type="text" data-tip="{text:'Master Secret'}"
-                 value="${data.masterSecret}" class="input-normal control-text" style="width:200px;">
+          <input name="androidMasterSecret" type="text" data-tip="{text:'Android Master Secret'}"
+                 value="${data.androidMasterSecret}" class="input-normal control-text" style="width:200px;">
         </div>
       </div>
     </div>
-
     <div class="row">
       <div class="control-group span20">
-        <label class="control-label">状态：</label>
+        <label class="control-label" style="width:150px;">IOS AppKey：</label>
+        <div class="controls">
+          <input name="iosAppKey" type="text" data-tip="{text:'IOS AppKey'}"
+                 value="${data.iosAppKey}" class="input-normal control-text" style="width:200px;">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label"  style="width:150px;">IOS MasterSecret：</label>
+        <div class="controls">
+          <input name="iosMasterSecret" type="text" data-tip="{text:'IOS Master Secret'}"
+                 value="${data.iosMasterSecret}" class="input-normal control-text" style="width:200px;">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label" style="width:150px;">状态：</label>
         <div class="controls">
           <label class="radio" for="status1"><input ID="status1" type="radio" name="status" value="NORMAL"
           ${(empty data.status || data.status=='NORMAL')?'checked':''}>开启</label>&nbsp;&nbsp;&nbsp;

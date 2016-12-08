@@ -154,7 +154,7 @@
           {id:'tgorder_list',text:'推广订单管理',href:'/order/list?orderType=EXTEND',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="xfm:list">
-          {id:'xfm_list',text:'消费码验证管理',href:'/order/list?orderType=EXTEND',closeable:true}
+          {id:'xfm_list',text:'消费码验证管理',href:'/order/verify',closeable:true}
           </shiro:hasPermission>
         ]}
       ]

@@ -8,15 +8,13 @@ package com.scht.admin.entity;
 public class PushSet {
 
     private String id;
-    private String AppKey;//app key
-    private String masterSecret;  // Master secret
+    private String androidAppKey;//app key
+    private String androidMasterSecret;  // Master secret
 
+    private String iosAppKey;
+    private String iosMasterSecret;
 
     private String status; //状态， 开启 关闭
-
-    public String getStatus() {
-        return status;
-    }
 
     public String getId() {
         return id;
@@ -26,20 +24,40 @@ public class PushSet {
         this.id = id;
     }
 
-    public String getAppKey() {
-        return AppKey;
+    public String getAndroidAppKey() {
+        return androidAppKey;
     }
 
-    public void setAppKey(String appKey) {
-        AppKey = appKey;
+    public void setAndroidAppKey(String androidAppKey) {
+        this.androidAppKey = androidAppKey;
     }
 
-    public String getMasterSecret() {
-        return masterSecret;
+    public String getAndroidMasterSecret() {
+        return androidMasterSecret;
     }
 
-    public void setMasterSecret(String masterSecret) {
-        this.masterSecret = masterSecret;
+    public void setAndroidMasterSecret(String androidMasterSecret) {
+        this.androidMasterSecret = androidMasterSecret;
+    }
+
+    public String getIosAppKey() {
+        return iosAppKey;
+    }
+
+    public void setIosAppKey(String iosAppKey) {
+        this.iosAppKey = iosAppKey;
+    }
+
+    public String getIosMasterSecret() {
+        return iosMasterSecret;
+    }
+
+    public void setIosMasterSecret(String iosMasterSecret) {
+        this.iosMasterSecret = iosMasterSecret;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public void setStatus(String status) {

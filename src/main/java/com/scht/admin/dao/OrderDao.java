@@ -16,4 +16,6 @@ public interface OrderDao {
     List<Order> listForTask(long time);
 
     void update(Order order);
+
+    Order findByCode(String code);
 }

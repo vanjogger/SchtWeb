@@ -263,12 +263,14 @@ create table base_advert_place(
  );
 
  -- push set
- create table base_push_set(
- f_id varchar(32) PRIMARY key,
- f_app_key varchar(32),
- f_master_secret varchar(64),
- f_status varchar(32)
- );
+CREATE TABLE t_push_set(
+f_id varchar(32) primary key,
+f_android_app_key varchar(100) default '',
+f_android_master_secret varchar(100) default '',
+f_ios_app_key varchar(100) default '',
+f_ios_master_secret varchar(100) default '',
+f_status varchar(100) not null
+);
 
  -- alipay set
  create table base_ali_pay_set(

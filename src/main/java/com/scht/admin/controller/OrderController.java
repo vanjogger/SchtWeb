@@ -11,6 +11,7 @@ import com.scht.admin.entity.OrderLimitSet;
 import com.scht.admin.entity.Shop;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.OrderProductService;
+import com.scht.admin.service.OrderService;
 import com.scht.admin.service.ShopService;
 import com.scht.common.BaseController;
 import com.scht.common.PageInfo;
@@ -42,6 +43,8 @@ public class OrderController extends BaseController {
     ShopService shopService;
     @Autowired
     OrderProductService orderProductService;
+    @Autowired
+    OrderService orderService;
 
     @RequestMapping("list")
     public String list(ModelMap map, String orderType){
@@ -152,6 +155,54 @@ public class OrderController extends BaseController {
                 order.setShopName(map.get(order.getShopId()));
             }
         }
+    }
+
+    //消费验证
+    @RequestMapping("verify")
+    public String verifyOrder(){
+        return "/order/verify";
+    }
+
+    //根据验证码查询订单
+    @RequestMapping("findByCode")
+    public String findByCode(String code,ModelMap map){
+        if(!StringUtil.isNullOrEmpty(code)) {
+            code = code.replaceAll("-","");
+            if(code.length() == 12){
+                code =  code.substring(0,4) + "-" + code.substring(4,8) + "-" +code.substring(8);
+                Order order = orderService.findByCode(code);
+                if(order != null){
+                    if (StringUtil.isNullOrEmpty(order.getShopId())) {
+                        Shop shop = this.baseService.findById(ShopDao.class, order.getShopId());
+                        order.setShopName(shop.getName());
+                    }
+                    order.setList(orderProductService.listByOrderId(order.getId()));
+                    map.put("data", order);
+                }
+            }
+        }
+        return "/order/order_verify";
+    }
+
+    //验证确认
+    @RequestMapping("verifySuccess")
+    @ResponseBody
+    public JSONObject verifySuccess(String id,HttpServletRequest request){
+        Order order = this.baseService.findById(OrderDao.class,id);
+        if(order == null) {
+            return this.FmtResult(false,"订单不存在",null);
+        }
+        if(!OrderStatus.PAY.name().equals(order.getStatus())){
+            return this.FmtResult(false,"该订单状态为："+OrderStatus.valueOf(order.getStatus()).getName()+"，不能验证",null);
+        }
+        try {
+            orderService.successOrder(order);
+            this.saveLog("验证订单：" + order.getNo(),request);
+            return this.FmtResult(true,"验证成功",null);
+        }catch (Exception e){
+            return this.FmtResult(false,"验证失败",null);
+        }
+
     }
 
 

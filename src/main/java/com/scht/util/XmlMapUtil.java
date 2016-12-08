@@ -23,7 +23,7 @@ public class XmlMapUtil {
     private static String Mapper_PreFix = "my";
 
     public static void main(String[] args) {
-        Class clazz = OrderPayRecord.class;
+        Class clazz = PushSet.class;
         System.out.println(createTableSql(clazz));
         System.out.println(createResultMapper(clazz));
         System.out.println(createSaveSql(clazz));

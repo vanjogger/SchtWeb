@@ -4,21 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.scht.admin.dao.PushSetDao">
 
-    <resultMap id="base_push_set" type="com.scht.admin.entity.PushSet">
+    <resultMap id="my_push_set" type="com.scht.admin.entity.PushSet">
         <id column="f_id" property="id"/>
-        <result column="f_app_key" property="appKey"/>
-        <result column="f_master_secret" property="masterSecret"/>
+        <result column="f_android_app_key" property="androidAppKey"/>
+        <result column="f_android_master_secret" property="androidMasterSecret"/>
+        <result column="f_ios_app_key" property="iosAppKey"/>
+        <result column="f_ios_master_secret" property="iosMasterSecret"/>
         <result column="f_status" property="status"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.PushSet">
-        insert into base_push_set (f_id, f_app_key,f_master_secret,f_status)
-        VALUES (#{id},#{appKey},#{masterSecret},#{status})
+        insert into t_push_set(f_id,f_android_app_key,f_android_master_secret,f_ios_app_key,f_ios_master_secret,f_status)
+        values(#{id},#{androidAppKey},#{androidMasterSecret},#{iosAppKey},#{iosMasterSecret},#{status})
     </insert>
-    <select id="findById" resultMap="base_push_set">
-        SELECT * from base_push_set
-    </select>
     <update id="update" parameterType="com.scht.admin.entity.PushSet">
-        update base_push_set set f_app_key=#{appKey},f_master_secret=#{masterSecret},f_status=#{status} where f_id=#{id}
+        update t_push_set
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="androidAppKey!=null and androidAppKey!=''">
+                f_android_app_key = #{androidAppKey},
+            </if>
+            <if test="androidMasterSecret!=null and androidMasterSecret!=''">
+                f_android_master_secret = #{androidMasterSecret},
+            </if>
+            <if test="iosAppKey!=null and iosAppKey!=''">
+                f_ios_app_key = #{iosAppKey},
+            </if>
+            <if test="iosMasterSecret!=null and iosMasterSecret!=''">
+                f_ios_master_secret = #{iosMasterSecret},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+        </set>
+        where f_id=#{id}
     </update>
-
+    <select id="findById" resultMap="my_push_set">
+        select * from t_push_set
+    </select>
 </mapper>
