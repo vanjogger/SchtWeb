@@ -524,3 +524,7 @@ f_pay_time bigint default 0,
 f_trade_no varchar(100) default '',
 f_buyer varchar(100) default ''
 );
+
+-- 修改t_shop_type
+alter table t_shop_type add f_parent_id varchar(32);
+alter table t_shop_type add f_is_product varchar(5);
