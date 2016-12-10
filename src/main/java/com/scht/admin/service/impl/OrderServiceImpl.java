@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Administrator on 2016/12/1.
@@ -34,6 +37,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     BaseMyBatisDao baseMyBatisDao;
+
+    private ExecutorService  executor = Executors.newCachedThreadPool();
 
     @Override
     public Order findByCode(String code) {
@@ -64,7 +69,8 @@ public class OrderServiceImpl implements OrderService {
         //增加销量、todo；
         //开启线程
         PushOrderThread thread = new PushOrderThread((PushSet)this.baseMyBatisDao.findById(PushSetDao.class,""), memberRecord,shopRecord);
-        new Thread(thread).start();
+        executor.execute(thread);
+        //new Thread(thread).start();
     }
 
     /**
@@ -95,6 +101,11 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
+    }
+
+    @Override
+    public Integer countOrder(Map params) {
+        return this.orderDao.countOrder(params);
     }
 
     private void updateProductStock(String[] orderIds){

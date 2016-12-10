@@ -114,4 +114,17 @@
         <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
     </delete>
 
+    <select id="countWithDrawals" parameterType="HashMap" resultType="Integer">
+        select count(t.f_id)
+        from t_shop_with_drawals t,t_shop s
+        <where>
+            t.f_shop_id = s.f_id
+            <if test="status!=null and status!=''">
+                and t.f_status = #{status}
+            </if>
+            <if test="agentId!=null and agentId!=''">
+                and s.f_agent_id = #{agentId}
+            </if>
+        </where>
+    </select>
  </mapper>

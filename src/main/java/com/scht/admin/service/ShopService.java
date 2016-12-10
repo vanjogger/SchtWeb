@@ -6,6 +6,7 @@ import net.sf.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vanjoger on 2016/11/26.
@@ -20,4 +21,6 @@ public interface ShopService {
 
     //根据名称查询列表
     List<Shop> listByName(String name);
+
+    Integer countShop(Map params);
 }

@@ -104,7 +104,14 @@
           <shiro:hasPermission name="tgproduct:list">
           {id:'tg_product_list',text:'推广商品管理',href:'/product/list?type=EXTEND',closeable:true}
           </shiro:hasPermission>
-        ]}
+        ]},
+        {
+          text:'商品评论管理',
+          items:[
+            <shiro:hasPermission name="product:commentlist">
+            {id:'product_comment_list',text:'商品评论管理',href:'/productComment/list',closeable:true}
+            </shiro:hasPermission>
+          ]}
       ]
     },{
       id:'shop_manage',

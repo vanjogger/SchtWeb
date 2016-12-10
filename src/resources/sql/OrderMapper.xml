@@ -180,4 +180,18 @@
         <![CDATA[select * from t_order where f_limit_time<#{time} and
         f_status in ('CREATE','DISPATCH')]]>
     </select>
+
+    <select id="countOrder" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_order
+        <where>
+            <if test="agentId!=null and agentId!=''">
+                and f_agent_id = #{agentId}
+            </if>
+            <if test="status!=null and status!=''">
+                and f_status = #{status}
+            </if>
+        </where>
+    </select>
+
 </mapper>

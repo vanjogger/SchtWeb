@@ -73,7 +73,7 @@ public class ShopChainController extends BaseController {
     }
 
     private void formatdata(List<Shop> list){
-        List<ShopType> data = shopTypeService.listMap();
+        List<ShopType> data = shopTypeService.listMap(new HashMap());
         Map<String,String> map = new HashMap<>();
         for(ShopType type:data){
             map.put(type.getId(),type.getName());

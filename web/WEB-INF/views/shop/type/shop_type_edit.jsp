@@ -31,6 +31,19 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label"><s>*</s>上级分类：</label>
+        <div class="controls">
+          <select name="parentId">
+              <option value="0"> --请选择-- </option>
+            <c:forEach items="${list}" var="e">
+              <option value="${e.id}" <c:if test="${parentId eq e.id}">selected</c:if>>${e.name}</option>
+            </c:forEach>
+          </select>
+        </div>
+      </div>
+    </div>
      <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>分类排序：</label>
@@ -39,6 +52,17 @@
         </div>
       </div>
     </div>
+
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">是否拉取商品套餐：</label>
+        <div class="controls">
+          <input type="radio" name="isProduct" value="0" <c:if test="${isProduct eq '0'}">checked</c:if>>否  &nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="radio" name="isProduct" value="1" <c:if test="${isProduct eq '1'}">checked</c:if>>是
+        </div>
+      </div>
+    </div>
+
 
     <div class="row">
       <div class="control-group span20">
@@ -52,10 +76,12 @@
       </div>
     </div>
 
+
+
     <div class="row form-actions actions-bar">
       <div class="span13 offset3 ">
         <button type="submit" class="button button-primary">保存</button>
-        <button type="reset" class="button">重置</button>
+        <button type="reset" class="button" onclick="back()">返回</button>
       </div>
     </div>
   </form>
@@ -82,11 +108,7 @@
       callback:function(data){
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
-            top.topManager.openPage({
-              id : 'shop_category_list',
-              isClose : true
-            });
-            top.topManager.reloadPage('shop_category_list');
+              back();
           }
         },'info');
       }
@@ -115,7 +137,15 @@
     }).render();
 
   });
+
+  function back(){
+    top.topManager.openPage({
+      id : 'shop_category_list',
+      isClose : true
+    });
+    top.topManager.reloadPage('shop_category_list');
+  }
 </script>
 
-<body>
+</body>
 </html> 

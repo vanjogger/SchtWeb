@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ProductCommentDao">
+
+    <resultMap id="my_product_comment" type="com.scht.admin.entity.ProductComment">
+        <id column="f_id" property="id"/>
+        <result column="f_product_id" property="productId"/>
+        <result column="f_product_name" property="productName"/>
+        <result column="f_order_id" property="orderId"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_grade" property="grade"/>
+        <result column="f_content" property="content"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_status" property="status"/>
+        <result column="f_reply_id" property="replyId"/>
+        <result column="f_reply_content" property="replyContent"/>
+        <result column="f_reply_time" property="replyTime"/>
+        <result column="f_member_name" property="memberName"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ProductComment">
+        insert into t_product_comment(f_id,f_product_id,f_product_name,f_order_id,f_shop_id,f_grade,f_content,f_member_id,f_create_time,f_status,f_reply_id,f_reply_content,f_reply_time)
+        values(#{id},#{productId},#{productName},#{orderId},#{shopId},#{grade},#{content},#{memberId},#{createTime},#{status},#{replyId},#{replyContent},#{replyTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ProductComment">
+        update t_product_comment
+        <set>
+            <if test="productId!=null and productId!=''">
+                f_product_id = #{productId},
+            </if>
+            <if test="productName!=null and productName!=''">
+                f_product_name = #{productName},
+            </if>
+            <if test="orderId!=null and orderId!=''">
+                f_order_id = #{orderId},
+            </if>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="grade!=null and grade!=''">
+                f_grade = #{grade},
+            </if>
+            <if test="content!=null and content!=''">
+                f_content = #{content},
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                f_member_id = #{memberId},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+            <if test="replyId!=null and replyId!=''">
+                f_reply_id = #{replyId},
+            </if>
+            <if test="replyContent!=null and replyContent!=''">
+                f_reply_content = #{replyContent},
+            </if>
+            <if test="replyTime!=null and replyTime!=''">
+                f_reply_time = #{replyTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+
+    <select id="findById" resultMap="my_product_comment">
+        select n.*,m.f_account as f_member_name
+        from t_product_comment n,base_member m
+         where n.f_id=#{id}
+    </select>
+
+    <select id="findAll" resultMap="my_product_comment">
+        select * from t_product_comment where 1=1 order by f_create_time desc
+    </select>
+
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_product_comment">
+        select n.*,m.f_account as f_member_name
+        from t_product_comment n,base_member m
+        <where>
+            n.f_member_id = m.f_id
+            <if test="productName != null and productName != ''">
+                and n.f_product_name=#{productName}
+            </if>
+            <if test="status != null and status != ''">
+                and n.f_status = #{status}
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and n.f_create_time >= #{startDate}
+                ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and n.f_create_time <= #{endDate}
+            ]]>
+            </if>
+        </where>
+        order by n.f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(n.f_id)
+        from t_product_comment n,base_member m
+        <where>
+            n.f_member_id = m.f_id
+            <if test="productName != null and productName != ''">
+                and n.f_product_name=#{productName}
+            </if>
+            <if test="status != null and status != ''">
+                and n.f_status = #{status}
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and n.f_create_time >= #{startDate}
+                ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and n.f_create_time <= #{endDate}
+            ]]>
+            </if>
+        </where>
+    </select>
+    <delete id="delete">
+        DELETE  from t_product_comment where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+
+</mapper>

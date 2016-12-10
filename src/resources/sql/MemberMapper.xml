@@ -75,4 +75,25 @@
         </where>
     </select>
 
+    <select id="countMember" parameterType="HashMap" resultType="int">
+        select count(f_id) from base_member
+        <where>
+
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+            <if test="startMills!=null and startMills!=0">
+                <![CDATA[
+                 and f_create_time >= #{startMills}
+                ]]>
+            </if>
+            <if test="endMills!=null and endMills!=0">
+                <![CDATA[
+                  and f_create_time <= #{endMills}
+               ]]>
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

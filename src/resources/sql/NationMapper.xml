@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.NationDao">
+
+    <resultMap id="my_nation" type="com.scht.admin.entity.Nation">
+        <id column="f_id" property="id"/>
+        <result column="f_mc" property="mc"/>
+        <result column="f_lx" property="lx"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.scht.admin.entity.Nation">
+        insert into t_nation(f_id,f_mc,f_lx)
+        values(#{id},#{mc},#{lx})
+    </insert>
+
+    <select id="findById" resultMap="my_nation">
+        select * from t_nation where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_nation">
+        select * from t_nation where 1=1
+    </select>
+
+    <select id="listByParentId"  parameterType="HashMap" resultMap="my_nation">
+        SELECT * FROM t_nation WHERE 1=1
+        <if test="lx!=null and lx!=''">
+           AND f_lx = #{lx}
+        </if>
+        <if test="id!=null and id!=''">
+            <if test="lx!=null and lx==2">
+                AND SUBSTR(f_id,1,2)=SUBSTR(#{id},1,2)
+            </if>
+            <if test="lx!=null and lx==3">
+                AND SUBSTR(f_id,1,4)=SUBSTR(#{id},1,4)
+            </if>
+        </if>
+        order by f_id
+    </select>
+</mapper>

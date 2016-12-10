@@ -26,6 +26,12 @@
 <div class="container">
   <form id="J_Form" class="form-horizontal" action="/shop/save">
     <input type="hidden" name="type" value="1"/>
+    <input type="hidden" name="provinceId" id="provinceId" />
+    <input type="hidden" name="provinceName" id="provinceName"/>
+    <input type="hidden" name="cityId" id="cityId" />
+    <input type="hidden" name="cityName" id="cityName"/>
+    <input type="hidden" name="districtId" id="districtId" />
+    <input type="hidden" name="districtName"  id="districtName"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>商家名称：</label>
@@ -42,7 +48,7 @@
         </div>
       </div>
     </div>
-     <div class="row">
+    <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>商家密码：</label>
         <div class="controls">
@@ -52,19 +58,33 @@
     </div>
 
     <div class="control-group">
-        <label class="control-label"><s>*</s>商家分类：</label>
+      <label class="control-label"><s>*</s>商家分类：</label>
       <div class="controls">
-         <select name="shopTypeId"  data-rules="{required:true}" data-loader="{url:'/shopType/listAll',property:'items',dataType:'json'}"></select>
-        </div>
+        <select name="shopTypeId"  data-rules="{required:true}" data-loader="{url:'/shopType/listAll',property:'items',dataType:'json'}"></select>
+      </div>
     </div>
 
     <div class="control-group"  style="height:120px;">
-        <label class="control-label">商家图标：</label>
+      <label class="control-label">商家图标：</label>
       <div class="controls">
         <div id="J_Uploader" style="margin-left: 100px;">
         </div>
         <input type="hidden" name="icon" id="icon" value="${dto.icon}"/>
-     </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">商家Code：</label>
+        <div class="controls">
+          <select name="code" id="code">
+            <option value=""> -- 请选择 -- </option>
+            <c:forEach items="${list}" var="e">
+              <option value="${e.key}">${e.value}</option>
+            </c:forEach>
+          </select>
+        </div>
+      </div>
     </div>
 
     <div class="row">
@@ -86,6 +106,23 @@
     </div>
 
     <div class="control-group">
+      <label class="control-label">所在区域：</label>
+      <div class="controls  control-row-auto">
+        <select id="t_province" name="t_province" onchange="loadArea(2)">
+
+        </select>
+        <select id="t_city"  name="t_city" onchange="loadArea(3)">
+
+        </select>
+        <select id="t_district" name="t_district">
+
+        </select>
+      </div>
+    </div>
+
+
+
+    <div class="control-group">
       <label class="control-label">地&nbsp;&nbsp;&nbsp;&nbsp;址：</label>
       <div class="controls  control-row-auto">
         <textarea  name="linkAddress" type="text" data-rules="{maxlength:100}" value="" class="control-row4 input-large"></textarea>
@@ -105,10 +142,10 @@
     </div>
 
     <div class="control-group">
-        <label class="control-label">备注：</label>
+      <label class="control-label">备注：</label>
       <div class="controls  control-row-auto">
-          <textarea  name="remark" type="text" data-rules="{maxlength:500}" value="" class="control-row4 input-large"></textarea>
-        </div>
+        <textarea  name="remark" type="text" data-rules="{maxlength:500}" value="" class="control-row4 input-large"></textarea>
+      </div>
 
     </div>
 
@@ -150,21 +187,27 @@
       srcNode : '#J_Form',
       submitType:"ajax",
       listeners:{
-      beforesubmit:function(){
-        if($("#J_Uploader img").length != 0) {
-          $("#icon").val($("#J_Uploader img").attr("src"));
+        beforesubmit:function(){
+          if($("#J_Uploader img").length != 0) {
+            $("#icon").val($("#J_Uploader img").attr("src"));
+          }
+          $("#provinceId").val($("#t_province").val());
+          $("#provinceName").val($("#t_province").find("option:selected").text());
+          $("#cityId").val($("#t_city").val());
+          $("#cityName").val($("#t_city").find("option:selected").text());
+          $("#districtId").val($("#t_district").val());
+          $("#districtName").val($("#t_district").find("option:selected").text());
+          return true;
         }
-        return true;
-      }
       },
       callback:function(data){
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'chain_shop_list',
+              id : 'shop_list',
               isClose : true
             });
-            top.topManager.reloadPage('chain_shop_list');
+            top.topManager.reloadPage('shop_list');
           }
         },'info');
       }
@@ -198,39 +241,73 @@
     $('#btnShow').on('click',function () {
       $(".dmdDialog").show();
     });
+    loadArea(1);
   })
+
+  function loadArea(i){
+    var parentId = "";
+    if(i==2){
+      parentId = $("#t_province").val();
+    }else if(i==3){
+      parentId = $("#t_city").val();
+    }
+    $.ajax({
+      url:"/common/listNationByParentId?r="+Math.random(),
+      type:"post",
+      data:{
+        lx : i,
+        id:parentId
+      },
+      success:function(res){
+        if(res.success){
+          var html = "<option value=''>-- 请选择 --</option>";
+          $.each(res.data,function(j,n){
+            html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+          })
+          if(i==1){
+            $("#t_province").html(html);
+          }else if(i==2){
+            $("#t_city").html(html);
+          }else if(i==3){
+            $("#t_district").html(html);
+          }
+        }
+      },
+      error:function(){}
+    })
+  }
 </script>
 
 <script type="text/javascript">
-    var xPoint,yPonit;
-    // 百度地图API功能
-    var map = new BMap.Map("allmap");
-    map.centerAndZoom(new BMap.Point(117.977485,37.388595), 11);
-    map.setCurrentCity("滨州");          // 设置地图显示的城市 此项是必须设置的
-    map.enableScrollWheelZoom(true);
-    map.addControl(new BMap.NavigationControl());
-    //单击获取点击的经纬度
-    map.addEventListener("click",function(e){
-      xPoint=e.point.lng;
-      yPoint=e.point.lat;
-      var point = new BMap.Point(e.point.lng, e.point.lat);
+  var xPoint,yPonit;
+  // 百度地图API功能
+  var map = new BMap.Map("allmap");
+  map.centerAndZoom(new BMap.Point(117.977485,37.388595), 11);
+  map.setCurrentCity("滨州");          // 设置地图显示的城市 此项是必须设置的
+  map.enableScrollWheelZoom(true);
+  map.addControl(new BMap.NavigationControl());
+  //单击获取点击的经纬度
+  map.addEventListener("click",function(e){
+    xPoint=e.point.lng;
+    yPoint=e.point.lat;
+    var point = new BMap.Point(e.point.lng, e.point.lat);
 
-      var marker = new BMap.Marker(point);
-      map.clearOverlays();
-      map.addOverlay(marker);
-    });
-    function G(id) {
-      return document.getElementById(id);
-    }
+    var marker = new BMap.Marker(point);
+    map.clearOverlays();
+    map.addOverlay(marker);
+  });
+  function G(id) {
+    return document.getElementById(id);
+  }
 
-    function closeDialog(){
-      $('.dmdDialog').hide();
-    }
-    function savePoint(){
-      $('#lng').val(xPoint);
-      $('#lnt').val(yPoint);
-      $('.dmdDialog').hide();
-    }
+  function closeDialog(){
+    $('.dmdDialog').hide();
+  }
+  function savePoint(){
+    $('#lng').val(xPoint);
+    $('#lnt').val(yPoint);
+    $('.dmdDialog').hide();
+  }
 
   var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
           {"input" : "suggestId"

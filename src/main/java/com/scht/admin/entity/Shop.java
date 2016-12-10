@@ -24,7 +24,15 @@ public class Shop {
     private String remark;
     private Long createTime;//
     private Float lng;//经度
-    private Float lnt;//纬度
+    private Float lat;//纬度
+    private String code;
+    private String provinceId;//所在省id
+    private String provinceName;//所在省名称
+    private String cityId;//所在地市
+    private String cityName;//
+    private String districtId;//所在区域
+    private String districtName;
+
 
 
     private List<SubShop> list;
@@ -168,11 +176,67 @@ public class Shop {
         this.lng = lng;
     }
 
-    public Float getLnt() {
-        return lnt;
+    public Float getLat() {
+        return lat;
     }
 
-    public void setLnt(Float lnt) {
-        this.lnt = lnt;
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
     }
 }

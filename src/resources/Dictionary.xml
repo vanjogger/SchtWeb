@@ -1,5 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
+    <ShopCode>
+        <item Key="0">code1</item>
+        <item Key="1">code2</item>
+        <item Key="2">code3</item>
+        <item Key="3">code4</item>
+    </ShopCode>
+
+
     <!--接口状态码 -->
     <RetCode>
         <item Key="0">请求成功</item>

@@ -2,21 +2,17 @@ package com.scht.admin.controller;
 
 import com.scht.admin.bean.Status;
 import com.scht.admin.dao.ShopDao;
-import com.scht.admin.dao.ShopMoneyDao;
-import com.scht.admin.dao.ShopTypeDao;
 import com.scht.admin.entity.Admin;
+import com.scht.admin.entity.Nation;
 import com.scht.admin.entity.Shop;
-import com.scht.admin.entity.ShopMoney;
 import com.scht.admin.entity.ShopType;
 import com.scht.admin.service.BaseService;
+import com.scht.admin.service.NationService;
 import com.scht.admin.service.ShopService;
 import com.scht.admin.service.ShopTypeService;
-import com.scht.common.BaseController;
-import com.scht.common.ConfigHelper;
-import com.scht.common.PageInfo;
+import com.scht.common.*;
 import com.scht.util.MD5Util;
 import com.scht.util.StringUtil;
-import com.scht.util.UUIDFactory;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +37,8 @@ public class ShopController extends BaseController {
     BaseService baseService;
     @Autowired
     ShopTypeService shopTypeService;
+    @Autowired
+    NationService nationService;
 
     @RequestMapping("/list")
     public String list(){
@@ -61,8 +58,6 @@ public class ShopController extends BaseController {
         if(admin.getType().equals("1")){//代理商
             params.put("agentId", admin.getId());
         }
-
-
         page.setParams(params);
         this.page(ShopDao.class, page);
 
@@ -74,7 +69,7 @@ public class ShopController extends BaseController {
     }
 
     private void formatdata(List<Shop> list){
-        List<ShopType> data = shopTypeService.listMap();
+        List<ShopType> data = shopTypeService.listMap(new HashMap());
         Map<String,String> map = new HashMap<>();
         for(ShopType type:data){
             map.put(type.getId(),type.getName());
@@ -89,6 +84,8 @@ public class ShopController extends BaseController {
 
     @RequestMapping("/beforeAdd")
     public String beforeAdd(Model model){
+        List<DictionaryEntity> list = DictionaryConfigHelper.getDictionaryEntityList("ShopCode");
+        model.addAttribute("list",list);
         return "shop/info/shop_info_add";
     }
 
@@ -98,6 +95,9 @@ public class ShopController extends BaseController {
             Shop data = this.baseService.findById(ShopDao.class,id);
             model.addAttribute("dto",data);
         }
+
+        List<DictionaryEntity> list = DictionaryConfigHelper.getDictionaryEntityList("ShopCode");
+        model.addAttribute("list",list);
 
         return "shop/info/shop_info_edit";
     }

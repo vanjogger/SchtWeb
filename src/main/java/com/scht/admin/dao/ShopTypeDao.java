@@ -14,7 +14,8 @@ import java.util.Map;
 public interface ShopTypeDao {
     List<ShopType> listBySort(@Param("sort")int sort);
 
-    List<ShopType> listMap();
+    List<ShopType> listMap(Map map);
 
     List<ShopType> listByKey(@Param("key")String key);
+
 }

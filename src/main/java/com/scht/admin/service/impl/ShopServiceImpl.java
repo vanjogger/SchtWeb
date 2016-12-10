@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vanjoger on 2016/11/26.
@@ -95,5 +96,10 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public List<Shop> listByName(String name) {
         return shopDao.listByName(name);
+    }
+
+    @Override
+    public Integer countShop(Map params) {
+        return this.shopDao.countShop(params);
     }
 }

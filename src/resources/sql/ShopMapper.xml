@@ -19,11 +19,20 @@
         <result column="f_remark" property="remark"/>
         <result column="f_create_time" property="createTime"/>
         <result column="f_lng" property="lng"/>
-        <result column="f_lnt" property="lnt"/>
+        <result column="f_lat" property="lat"/>
+        <result column="f_code" property="code"/>
+        <result column="f_province_id" property="provinceId"/>
+        <result column="f_province_name" property="provinceName"/>
+        <result column="f_city_id" property="cityId"/>
+        <result column="f_city_name" property="cityName"/>
+        <result column="f_district_id" property="districtId"/>
+        <result column="f_district_name" property="districtName"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.Shop">
-        insert into t_shop(f_id,f_name,f_account,f_password,f_shop_type_id,f_type,f_icon,f_status,f_link_name,f_link_mobile,f_link_address,f_agent_id,f_remark,f_create_time,f_lng,f_lnt)
-        values(#{id},#{name},#{account},#{password},#{shopTypeId},#{type},#{icon},#{status},#{linkName},#{linkMobile},#{linkAddress},#{agentId},#{remark},#{createTime},#{lng},#{lnt})
+        insert into t_shop(f_id,f_name,f_account,f_password,f_shop_type_id,f_type,f_icon,f_status,f_link_name,f_link_mobile,f_link_address,f_agent_id,f_remark,f_create_time,f_lng,f_lat,f_code,f_province_id,
+        f_province_name,f_city_id,f_city_name,f_district_id,f_district_name)
+        values(#{id},#{name},#{account},#{password},#{shopTypeId},#{type},#{icon},#{status},#{linkName},#{linkMobile},#{linkAddress},#{agentId},#{remark},#{createTime},#{lng},#{lat},#{code},#{provinceId},
+        #{provinceName},#{cityId},#{cityName},#{districtId},#{districtName})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Shop">
         update t_shop
@@ -70,8 +79,29 @@
             <if test="lng!=null and lng!=''">
                 f_lng = #{lng},
             </if>
-            <if test="lnt!=null and lnt!=''">
-                f_lnt = #{lnt},
+            <if test="lat!=null and lat!=''">
+                f_lat = #{lat},
+            </if>
+            <if test="code!=null and code!=''">
+                f_code = #{code},
+            </if>
+            <if test="provinceId!=null and provinceId!=''">
+                f_province_id = #{provinceId},
+            </if>
+            <if test="provinceName!=null and provinceName!=''">
+                f_province_name = #{provinceName},
+            </if>
+            <if test="cityId!=null and cityId!=''">
+                f_city_id = #{cityId},
+            </if>
+            <if test="cityName!=null and cityName!=''">
+                f_city_name = #{cityName},
+            </if>
+            <if test="districtId!=null and districtId!=''">
+                f_district_id = #{districtId},
+            </if>
+            <if test="districtName!=null and districtName!=''">
+                f_district_name = #{districtName},
             </if>
         </set>
         where f_id=#{id}
@@ -144,5 +174,19 @@
           </if>
         </where>
         order by f_create_time desc
+    </select>
+
+
+    <select id="countShop" parameterType="HashMap" resultType="Integer">
+        select count(f_id)
+        from t_shop
+        <where>
+            <if test="agentId!=null and agentId!=''">
+                and f_agent_id = #{agentId}
+            </if>
+            <if test="status!=null and status!=''">
+                and f_status = #{status}
+            </if>
+        </where>
     </select>
 </mapper>

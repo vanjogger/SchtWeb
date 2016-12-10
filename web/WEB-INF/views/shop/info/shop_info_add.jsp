@@ -26,6 +26,12 @@
 <div class="container">
   <form id="J_Form" class="form-horizontal" action="/shop/save">
     <input type="hidden" name="type" value="0"/>
+    <input type="hidden" name="provinceId" id="provinceId" />
+    <input type="hidden" name="provinceName" id="provinceName"/>
+    <input type="hidden" name="cityId" id="cityId" />
+    <input type="hidden" name="cityName" id="cityName"/>
+    <input type="hidden" name="districtId" id="districtId" />
+    <input type="hidden" name="districtName"  id="districtName"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>商家名称：</label>
@@ -69,6 +75,20 @@
 
     <div class="row">
       <div class="control-group span20">
+        <label class="control-label">商家Code：</label>
+        <div class="controls">
+          <select name="code" id="code">
+            <option value=""> -- 请选择 -- </option>
+            <c:forEach items="${list}" var="e">
+              <option value="${e.key}">${e.value}</option>
+            </c:forEach>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="control-group span20">
         <label class="control-label">联系人：</label>
         <div class="controls">
           <input name="linkName" type="text" data-rules="{maxlength:50}" value="" class="input-large"/>
@@ -84,6 +104,23 @@
         </div>
       </div>
     </div>
+
+    <div class="control-group">
+      <label class="control-label">所在区域：</label>
+      <div class="controls  control-row-auto">
+        <select id="t_province" name="t_province" onchange="loadArea(2)">
+
+        </select>
+        <select id="t_city"  name="t_city" onchange="loadArea(3)">
+
+        </select>
+        <select id="t_district" name="t_district">
+
+        </select>
+      </div>
+    </div>
+
+
 
     <div class="control-group">
       <label class="control-label">地&nbsp;&nbsp;&nbsp;&nbsp;址：</label>
@@ -154,6 +191,12 @@
         if($("#J_Uploader img").length != 0) {
           $("#icon").val($("#J_Uploader img").attr("src"));
         }
+        $("#provinceId").val($("#t_province").val());
+        $("#provinceName").val($("#t_province").find("option:selected").text());
+        $("#cityId").val($("#t_city").val());
+        $("#cityName").val($("#t_city").find("option:selected").text());
+        $("#districtId").val($("#t_district").val());
+        $("#districtName").val($("#t_district").find("option:selected").text());
         return true;
       }
       },
@@ -198,7 +241,41 @@
     $('#btnShow').on('click',function () {
       $(".dmdDialog").show();
     });
+    loadArea(1);
   })
+
+  function loadArea(i){
+    var parentId = "";
+    if(i==2){
+      parentId = $("#t_province").val();
+    }else if(i==3){
+      parentId = $("#t_city").val();
+    }
+      $.ajax({
+        url:"/common/listNationByParentId?r="+Math.random(),
+        type:"post",
+        data:{
+          lx : i,
+          id:parentId
+        },
+        success:function(res){
+          if(res.success){
+            var html = "<option value=''>-- 请选择 --</option>";
+            $.each(res.data,function(j,n){
+              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+            })
+            if(i==1){
+              $("#t_province").html(html);
+            }else if(i==2){
+              $("#t_city").html(html);
+            }else if(i==3){
+              $("#t_district").html(html);
+            }
+          }
+        },
+        error:function(){}
+      })
+  }
 </script>
 
 <script type="text/javascript">

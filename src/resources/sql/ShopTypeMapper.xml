@@ -10,10 +10,12 @@
         <result column="f_sort" property="sort"/>
         <result column="f_icon" property="icon"/>
         <result column="f_status" property="status"/>
+        <result column="f_parent_id" property="parentId"/>
+        <result column="f_is_product" property="isProduct"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.ShopType">
-        insert into t_shop_type(f_id,f_name,f_key,f_sort,f_icon,f_status)
-        values(#{id},#{name},#{key},#{sort},#{icon},#{status})
+        insert into t_shop_type(f_id,f_name,f_key,f_sort,f_icon,f_status,f_parent_id,f_is_product)
+        values(#{id},#{name},#{key},#{sort},#{icon},#{status},#{parentId},#{isProduct})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.ShopType">
         update t_shop_type
@@ -32,6 +34,12 @@
             </if>
             <if test="status!=null and status!=''">
                 f_status = #{status},
+            </if>
+            <if test="parentId!=null and parentId!=''">
+                f_parent_id = #{parentId},
+            </if>
+            <if test="isProduct!=null and isProduct!=''">
+                f_is_product = #{isProduct},
             </if>
         </set>
         where f_id=#{id}
@@ -52,6 +60,9 @@
             <if test="name != null and name != ''">
                 and f_name like CONCAT("%",#{name},"%")
             </if>
+            <if test="parentId!=null and parentId!=''">
+                and f_parent_id = #{parentId}
+            </if>
         </where>
         order by f_sort asc
         limit #{start},#{limit}
@@ -62,6 +73,9 @@
             f_status = 'NORMAL'
             <if test="name != null and name != ''">
                 and f_name like CONCAT("%",#{name},"%")
+            </if>
+            <if test="parentId!=null and parentId!=''">
+                and f_parent_id = #{parentId}
             </if>
         </where>
     </select>
@@ -80,5 +94,10 @@
 
     <select id="listMap"  parameterType="HashMap" resultMap="my_shop_type">
         select * from t_shop_type where  f_status = 'NORMAL'
+        <if test="parentId!=null and parentId!=''">
+            and f_parent_id = #{parentId}
+        </if>
     </select>
+
+
 </mapper>

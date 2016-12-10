@@ -27,6 +27,12 @@
   <form id="J_Form" class="form-horizontal" action="/shop/save">
     <input type="hidden" name="id" value="${dto.id}"/>
     <input type="hidden" name="type" value="${dto.type}"/>
+    <input type="hidden" name="provinceId" id="provinceId" value="${dto.provinceId}"/>
+    <input type="hidden" name="provinceName" value="${dto.provinceName}"/>
+    <input type="hidden" name="cityId" id="cityId" value="${dto.cityId}"/>
+    <input type="hidden" name="cityName" value="${dto.cityName}"/>
+    <input type="hidden" name="districtId" id="districtId" value="${dto.districtId}"/>
+    <input type="hidden" name="districtName" value="${dto.districtName}"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>商家名称：</label>
@@ -46,9 +52,9 @@
 
 
     <div class="control-group">
-        <label class="control-label"><s>*</s>商家分类：</label>
-        <div class="controls">
-          <select name="shopTypeId" value="${dto.shopTypeId}"  data-rules="{required:true}" data-loader="{url:'/shopType/listAll',property:'items',dataType:'json'}"></select>
+      <label class="control-label"><s>*</s>商家分类：</label>
+      <div class="controls">
+        <select name="shopTypeId" value="${dto.shopTypeId}"  data-rules="{required:true}" data-loader="{url:'/shopType/listAll',property:'items',dataType:'json'}"></select>
       </div>
     </div>
 
@@ -63,6 +69,21 @@
         <input type="hidden" name="icon" id="icon" value="${dto.icon}"/>
       </div>
     </div>
+
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">商家Code：</label>
+        <div class="controls">
+          <select name="code" id="code">
+            <option value=""> -- 请选择 -- </option>
+            <c:forEach items="${list}" var="e">
+              <option value="${e.key}" <c:if test="${dto.code eq e.key}">selected</c:if>>${e.value}</option>
+            </c:forEach>
+          </select>
+        </div>
+      </div>
+    </div>
+
 
     <div class="row">
       <div class="control-group span20">
@@ -82,6 +103,20 @@
       </div>
     </div>
 
+    <div class="control-group">
+      <label class="control-label">所在区域：</label>
+      <div class="controls  control-row-auto">
+        <select id="t_province" name="t_province" onchange="loadArea(2)">
+
+        </select>
+        <select id="t_city"  name="t_city" onchange="loadArea(3)">
+
+        </select>
+        <select id="t_district" name="t_district">
+
+        </select>
+      </div>
+    </div>
 
 
     <div class="control-group">
@@ -98,7 +133,7 @@
         <label class="control-label">商家位置：</label>
         <div class="controls">
           经度：<input type="text" name="lng" id="lng"  class="control-text" style="width:80px;" value="${dto.lng}"/>
-          纬度：<input type="text" id="lnt" name="lnt"  class="control-text" style="width:80px;" value="${dto.lnt}"/>
+          纬度：<input type="text" id="lat" name="lat"  class="control-text" style="width:80px;" value="${dto.lat}"/>
           <input type="button" value="标注位置" id="btnShow"/>
         </div>
       </div>
@@ -153,6 +188,12 @@
           if($("#J_Uploader img").length != 0) {
             $("#icon").val($("#J_Uploader img").attr("src"));
           }
+          $("#provinceId").val($("#t_province").val());
+          $("#provinceName").val($("#t_province").find("option:selected").text());
+          $("#cityId").val($("#t_city").val());
+          $("#cityName").val($("#t_city").find("option:selected").text());
+          $("#districtId").val($("#t_district").val());
+          $("#districtName").val($("#t_district").find("option:selected").text());
           return true;
         }
       },
@@ -160,10 +201,10 @@
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'chain_shop_list',
+              id : 'shop_list',
               isClose : true
             });
-            top.topManager.reloadPage('chain_shop_list');
+            top.topManager.reloadPage('shop_list');
           }
         },'info');
       }
@@ -197,28 +238,92 @@
     $('#btnShow').on('click',function () {
       $(".dmdDialog").show();
     });
+    loadArea(1);
+    var cId = $("#cityId").val();
+    if(cId!='')
+      loadArea(2);
+    var dId = $("#districtId").val();
+    if(dId!='')
+      loadArea(3);
   })
+
+  function loadArea(i){
+    var parentId = "";
+    if(i==2){
+      parentId = $("#t_province").val();
+      if(parentId=='')
+        parentId = $("#provinceId").val();
+    }else if(i==3){
+      parentId = $("#t_city").val();
+      if(parentId=='')
+        parentId = $("#cityId").val();
+    }
+    $.ajax({
+      url:"/common/listNationByParentId?r="+Math.random(),
+      type:"post",
+      data:{
+        lx : i,
+        id:parentId
+      },
+      success:function(res){
+        if(res.success){
+          var html = "<option value=''>-- 请选择 --</option>";
+          $.each(res.data,function(j,n){
+            html += "<option value='"+ n.id+"'";
+            var sel = "";
+            var pId = $("#provinceId").val();
+            var cId = $("#cityId").val();
+            var dId = $("#districtId").val();
+            if(i==1){
+              if(n.id==pId)
+                sel = " selected ";
+            }else if(i==2){
+              if(n.id==cId)
+                sel = " selected ";
+            }else if(i==3){
+              if(n.id==dId)
+                sel = " selected ";
+            }
+            html += sel + ">";
+            html += n.mc;
+            html += "</option>"
+          })
+          if(i==1){
+            $("#t_province").html(html);
+          }else if(i==2){
+            $("#t_city").html(html);
+          }else if(i==3){
+            $("#t_district").html(html);
+          }
+        }
+      },
+      error:function(){}
+    })
+  }
+
+
+
 </script>
 
 <script type="text/javascript">
   var xPoint,yPonit;
   var lng = '${dto.lng}';
-  var lnt = '${dto.lnt}';
+  var lat = '${dto.lat}';
   if(lng==''){
     lng = '117.977485';
   }
-  if(lnt==''){
-    lnt = '37.388595';
+  if(lat==''){
+    lat = '37.388595';
   }
   // 百度地图API功能
   var map = new BMap.Map("allmap");
-  map.centerAndZoom(new BMap.Point(lng,lnt), 11);
+  map.centerAndZoom(new BMap.Point(lng,lat), 11);
   map.setCurrentCity("滨州");          // 设置地图显示的城市 此项是必须设置的
   map.enableScrollWheelZoom(true);
   //map.centerAndZoom(new BMap.Point(117.981509,37.386301), 11);
   map.addControl(new BMap.NavigationControl());
 
-  var pt = new BMap.Point(lng, lnt);
+  var pt = new BMap.Point(lng, lat);
   var marker2 = new BMap.Marker(pt);  // 创建标注
   map.addOverlay(marker2);
 
@@ -241,7 +346,7 @@
   }
   function savePoint(){
     $('#lng').val(xPoint);
-    $('#lnt').val(yPoint);
+    $('#lat').val(yPoint);
     $('.dmdDialog').hide();
   }
 

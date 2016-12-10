@@ -3,9 +3,11 @@ package com.scht.admin.service.impl;
 import com.scht.admin.dao.ShopTypeDao;
 import com.scht.admin.entity.ShopType;
 import com.scht.admin.service.ShopTypeService;
+import com.scht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,12 +26,28 @@ public class ShopTypeServiceImpl implements ShopTypeService {
     }
 
     @Override
-    public List<ShopType> listMap() {
-        return this.shopTypeDao.listMap();
+    public List<ShopType> listMap(Map params) {
+        return this.shopTypeDao.listMap(params);
     }
 
     @Override
     public List<ShopType> listByKey(String key) {
         return this.shopTypeDao.listByKey(key);
     }
+
+    @Override
+    public List<ShopType> listAll(Map params) {
+        List<ShopType> list = this.shopTypeDao.listMap(params);
+        if(StringUtil.isNotEmpty(list)){
+            Map map = new HashMap();
+            for(ShopType shopType:list){
+                map.put("parentId",shopType.getId());
+                List<ShopType> subs = this.shopTypeDao.listMap(params);
+                shopType.setSubs(subs);
+            }
+        }
+        return list;
+    }
+
+
 }

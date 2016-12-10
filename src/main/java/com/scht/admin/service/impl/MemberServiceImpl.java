@@ -6,6 +6,8 @@ import com.scht.admin.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 /**
  * Created by Administrator on 2016/11/25.
  */
@@ -18,5 +20,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member findByAccount(String account) {
         return memberDao.findByAccount(account);
+    }
+
+    @Override
+    public Integer countMember(Map params) {
+        return this.memberDao.countMember(params);
     }
 }

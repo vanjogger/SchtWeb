@@ -21,6 +21,7 @@
           <input type="text" class="control-text" name="name">
         </div>
       </div>
+        <input type="hidden" name="parentId" id="parentId" value="${parentId}"/>
 <%--
       <div class="control-group span8">
         <label class="control-label">状态：</label>
@@ -67,21 +68,16 @@
                   var delStr = "";
                   if(obj.status=='NORMAL')
                      delStr =  "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"del('"+obj.id+"')\">删除</a>&nbsp;&nbsp;";
-                  var substr =  Search.createLink({ //链接使用 此方式
-                      id : 'sub' + obj.id,
-                      title : obj.name,
-                      text : '下级分类',
-                      href : '/shopType/listSub?parentId='+obj.id
-                  });
-                return editStr+delStr+substr;
+
+                return editStr+delStr;
               }}
             ];
-            store = Search.createStore('/shopType/listData');
+            store = Search.createStore('/shopType/listSubData');
             gridCfg = Search.createGridCfg(columns,{
               tbar : {
                 items : [
                   {text : '<i class="icon-plus"></i>新建',btnCls : 'button button-small',handler:function(){
-                      top.topManager.openPage({id:"shopType_add",href:"/shopType/beforeEdit",title:"新增"});
+                      top.topManager.openPage({id:"shopType_add",href:"/shopType/beforeEdit?parentId="+$("#parentId").val(),title:"新增"});
                   }}
                 ]
               },

@@ -1,6 +1,7 @@
 package com.scht.admin.service;
 
 import com.scht.admin.entity.ShopType;
+import com.scht.common.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,11 @@ import java.util.Map;
 public interface ShopTypeService {
     List<ShopType> listBySort(int sort);
 
-    List<ShopType> listMap();
+    List<ShopType> listMap(Map params);
 
     List<ShopType> listByKey(String key);
+
+    List<ShopType> listAll(Map params);
+
+
 }
