@@ -1,8 +1,11 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.ShopBank;
+import com.scht.front.bean.RestProduct;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by vanjoger on 2016/12/2.
@@ -14,4 +17,8 @@ public interface ShopBankDao {
     ShopBank findById(@Param("id")String id);
 
     void update(ShopBank bank);
+
+    List<RestProduct> list(@Param("shopId")String shopId, @Param("start")int start, @Param("size")int size);
+
+    Integer count(@Param("shopId")String shopId);
 }

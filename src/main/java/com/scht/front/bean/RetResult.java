@@ -65,6 +65,8 @@ public class RetResult implements Serializable {
         public static final String Operate_Error = "406";
         //非法操作
         public static final String Illegal_Request = "10000";
+
+		//用户接口返回码以 100 打头
         //用户不存在
         public static final String User_Not_Exist = "10001";
         //用户登录密码错误
@@ -85,6 +87,13 @@ public class RetResult implements Serializable {
         //用户旧密码错误
         public static final String User_Old_Pwd_Error = "10014";
 
+		// 商家接口返回码以 200打头
+		//商家不存在
+		public static final String Shop_Not_Exist = "20001";
+		//商家密码错误
+		public static final String Shop_Pwd_Error = "20002";
+		//银行卡不存在
+		public static final String Shop_Bank_Not_Exist = "20003";
 		
 	}
 }

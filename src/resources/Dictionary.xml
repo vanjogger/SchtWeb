@@ -13,7 +13,7 @@
         <item Key="0">请求成功</item>
         <item Key="400">错误的请求格式</item>
         <item Key="401">非法APP请求，认证失败</item>
-        <item Key="402">系统执行过程中出错！</item>
+        <item Key="402">出错了！</item>
         <item Key="406">操作失败</item>
         <item Key="500">系统错误</item>
         <item Key="10000">非法操作</item>
@@ -29,6 +29,9 @@
         <item Key="10012">短信发送频繁，30分钟同一手机号码最多发送5条短信</item>
         <item Key="10013">短信验证码已失效</item>
         <item Key="10014">您输入的旧密码错误</item>
+        <item Key="20001">商家不存在</item>
+        <item Key="20002">密码错误</item>
+        <item Key="20003">商家银行卡不存在</item>
     </RetCode>
 </root>
 

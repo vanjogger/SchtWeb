@@ -2,6 +2,7 @@ package com.scht.admin.service;
 
 import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.Shop;
+import com.scht.front.bean.RetResult;
 import net.sf.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,4 +24,10 @@ public interface ShopService {
     List<Shop> listByName(String name);
 
     Integer countShop(Map params);
+
+    RetResult restLogin(String account, String password);
+
+    RetResult updateInfo(String id, String linkName, String linkMobile, String linkAddress);
+
+    RetResult updatePwd(String id, String oldPwd, String newPwd);
 }

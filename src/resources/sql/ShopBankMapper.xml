@@ -77,4 +77,23 @@
         <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
     </delete>
 
+    <select id="list" parameterType="HashMap" resultMap="my_shop_bank">
+        select * from t_shop_bank
+        <where>
+            1=1
+            <if test="shopId!=null and shopId!=''">
+                and f_shop_id = #{shopId}
+            </if>
+        </where>
+    </select>
+
+    <select id="count" parameterType="HashMap" resultType="Integer">
+        select count(f_id) from t_shop_bank
+        <where>
+            1=1
+            <if test="shopId!=null and shopId!=''">
+                and f_shop_id = #{shopId}
+            </if>
+        </where>
+    </select>
  </mapper>

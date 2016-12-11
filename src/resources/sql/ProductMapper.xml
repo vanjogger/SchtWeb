@@ -25,6 +25,23 @@
         <result column="f_self" property="self"/>
         <result column="f_shop_id" property="shopId"/>
     </resultMap>
+
+    <resultMap id="rest_product" type="com.scht.front.bean.RestProduct">
+        <id column="f_id" property="id"/>
+        <result column="f_title" property="title"/>
+        <result column="f_type_name" property="typeName"/>
+        <result column="f_type_id" property="typeId"/>
+        <result column="f_description" property="description"/>
+        <result column="f_price" property="price"/>
+        <result column="f_market_price" property="marketPrice"/>
+        <result column="f_images" property="images"/>
+        <result column="f_stock" property="stock"/>
+        <result column="f_sale_count" property="saleCount"/>
+        <result column="f_virtual_count" property="virtualCount"/>
+        <result column="f_comment_count" property="commentCount"/>
+    </resultMap>
+
+
     <insert id="insert" parameterType="com.scht.admin.entity.Product">
         insert into t_product(f_id,f_title,f_product_type,f_type_id,f_description,f_price,f_market_price,f_agent_id,f_images,f_stock,f_sale_count,f_virtual_count,f_comment_count,f_content,f_status,f_create_time,f_sort,f_self,f_shop_id)
         values(#{id},#{title},#{productType},#{typeId},#{description},#{price},#{marketPrice},#{agentId},#{images},#{stock},#{saleCount},#{virtualCount},#{commentCount},#{content},#{status},#{createTime},#{sort},#{self},#{shopId})
@@ -182,7 +199,41 @@
     <select id="listByIds" resultMap="my_product">
         select * from t_product where f_id
           IN <foreach collection="array" item="ids" open="(" separator="," close=")">
-        #{ids}
-    </foreach>
-        </select>
+               #{ids}
+              </foreach>
+     </select>
+
+
+
+    <select id="list" parameterType="HashMap" resultMap="rest_product">
+      SELECT t.f_id,t.f_title,p.f_name as f_type_name,t.f_type_id,t.f_description,t.f_price,t.f_market_price,t.f_images,t.f_stock,t.f_sale_count,t.f_virtual_count,t.f_comment_count
+      FROM t_product t,t_product_type p
+      <where>
+          t.f_type_id = p.f_id
+          <if test="shopId!=null and shopId!=''">
+              and t.f_shop_id = #{shopId}
+          </if>
+          <if test="title!=null and title!=''">
+              and t.f_title like CONCAT("%",#{title},"%")
+          </if>
+          order by t.f_sort asc
+          limit #{start},#{size}
+      </where>
+    </select>
+
+    <select id="count" parameterType="HashMap" resultType="Integer">
+        SELECT count(t.f_id)
+        FROM t_product t,t_product_type p
+        <where>
+            t.f_type_id = p.f_id
+            <if test="shopId!=null and shopId!=''">
+                and t.f_shop_id = #{shopId}
+            </if>
+            <if test="title!=null and title!=''">
+                and t.f_title like CONCAT("%",#{title},"%")
+            </if>
+        </where>
+    </select>
+
+
 </mapper>

@@ -58,7 +58,7 @@
                 /views/js/** = anon
                 /views/error/** = anon
                 /login = anon
-                /res/** = anon
+                /rest/** = anon
                 /admin = anon
                 /validateCode = anon
                 /upload/** = anon

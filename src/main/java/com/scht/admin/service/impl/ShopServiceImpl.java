@@ -8,6 +8,8 @@ import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.Shop;
 import com.scht.admin.entity.ShopMoney;
 import com.scht.admin.service.ShopService;
+import com.scht.front.bean.RetData;
+import com.scht.front.bean.RetResult;
 import com.scht.util.MD5Util;
 import com.scht.util.StringUtil;
 import com.scht.util.UUIDFactory;
@@ -101,5 +103,83 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public Integer countShop(Map params) {
         return this.shopDao.countShop(params);
+    }
+
+
+
+   /**********************************  接口  **********************************
+
+    /**
+     *
+     * @param account
+     * @param password
+     * @return
+     */
+    @Override
+    public RetResult restLogin(String account, String password) {
+        RetResult result = null;
+        try {
+            List<Shop> list = shopDao.listByAccount(account);
+            if (StringUtil.isNotEmpty(list)) {
+                Shop shop = list.get(0);
+                if(shop.getPassword().equals(MD5Util.getMD5ofStr(password))){
+                    result = new RetResult(RetResult.RetCode.OK);
+                    RetData data = new RetData(shop);
+                    result.setData(data);
+                }else{
+                    result = new RetResult(RetResult.RetCode.Shop_Pwd_Error);
+                }
+            }else{
+                result = new RetResult(RetResult.RetCode.Shop_Not_Exist);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
+    }
+
+    @Override
+    public RetResult updateInfo(String id, String linkName, String linkMobile, String linkAddress) {
+        RetResult result = null;
+        try {
+            Shop shop = baseMyBatisDao.findById(ShopDao.class,id);
+            if (shop!=null) {
+                shop.setLinkName(linkName);
+                shop.setLinkMobile(linkMobile);
+                shop.setLinkAddress(linkAddress);
+                this.baseMyBatisDao.update(ShopDao.class, shop);
+                result = new RetResult(RetResult.RetCode.OK);
+            }else{
+                result = new RetResult(RetResult.RetCode.Shop_Not_Exist);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
+    }
+
+    @Override
+    public RetResult updatePwd(String id, String oldPwd, String newPwd) {
+        RetResult result = null;
+        try {
+            Shop shop = baseMyBatisDao.findById(ShopDao.class,id);
+            if (shop!=null) {
+                if(shop.getPassword().equals(MD5Util.getMD5ofStr(oldPwd))){
+                    shop.setPassword(MD5Util.getMD5ofStr(newPwd));
+                    this.baseMyBatisDao.update(ShopDao.class, shop);
+                    result = new RetResult(RetResult.RetCode.OK);
+                }else{
+                    result = new RetResult(RetResult.RetCode.Shop_Pwd_Error);
+                }
+            }else{
+                result = new RetResult(RetResult.RetCode.Shop_Not_Exist);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
     }
 }

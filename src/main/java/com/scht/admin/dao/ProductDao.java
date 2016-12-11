@@ -1,6 +1,7 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.Product;
+import com.scht.front.bean.RestProduct;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +23,8 @@ public interface ProductDao {
 
 
     List<Product> listByIds(String[] ids);
+
+    List<RestProduct> list(@Param("shopId")String id, @Param("title")String productName, @Param("start")int start, @Param("size")int size);
+
+    Integer count(@Param("shopId")String id, @Param("title")String productName);
 }
