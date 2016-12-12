@@ -15,7 +15,7 @@ public class Product {
     private String id;
     private String title; //商品名称
     /**
-     * @see ProductType
+     * @see com.scht.admin.bean.ProductTypeEnum
      */
     private String productType; //商品类型
     private String typeId; //分类id

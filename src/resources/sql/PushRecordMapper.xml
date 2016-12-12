@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.PushRecordDao">
+
+    <resultMap id="my_push_record" type="com.scht.admin.entity.PushRecord">
+        <id column="f_id" property="id"/>
+        <result column="f_type" property="type"/>
+        <result column="f_target_type" property="targetType"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_title" property="title"/>
+        <result column="f_content" property="content"/>
+        <result column="f_target_id" property="targetId"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.PushRecord">
+        insert into t_push_record(f_id,f_type,f_target_type,f_member_id,f_shop_id,f_title,f_content,f_target_id,f_create_time)
+        values(#{id},#{type},#{targetType},#{memberId},#{shopId},#{title},#{content},#{targetId},#{createTime})
+    </insert>
+    <insert id="insertBatch" parameterType="List">
+          insert into t_push_record(f_id,f_type,f_target_type,f_member_id,f_shop_id,f_title,f_content,f_target_id,f_create_time)
+        values
+        <foreach collection="list" item="item" separator=",">
+        (#{item.id},#{item.type},#{item.targetType},#{item.memberId},#{item.shopId},#{item.title},#{item.content},
+            #{item.targetId},#{item.createTime})
+        </foreach>
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.PushRecord">
+        update t_push_record
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="type!=null and type!=''">
+                f_type = #{type},
+            </if>
+            <if test="targetType!=null and targetType!=''">
+                f_target_type = #{targetType},
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                f_member_id = #{memberId},
+            </if>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="title!=null and title!=''">
+                f_title = #{title},
+            </if>
+            <if test="content!=null and content!=''">
+                f_content = #{content},
+            </if>
+            <if test="targetId!=null and targetId!=''">
+                f_target_id = #{targetId},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_push_record">
+        select * from t_push_record where f_id=#{id}
+    </select>
+    <select id="searchByPage"  parameterType="HashMap" resultMap="my_push_record">
+        SELECT * from t_push_record
+        <where>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+        </where>
+        order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        SELECT count(f_id) from t_push_record
+        <where>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+        </where>
+    </select>
+    <select id="findAll" resultMap="my_push_record">
+        select * from t_push_record order by f_create_time desc
+    </select>
+</mapper>

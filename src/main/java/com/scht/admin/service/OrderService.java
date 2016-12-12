@@ -1,6 +1,7 @@
 package com.scht.admin.service;
 
 import com.scht.admin.entity.Order;
+import com.scht.front.bean.RetResult;
 
 import java.util.Map;
 
@@ -17,4 +18,19 @@ public interface OrderService {
     void updateTask();
 
     Integer countOrder(Map params);
+
+    /** ******* APP 接口 ******* **/
+
+    /**
+     * 创建订单
+     * @return
+     */
+    RetResult createOrder(String memberId, String productId, int amount, String remark, String userName, String telephone, String address, String express);
+
+    /**
+     * 关闭订单
+     * @param id
+     * @return
+     */
+    RetResult closeOrder(String id);
 }

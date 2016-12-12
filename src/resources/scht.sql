@@ -562,7 +562,7 @@ f_reply_time bigint default 0
   f_id  varchar(11) primary key,
   f_mc  varchar(40)  default '',
   f_lx  varchar(40)   default ''
-)
+);
 
 INSERT INTO `t_nation` VALUES ('450126', '宾阳县', '3');
 INSERT INTO `t_nation` VALUES ('370602', '芝罘区', '3');
@@ -4102,3 +4102,17 @@ INSERT INTO `t_nation` VALUES ('450303', '叠彩区', '3');
 INSERT INTO `t_nation` VALUES ('210000', '辽宁省', '1');
 INSERT INTO `t_nation` VALUES ('360600', '鹰潭市', '2');
 INSERT INTO `t_nation` VALUES ('532527', '泸西县', '3');
+
+-- push record
+
+CREATE TABLE t_push_record(
+f_id varchar(32) primary key,
+f_type varchar(100) default '',
+f_target_type varchar(100) default '',
+f_member_id varchar(32) default '',
+f_shop_id varchar(32) default '',
+f_title varchar(512) default '',
+f_content varchar(1000) default '',
+f_target_id varchar(32) default '',
+f_create_time bigint default 0
+);

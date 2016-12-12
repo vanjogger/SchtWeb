@@ -14,6 +14,11 @@
         <result column="f_amount" property="amount"/>
         <result column="f_money" property="money"/>
     </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.OrderProduct">
+        insert into t_order_product(f_id,f_order_id,f_product_id,f_product_name,f_product_image,f_price,f_amount,f_money)
+        values  (#{id},#{orderId},#{productId},#{productName},#{productImage},#{price},#{amount},#{money})
+
+    </insert>
     <insert id="insertBatch" parameterType="List">
         insert into t_order_product(f_id,f_order_id,f_product_id,f_product_name,f_product_image,f_price,f_amount,f_money)
         values

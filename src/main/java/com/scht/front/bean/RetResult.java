@@ -94,6 +94,11 @@ public class RetResult implements Serializable {
 		public static final String Shop_Pwd_Error = "20002";
 		//银行卡不存在
 		public static final String Shop_Bank_Not_Exist = "20003";
+
+		//订单接口返回 以 300 开头
+		public static final String Order_Not_exist = "30001"; //订单不存在
+		public static final String Order_Status_Error = "30002"; //订单状态不允许该操作
+		public static final String Order_Product_Error = "30003"; //商品不存在或库存不足
 		
 	}
 }

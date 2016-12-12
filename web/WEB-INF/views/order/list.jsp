@@ -66,6 +66,29 @@
   </div>
 </div>
 
+<!-- 此节点内部的内容会在弹出框内显示,默认隐藏此节点-->
+<div id="content" style="display: none;">
+  <form id="form" class="form-horizontal" action="/order/dispatch">
+    <input type="hidden" id="orderId" name="id"/>
+    <div class="row">
+      <div class="control-group span8">
+        <label class="control-label">快递公司名称：</label>
+        <div class="controls">
+          <input type="text" class="input-normal control-text" name="expressName">
+        </div>
+      </div>
+     </div>
+    <div class="row">
+      <div class="control-group span8">
+        <label class="control-label">快递单号：</label>
+        <div class="controls">
+          <input type="text" class="input-normal control-text" name="expressNo">
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
 <script type="text/javascript" src="/resources/js/jquery-1.8.1.min.js"></script>
 <script type="text/javascript" src="/resources/js/bui-min.js"></script>
 <script type="text/javascript" src="/resources/js/config-min.js"></script>
@@ -79,7 +102,7 @@
         return o.shopId ? o.shopName : "自营"
       }},
       {title:'订单金额',dataIndex:'totalMoney',width:100},
-      {title:'下单时间',dataIndex:'t',width:120,renderer:function(v,o){
+      {title:'下单时间',dataIndex:'t',width:150,renderer:function(v,o){
         return o.createDate;
       }},
       {title:'订单状态',dataIndex:'a',width:150,renderer:function(v,o){
@@ -99,7 +122,13 @@
         if(obj.status == 'PAY' && obj.express == '1'){
           dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"dispatch('"+obj.id+"')\"> 发货 </a>&nbsp;&nbsp;"
         }
-        var viewStr = " &nbsp;&nbsp;<a href='/order/find?id="+obj.id+"'>查看</a>&nbsp;&nbsp;";
+
+        var viewStr = Search.createLink({ //链接使用 此方式
+          id : 'edit' + obj.id,
+          title : '查看',
+          text : '查看',
+          href : '/order/find?id='+obj.id
+        });
         return delStr + dispatchStr + viewStr;
       }}
     ];
@@ -121,7 +150,7 @@
   function del(id){
     BUI.Message.Confirm("确定删除吗？",function(){
       $.ajax({
-        url :"/product/delete?r="+Math.random(),
+        url :"/order/delete?r="+Math.random(),
         type : 'post',
         data : {id:id},
         success : function(data){
@@ -135,6 +164,39 @@
   }
 
 
+  var dialog;
+  BUI.use(['bui/overlay','bui/form'],function(Overlay,Form){
+
+    var form = new Form.HForm({
+      srcNode : '#form',
+      submitType:"ajax",
+      callback:function(data){
+        BUI.Message.Alert(data.msg,function(){
+          if(data.success){
+            top.topManager.reloadPage();
+          }
+        },'info');
+      }
+    }).render();
+
+    dialog = new Overlay.Dialog({
+      title:'发货操作',
+      width:500,
+      height:170,
+      //配置DOM容器的编号
+      contentId:'content',
+      success:function () {
+        form.submit();
+        this.close();
+      }
+    });
+
+  });
+
+  function dispatch(_id){
+    $("#content #orderId").val(_id);
+    dialog.show();
+  }
 </script>
 <script type="text/javascript" src="/views/js/list.js"></script>
 </body>

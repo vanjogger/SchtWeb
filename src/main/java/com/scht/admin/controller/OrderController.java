@@ -88,7 +88,7 @@ public class OrderController extends BaseController {
     @RequestMapping("find")
     public String find(ModelMap map, String id){
         Order order = this.baseService.findById(OrderDao.class, id);
-        if(StringUtil.isNullOrEmpty(order.getShopId())){
+        if(!StringUtil.isNullOrEmpty(order.getShopId())){
             Shop shop = this.baseService.findById(ShopDao.class, order.getShopId());
             order.setShopName(shop.getName());
         }
@@ -102,7 +102,7 @@ public class OrderController extends BaseController {
     @ResponseBody
     public JSONObject dispatch(String id, String expressName, String expressNo,HttpServletRequest request){
         Order order = this.baseService.findById(OrderDao.class, id);
-        if(order == null || !"1".equals(order.getExpress()) || OrderStatus.PAY.name().equals(order.getStatus())){
+        if(order == null || !"1".equals(order.getExpress()) || !OrderStatus.PAY.name().equals(order.getStatus())){
             return this.FmtResult(false,"该订单不需要发货",null);
         }
         order.setExpressName(expressName);
@@ -126,7 +126,7 @@ public class OrderController extends BaseController {
     @ResponseBody
     public JSONObject delete(String id, HttpServletRequest request){
         Order order = this.baseService.findById(OrderDao.class,id);
-        if(order != null || !OrderStatus.CLOSE.name().equals(order.getStatus())){
+        if(order != null && !OrderStatus.CLOSE.name().equals(order.getStatus())){
             return this.FmtResult(false,"订单不是关闭状态，不可删除",null);
         }
         this.baseService.delete(OrderProductDao.class, new String[]{id});
@@ -172,7 +172,7 @@ public class OrderController extends BaseController {
                 code =  code.substring(0,4) + "-" + code.substring(4,8) + "-" +code.substring(8);
                 Order order = orderService.findByCode(code);
                 if(order != null){
-                    if (StringUtil.isNullOrEmpty(order.getShopId())) {
+                    if (!StringUtil.isNullOrEmpty(order.getShopId())) {
                         Shop shop = this.baseService.findById(ShopDao.class, order.getShopId());
                         order.setShopName(shop.getName());
                     }
