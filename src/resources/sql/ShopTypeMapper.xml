@@ -97,6 +97,7 @@
         <if test="parentId!=null and parentId!=''">
             and f_parent_id = #{parentId}
         </if>
+        order by f_sort asc
     </select>
 
 

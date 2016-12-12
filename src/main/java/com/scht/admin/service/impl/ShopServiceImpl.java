@@ -8,6 +8,7 @@ import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.Shop;
 import com.scht.admin.entity.ShopMoney;
 import com.scht.admin.service.ShopService;
+import com.scht.front.bean.RestShop;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
 import com.scht.util.MD5Util;
@@ -176,6 +177,25 @@ public class ShopServiceImpl implements ShopService {
             }else{
                 result = new RetResult(RetResult.RetCode.Shop_Not_Exist);
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
+    }
+
+    @Override
+    public RetResult list(String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize) {
+        RetResult result = null;
+        try{
+            if(pageNo<1)
+                pageNo = 1;
+            List<RestShop> list = this.shopDao.list(shopTypeKey,sortType,type,code,(pageNo-1)*pageSize,pageSize);
+            Integer count = this.shopDao.count(shopTypeKey,sortType,type,code);
+
+            RetData data = new RetData(pageNo,pageSize,list,count);
+            result = new RetResult(RetResult.RetCode.OK);
+            result.setData(data);
         }catch (Exception e){
             e.printStackTrace();
             result = new RetResult(RetResult.RetCode.Execute_Error);

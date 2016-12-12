@@ -28,6 +28,23 @@
         <result column="f_district_id" property="districtId"/>
         <result column="f_district_name" property="districtName"/>
     </resultMap>
+
+    <resultMap id="rest_shop" type="com.scht.front.bean.RestShop">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_shop_type_id" property="typeId"/>
+        <result column="f_type" property="type"/>
+        <result column="f_icon" property="icon"/>
+        <result column="f_link_name" property="linkName"/>
+        <result column="f_link_mobile" property="linkMobile"/>
+        <result column="f_link_address" property="linkAddress"/>
+        <result column="f_shop_type_name" property="typeName"/>
+        <result column="f_remark" property="remark"/>
+        <result column="f_lng" property="lng"/>
+        <result column="f_lat" property="lat"/>
+        <result column="f_code" property="code"/>
+    </resultMap>
+
     <insert id="insert" parameterType="com.scht.admin.entity.Shop">
         insert into t_shop(f_id,f_name,f_account,f_password,f_shop_type_id,f_type,f_icon,f_status,f_link_name,f_link_mobile,f_link_address,f_agent_id,f_remark,f_create_time,f_lng,f_lat,f_code,f_province_id,
         f_province_name,f_city_id,f_city_name,f_district_id,f_district_name)
@@ -189,4 +206,43 @@
             </if>
         </where>
     </select>
+
+
+
+    <select id="list" parameterType="HashMap" resultMap="rest_shop">
+        select t.f_id,t.f_name,t.f_shop_type_id,t.f_type,t.f_icon,t.f_link_name,t.f_link_mobile,t.f_link_address,
+        a.f_name,t.f_remark,t.f_lng,t.f_lat,t.f_code
+        from t_shop t,t_shop_type a
+        <where>
+            t.f_shop_type_id = a.f_id and t.f_status = 'NORMAL'
+            <if test="shopTypeKey!=null and shopTypeKey!=''">
+                and a.f_key = #{shopTypeKey}
+            </if>
+            <if test="type!=null and type!=''">
+                and t.f_type = #{type}
+            </if>
+            <if test="code!=null and code!=''">
+                and t.f_code = #{code}
+            </if>
+            limit #{start},#{size}
+        </where>
+    </select>
+
+    <select id="count" parameterType="HashMap" resultType="Integer">
+        select count(t.f_id)
+        from t_shop t,t_shop_type a
+        <where>
+            t.f_shop_type_id = a.f_id and t.f_status = 'NORMAL'
+            <if test="shopTypeKey!=null and shopTypeKey!=''">
+                and a.f_key = #{shopTypeKey}
+            </if>
+            <if test="type!=null and type!=''">
+                and t.f_type = #{type}
+            </if>
+            <if test="code!=null and code!=''">
+                and t.f_code = #{code}
+            </if>
+        </where>
+    </select>
+
 </mapper>

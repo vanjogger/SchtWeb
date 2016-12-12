@@ -2,6 +2,7 @@ package com.scht.admin.service;
 
 import com.scht.admin.entity.ShopType;
 import com.scht.common.PageInfo;
+import com.scht.front.bean.RetResult;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,5 @@ public interface ShopTypeService {
     List<ShopType> listAll(Map params);
 
 
+    RetResult list();
 }

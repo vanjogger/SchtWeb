@@ -1,6 +1,7 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.Shop;
+import com.scht.front.bean.RestShop;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,9 @@ public interface ShopDao {
     List<Shop> listByName(@Param("name")String name);
 
     Integer countShop(Map params);
+
+
+    List<RestShop> list(@Param("shopTypeKey")String shopTypeKey, @Param("sortType")String sortType, @Param("type")String type, @Param("code")String code, @Param("start")int start, @Param("size")int size);
+
+    Integer count(@Param("shopTypeKey")String shopTypeKey,@Param("sortType") String sortType,@Param("type")String type, @Param("code")String code);
 }

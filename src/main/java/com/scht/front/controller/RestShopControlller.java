@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by vanjoger on 2016/12/11.
  */
@@ -49,4 +52,15 @@ public class RestShopControlller extends BaseFrontController{
         RetResult result = this.shopService.updatePwd(id, oldPwd, newPwd);
         return JSON.toJSON(result);
     }
+
+    @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Object list(@RequestParam(value="shopTypeKey",required = false) String shopTypeKey,@RequestParam(value="sortType",required = false)String sortType,
+                       @RequestParam(value="type",required = false)String type, @RequestParam(value="code",required = false)String code,@RequestParam("pageNo") int pageNo,
+                       @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
+
+        RetResult result = this.shopService.list(shopTypeKey,sortType,type,code,pageNo,pageSize);
+        return JSON.toJSON(result);
+    }
+
 }

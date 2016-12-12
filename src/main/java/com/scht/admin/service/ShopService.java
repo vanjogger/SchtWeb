@@ -30,4 +30,6 @@ public interface ShopService {
     RetResult updateInfo(String id, String linkName, String linkMobile, String linkAddress);
 
     RetResult updatePwd(String id, String oldPwd, String newPwd);
+
+    RetResult list(String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize);
 }
