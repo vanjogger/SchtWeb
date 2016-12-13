@@ -12,8 +12,8 @@ import org.xml.sax.InputSource;
 
 public class SmsUtil {
 
-	private static String account = "cf_maxinghua";
-	private static String password = "maxinghua0125";
+	private static String account = "";
+	private static String password = "";
 	private static String SEND_URL = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
 	private static String QUERY_URL = "http://106.ihuyi.cn/webservice/sms.php?method=GetNum";
 
@@ -80,7 +80,7 @@ public class SmsUtil {
 	public static Map queryNum(){
 		try {
 			String param = "account=" + account + "&password=" + password;
-			param = "account=cf_maxinghua&password=maxinghua0125";
+			//param = "account=cf_maxinghua&password=maxinghua0125";
 			System.out.println(QUERY_URL);
 			String result = HttpUrlConnection.doPostWithParams(QUERY_URL, param);
 			System.out.println(result);
@@ -93,7 +93,7 @@ public class SmsUtil {
 	}
 	public static void main(String[] args) {
 		System.out.println(queryNum());
-		System.out.println(sendSms("18706645733","您的验证码是：【1234】。请不要把验证码泄露给其他人。"));
+	//	System.out.println(sendSms("18706645733","您的验证码是：【1234】。请不要把验证码泄露给其他人。"));
 	}
 
 }
