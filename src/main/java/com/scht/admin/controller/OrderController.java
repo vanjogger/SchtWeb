@@ -118,6 +118,7 @@ public class OrderController extends BaseController {
         }
         this.baseService.update(OrderDao.class, order);
         this.saveLog("订单:" + order.getNo() + "进行发货操作", request);
+        orderService.pushDispatchMessage(order);
         return this.FmtResult(true,"发货操作成功",null);
     }
 

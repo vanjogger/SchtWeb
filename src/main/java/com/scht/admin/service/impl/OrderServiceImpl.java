@@ -1,19 +1,22 @@
 package com.scht.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.scht.admin.bean.OrderStatus;
-import com.scht.admin.bean.ProductTypeEnum;
-import com.scht.admin.bean.Status;
+import com.scht.admin.bean.*;
 import com.scht.admin.dao.*;
 import com.scht.admin.entity.*;
 import com.scht.admin.service.OrderService;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
 import com.scht.util.*;
+import com.scht.util.PayUtil.AliPayUtil;
+import com.scht.util.PayUtil.WeixinPayUtil;
+import org.dom4j.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -114,6 +117,24 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Integer countOrder(Map params) {
         return this.orderDao.countOrder(params);
+    }
+
+    @Override
+    public void pushDispatchMessage(Order order) {
+        List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
+        String message = "您好，您购买的商品“" + product.get(0).getProductName() + "”";
+        if(!StringUtil.isNullOrEmpty(order.getExpressName())){
+            message += "已由快递公司" + order.getExpressName() + "承接配送。";
+            if(!StringUtil.isNullOrEmpty(order.getExpressNo())) {
+                message += "快递单号：" +order.getExpressNo() +"。请注意查收";
+            }
+        }else{
+            message += "已发货，请注意查收！";
+        }
+        PushRecord record = PushRecord.createMemberOrder(order.getMemberId(), "订单发货提醒",message, order.getId());
+        this.baseMyBatisDao.insert(PushRecordDao.class,record);
+        PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
+        executor.execute(thread);
     }
 
     //货款给商家
@@ -259,6 +280,7 @@ public class OrderServiceImpl implements OrderService {
         if(!StringUtil.isNullOrEmpty(product.getShopId()) && OrderStatus.PAY.name().equals(order.getStatus())) {
             PushRecord record = PushRecord.createShopOrder(product.getShopId(),"新订单提醒",
                     "您好，您有一个新订单，商品“"+product.getTitle()+"”,会员账号“"+member.getAccount()+"”",order.getId());
+            this.baseMyBatisDao.insert(PushRecordDao.class,record);
             PushOrderThread thread = new PushOrderThread((PushSet)this.baseMyBatisDao.findById(PushSetDao.class,""), record);
             executor.execute(thread);
         }
@@ -318,6 +340,94 @@ public class OrderServiceImpl implements OrderService {
         }catch (Exception e){
             e.printStackTrace();
             result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
+    }
+
+    @Override
+    public void payBack(OrderPayRecord r) {
+        OrderPayRecord payRecord = this.baseMyBatisDao.findById(OrderPayRecordDao.class, r.getId());
+        if(PayStatus.SUCCESS.name().equals(payRecord.getStatus())){
+            return;
+        }
+        r.setPayTime(System.currentTimeMillis());
+        this.baseMyBatisDao.update(OrderPayRecord.class, r);
+        if(PayStatus.SUCCESS.name().equals(r.getStatus())) {
+            //支付成功
+            Order order = this.baseMyBatisDao.findById(OrderDao.class, r.getOrderId());
+            if(OrderStatus.PAY.name().equals(order.getStatus())) {
+                return;
+            }
+            order.setPayTime(r.getPayTime());
+            order.setPayType(r.getPayType());
+            order.setStatus(OrderStatus.PAY.name());
+            order.setLimitTime(0l);
+            if("0".equals(order.getExpress())){
+                order.setCode(OrderUtil.getUniqueCode());
+            }
+            //订单支付完成
+            this.baseMyBatisDao.update(OrderDao.class, order);
+            if(!StringUtil.isNullOrEmpty(order.getShopId())) {//给商家推送消息
+                List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
+                PushRecord record = PushRecord.createShopOrder(order.getShopId(), "新订单提醒",
+                        "您好，您有一个新订单，商品“" + product.get(0).getProductName() + "”,会员账号“" + order.getMemberAccount() + "”", order.getId());
+                this.baseMyBatisDao.insert(PushRecordDao.class,record);
+                PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
+                executor.execute(thread);
+            }
+        }
+    }
+
+    @Override
+    public RetResult pay(String orderId, String memberId, String payType, HttpServletRequest request, String ip) throws IOException, DocumentException {
+        RetResult result = null;
+        if(StringUtil.isNullOrEmpty(payType) || PayType.valueOf(payType) == null){
+            result = new RetResult(RetResult.RetCode.Illegal_Request);
+            return result;
+        }
+        Member member = this.baseMyBatisDao.findById(MemberDao.class, memberId);
+        if(member == null) {
+            result = new RetResult(RetResult.RetCode.User_Not_Exist);
+        }else if( Status.FROZEN.name().equals(member.getStatus())) {
+            result = new RetResult(RetResult.RetCode.User_Frozen);
+        }
+        if(result != null) return result;
+        Order order = this.baseMyBatisDao.findById(OrderDao.class, orderId);
+        if(order == null) {
+            result = new RetResult(RetResult.RetCode.Order_Not_exist);
+        }else if(!OrderStatus.CREATE.name().equals(order.getStatus())) {
+            result = new RetResult(RetResult.RetCode.Order_Status_Error);
+        }
+        if(result != null) {
+            return result;
+        }
+        OrderPayRecord payRecord = new OrderPayRecord();
+        payRecord.setId(UUIDFactory.random());
+        payRecord.setNo(OrderUtil.createNo());
+        payRecord.setOrderId(order.getId());
+        payRecord.setOrderNo(order.getNo());
+        payRecord.setMemberId(memberId);
+        payRecord.setMoney(order.getTotalMoney());
+        payRecord.setPayType(payType);
+        payRecord.setStatus(PayStatus.WAIT.name());
+        payRecord.setCreateTime(System.currentTimeMillis());
+        this.baseMyBatisDao.insert(OrderPayRecordDao.class, payRecord);
+        RetData data = null;
+        String domain = "http://" + request.getServerName() + ":" + request.getServerPort();
+        if(PayType.ALIPAY.name().equals(payType)) {
+            AliPaySet aliPaySet = this.baseMyBatisDao.findById(AliPaySetDao.class,"");
+           Map<String,String> map = AliPayUtil.createAppMap(payRecord, aliPaySet, domain + AliPayUtil.NOTICE_URL);
+            data = new RetData(map);
+        }else if(PayType.WEIXIN.name().equals(payType)) {
+            WeixinPaySet weixinPaySet = this.baseMyBatisDao.findById(WeixinPaySetDao.class,"");
+            Map<String,String> map = WeixinPayUtil.submitJsonForApp(request, ip, domain + WeixinPayUtil.NOTICE_URL,payRecord,weixinPaySet);
+            data = new RetData(map);
+        }
+        if(data != null){
+            result = new RetResult(RetResult.RetCode.OK);
+            result.setData(data);
+        }else{
+            result = new RetResult(RetResult.RetCode.System_Error);
         }
         return result;
     }

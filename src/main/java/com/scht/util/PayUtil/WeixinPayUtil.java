@@ -20,6 +20,9 @@ import java.util.*;
  * Created by Administrator on 2016/12/5.
  */
 public class WeixinPayUtil {
+
+    public static String NOTICE_URL="/rest/payback/weixinpay";
+
     private static String tyZf_url = "https://api.mch.weixin.qq.com/pay/unifiedorder";//统一支付接口
 
     /**
@@ -285,4 +288,91 @@ public class WeixinPayUtil {
         }
         return sb.toString();
     }
+
+    // 支付返回
+    public static Object tyZfNotify(HttpServletRequest request, String payKey) throws UnsupportedEncodingException {
+        // 将请求、响应的编码均设置为UTF-8（防止中文乱码）
+        request.setCharacterEncoding("UTF-8");
+        String respMessage = ""; //
+        String orderId="";
+        TyNoticeSj returnTyNoticeSj = null;
+        TyNoticeSj tyNoticeSj = new TyNoticeSj();
+        // xml请求解析
+        try {
+            Map<String, String> requestMap = MessageUtil.parseXml(request);
+            orderId = requestMap.get("out_trade_no");
+            if ("FAIL".equals(requestMap.get("return_code"))) {
+                tyNoticeSj.setReturn_code("FAIL");
+                tyNoticeSj.setReturn_msg("通信失败");
+                respMessage = MessageUtil.tyNoticeToXml(tyNoticeSj);
+            } else if ("FAIL".equals(requestMap.get("result_code"))) {
+                tyNoticeSj.setReturn_code("FAIL");
+                tyNoticeSj.setReturn_msg(requestMap.get("err_code_des"));
+                respMessage = MessageUtil.tyNoticeToXml(tyNoticeSj);
+            } else {
+                //判断签名
+                String returnSign = requestMap.get("sign");
+                requestMap.remove("sign");
+                if (requestMap.get("orderId") != null) {
+                    requestMap.remove("orderId");
+                }
+                String zzSign = weiXinZfSign(requestMap, payKey);
+                if (zzSign.equals(returnSign)) {
+                    returnTyNoticeSj = createBackTyZfNotice(requestMap);
+                    returnTyNoticeSj.setSign(returnSign);
+                    tyNoticeSj.setReturn_code("SUCCESS");
+                    respMessage = MessageUtil.tyNoticeToXml(tyNoticeSj);
+                } else {//签名失败
+                    tyNoticeSj.setReturn_code("FAIL");
+                    tyNoticeSj.setReturn_msg("签名失败");
+                    respMessage = MessageUtil.tyNoticeToXml(tyNoticeSj);
+                }
+            }
+        } catch (Exception e) {
+            tyNoticeSj.setReturn_code("FAIL");
+            tyNoticeSj.setReturn_msg("参数格式错误");
+            respMessage = MessageUtil.tyNoticeToXml(tyNoticeSj);
+        }
+        return new Object[]{returnTyNoticeSj, respMessage, orderId};
+    }
+
+    //微信通用通知商家时返回来的信息数据组装成对象
+    private static TyNoticeSj createBackTyZfNotice(Map<String, String> requestMap) {
+        TyNoticeSj tyNoticeSj = new TyNoticeSj();
+        tyNoticeSj.setReturn_code(requestMap.get("return_code"));
+        if (requestMap.get("return_msg") != null) {
+            tyNoticeSj.setReturn_msg(requestMap.get("return_msg"));
+        }
+        tyNoticeSj.setAppid(requestMap.get("appid"));
+        tyNoticeSj.setMch_id(requestMap.get("mch_id"));
+        if (requestMap.get("device_info") != null) {
+            tyNoticeSj.setDevice_info(requestMap.get("device_info"));
+        }
+        tyNoticeSj.setNonce_str(requestMap.get("nonce_str"));
+        tyNoticeSj.setResult_code(requestMap.get("result_code"));
+        if (requestMap.get("err_code") != null) {
+            tyNoticeSj.setErr_code(requestMap.get("err_code"));
+        }
+        if (requestMap.get("err_code_des") != null) {
+            tyNoticeSj.setErr_code_des(requestMap.get("err_code_des"));
+        }
+        tyNoticeSj.setOpenid(requestMap.get("openid"));
+        tyNoticeSj.setIs_subscribe(requestMap.get("is_subscribe"));
+        tyNoticeSj.setTrade_type(requestMap.get("trade_type"));
+        tyNoticeSj.setBank_type(requestMap.get("bank_type"));
+        tyNoticeSj.setTotal_fee(Integer.parseInt(requestMap.get("total_fee")));
+        tyNoticeSj.setCoupon_fee(requestMap.get("coupon_fee"));
+        if (requestMap.get("fee_type") != null) {
+            tyNoticeSj.setFee_type(requestMap.get("fee_type"));
+        }
+        tyNoticeSj.setTransaction_id(requestMap.get("transaction_id"));
+        tyNoticeSj.setOut_trade_no(requestMap.get("out_trade_no"));
+        if (requestMap.get("attach") != null) {
+            tyNoticeSj.setAttach(requestMap.get("attach"));
+        }
+        tyNoticeSj.setTime_end(requestMap.get("time_end"));
+        return tyNoticeSj;
+    }
+
+
 }

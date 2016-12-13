@@ -11,6 +11,7 @@ public class OrderPayRecord {
     private String no; //支付流水号，每次提交生成一个
     private String orderId; //对应的订单id
     private String orderNo; //对应的订单编号
+    private String memberId; //会员id
 
     private String money; //支付金额
     private String payType; //支付方式
@@ -32,6 +33,14 @@ public class OrderPayRecord {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
     public String getNo() {

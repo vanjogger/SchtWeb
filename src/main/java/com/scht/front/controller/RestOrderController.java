@@ -5,6 +5,7 @@ import com.scht.admin.bean.OrderStatus;
 import com.scht.admin.dao.OrderDao;
 import com.scht.admin.dao.OrderProductDao;
 import com.scht.admin.dao.ShopDao;
+import com.scht.admin.entity.Member;
 import com.scht.admin.entity.Order;
 import com.scht.admin.entity.Shop;
 import com.scht.admin.service.BaseService;
@@ -22,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/12/12.
@@ -38,6 +43,54 @@ public class RestOrderController extends BaseController {
 
     @Autowired
     OrderProductService orderProductService;
+    //订单列表
+    @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object list(@RequestParam(value = "pageNo",defaultValue = "1")int pageNo,
+                       @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,String memberId,
+                       String shopId, String status){
+        if(StringUtil.isNullOrEmpty(memberId) && StringUtil.isNullOrEmpty(shopId)) {
+            return JSON.toJSON(new RetResult(RetResult.RetCode.Illegal_Request));
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put("start", (pageNo-1)*pageSize);
+        map.put("limit", pageSize);
+        if(!StringUtil.isNullOrEmpty(memberId)) {
+            map.put("memberId", memberId);
+        }
+        if(!StringUtil.isNullOrEmpty(shopId)) {
+            map.put("shopId", shopId);
+        }
+        if(!StringUtil.isNullOrEmpty(status)) {
+            map.put("status", status);
+        }
+        List list = this.baseService.searchByPage(OrderDao.class, map);
+        int count = this.baseService.count4Page(OrderDao.class, map);
+        RetResult result = new RetResult(RetResult.RetCode.OK);
+        RetData data = new RetData(pageNo,pageSize, list,count);
+        result.setData(data);
+        return JSON.toJSON(result);
+    }
+    //订单详情
+    @RequestMapping(value = "find",produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object find(String id){
+        RetResult result = null;
+        try{
+            Order order = this.baseService.findById(OrderDao.class, id);
+            if(!StringUtil.isNullOrEmpty(order.getShopId())){
+                Shop shop = this.baseService.findById(ShopDao.class, order.getShopId());
+                order.setShopName(shop.getName());
+            }
+            order.setList(orderProductService.listByOrderId(order.getId()));
+            RetData data = new RetData(order);
+            result = new RetResult(RetResult.RetCode.OK);
+            result.setData(data);
+        }catch (Exception e){
+            result = new RetResult(RetResult.RetCode.System_Error);
+        }
+        return result;
+    }
 
     /**
      * 创建订单
@@ -100,8 +153,16 @@ public class RestOrderController extends BaseController {
     }
 
     //订单支付
-    public Object orderPay(){
-        return null;
+    @RequestMapping(value = "pay", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object orderPay(String orderId, String memberId, String payType, HttpServletRequest request){
+        RetResult result = null;
+        try{
+            result = orderService.pay(orderId, memberId, payType,request, getRequestIp(request));
+        }catch (Exception e){
+            result = new RetResult(RetResult.RetCode.System_Error);
+        }
+        return JSON.toJSON(result);
     }
 
     //确认收货

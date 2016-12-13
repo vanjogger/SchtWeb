@@ -517,6 +517,7 @@ CREATE TABLE t_order_pay_record(
 f_id varchar(32) primary key,
 f_no varchar(32) default '',
 f_order_id varchar(32) default '',
+f_member_id varchar(32) default '',
 f_order_no varchar(32) default '',
 f_money varchar(100) default '0',
 f_pay_type varchar(32) default '',

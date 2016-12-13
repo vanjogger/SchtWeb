@@ -1,8 +1,12 @@
 package com.scht.admin.service;
 
 import com.scht.admin.entity.Order;
+import com.scht.admin.entity.OrderPayRecord;
 import com.scht.front.bean.RetResult;
+import org.dom4j.DocumentException;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -18,6 +22,8 @@ public interface OrderService {
     void updateTask();
 
     Integer countOrder(Map params);
+    //给买家推送发货消息
+    void pushDispatchMessage(Order order);
 
     /** ******* APP 接口 ******* **/
 
@@ -35,4 +41,10 @@ public interface OrderService {
     RetResult closeOrder(String id);
 
     RetResult list(String shopId,String status, int pageNo, int pageSize);
+
+    RetResult pay(String orderId, String memberId, String payType, HttpServletRequest request, String ip) throws IOException, DocumentException;
+
+    //支付返回
+    void payBack(OrderPayRecord record);
+
 }
