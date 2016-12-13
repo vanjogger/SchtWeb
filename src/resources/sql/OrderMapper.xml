@@ -194,4 +194,32 @@
         </where>
     </select>
 
+
+    <select id="list" parameterType="HashMap" resultMap="my_order">
+        select * from t_order
+        <where>
+            1=1
+            <if test="shopId!=null and shopId!=''">
+                and f_shop_id = #{shopId}
+            </if>
+            <if test="status!=null and status!=''">
+                and f_status = #{status}
+            </if>
+            order by f_create_time desc
+            limit  #{start},#{size}
+        </where>
+    </select>
+
+    <select id="count" parameterType="HashMap" resultType="Integer">
+        select count(f_id) from t_order
+        <where>
+            1=1
+            <if test="shopId!=null and shopId!=''">
+                and f_shop_id = #{shopId}
+            </if>
+            <if test="status!=null and status!=''">
+                and f_status = #{status}
+            </if>
+        </where>
+    </select>
 </mapper>

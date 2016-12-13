@@ -1,6 +1,7 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.Advert;
+import com.scht.front.bean.RestAdvert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface AdvertDao {
     void update(Advert advert);
 
     void delete(String[] ids);
+
+    List<RestAdvert> list(Map map);
 }

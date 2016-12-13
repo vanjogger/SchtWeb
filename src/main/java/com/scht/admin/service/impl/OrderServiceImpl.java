@@ -298,6 +298,30 @@ public class OrderServiceImpl implements OrderService {
         return new RetResult(RetResult.RetCode.OK);
     }
 
+    @Override
+    public RetResult list(String shopId,String status, int pageNo, int pageSize) {
+        RetResult result = null;
+        try{
+            if(pageNo<1)
+                pageNo = 1;
+            List<Order> list = this.orderDao.list(shopId,status,(pageNo-1)*pageSize,pageSize);
+            Integer count = this.orderDao.count(shopId,status);
+            if(StringUtil.isNotEmpty(list)){
+                for(Order order:list){
+                    List<OrderProduct> data = this.orderProductDao.listByOrderId(order.getId());
+                    order.setList(data);
+                }
+            }
+            RetData data = new RetData(pageNo,pageSize,list,count);
+            result = new RetResult(RetResult.RetCode.OK);
+            result.setData(data);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
+    }
+
     /**************    *******************/
     //推送APP消息线程
     class PushOrderThread implements Runnable {

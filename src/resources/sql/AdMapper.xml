@@ -17,6 +17,13 @@
         <result column="remark" property="remark"/>
     </resultMap>
 
+    <resultMap id="rest_advert" type="com.scht.front.bean.RestAdvert">
+        <id column="f_id" property="id"/>
+        <result column="f_title" property="title"/>
+        <result column="f_url" property="url"/>
+        <result column="f_image" property="image"/>
+    </resultMap>
+
     <insert id="insert" parameterType="com.scht.admin.entity.Advert">
         insert into base_advert(f_id,f_title,f_url,f_image,f_status,f_place_id,f_start_time,f_end_time,f_create_time,f_sort,f_remark)
          VALUES (#{id},#{title},#{url},#{image},#{status},#{placeId},#{startTime},#{endTime},#{createTime},#{sort},#{remark})
@@ -75,4 +82,24 @@
         </foreach>
     </delete>
 
+
+    <select id="list" parameterType="HashMap" resultMap="rest_advert">
+        SELECT t.f_id,t.f_title,t.f_url,t.f_image
+        FROM  base_advert t,base_advert_place p
+        <where>
+            t.f_place_id = p.f_id
+            <if test="code!=null and code!=''">
+                and p.f_code = #{code}
+            </if>
+            <if test="status!=null and status!=''">
+                and t.f_status = #{status}
+            </if>
+            <if test="currentTime!=null and currentTime!=0">
+                    <![CDATA[
+                    and (t.f_start_time <= #{currentTime}  and t.f_end_time >= #{currentTime})
+                    ]]>
+            </if>
+            order by t.f_sort asc
+        </where>
+    </select>
 </mapper>

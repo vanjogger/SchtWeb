@@ -1,6 +1,8 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.Notice;
+import com.scht.front.bean.RetResult;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public interface NoticeDao {
 
     void delete(String[] ids);
     //增加阅读量
-    void addCount(String id);
+    void addCount(@Param("id")String id);
 
+    List<Notice> list(@Param("no")String no);
 }

@@ -33,4 +33,6 @@ public interface OrderService {
      * @return
      */
     RetResult closeOrder(String id);
+
+    RetResult list(String shopId,String status, int pageNo, int pageSize);
 }

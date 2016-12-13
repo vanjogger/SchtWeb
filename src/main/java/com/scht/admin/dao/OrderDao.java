@@ -1,6 +1,7 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.Order;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,4 +22,8 @@ public interface OrderDao {
     Order findByCode(String code);
 
     Integer countOrder(Map params);
+
+    List<Order> list(@Param("shopId")String shopId, @Param("status")String status,@Param("start") int start, @Param("size")int size);
+
+    Integer count(@Param("shopId")String shopId, @Param("status")String status);
 }
