@@ -4,6 +4,7 @@ import com.scht.admin.entity.Nation;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.NationService;
 import com.scht.common.BaseController;
+import com.scht.front.util.SmsUtil;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vanjoger on 2016/9/29.
@@ -41,6 +43,18 @@ public class CommonController extends BaseController{
             e.printStackTrace();
         }
         return this.FmtResult(false,null,null);
+    }
+
+
+    @RequestMapping("/querySms")
+    public String querySms(Model model){
+        Map map = SmsUtil.queryNum();
+        if(map!=null&&map.get("code").equals("2")){
+            model.addAttribute("msg","短信剩余条数："+map.get("num"));
+        }else{
+            model.addAttribute("msg","查询失败");
+        }
+        return "setting/sms";
     }
 
 }

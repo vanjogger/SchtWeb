@@ -1004,4 +1004,23 @@ public class StringUtil {
         }
         return "0";
     }
+
+
+    /**
+     * 得到length位的随机码
+     * @param length
+     * @return
+     */
+    public static String getRandomNum(int length){
+
+        StringBuffer str = new StringBuffer();
+        for(int i=0;i<length;i++){
+            str.append((int)(Math.random()*10)+"");
+        }
+        String result = str.toString();
+        if(result.startsWith("0"))
+            result = getRandomNum(length);
+
+        return result;
+    }
 }

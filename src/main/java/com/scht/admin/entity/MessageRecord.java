@@ -14,6 +14,7 @@ public class MessageRecord {
     private String code; //如果是验证码，则保存验证码，否则为空
     private String errMsg; //发送失败信息
     private String ip; //请求发送短信的ip
+    private String type;//短信类型   1：注册  2：找回密码
 
 
     public String getId() {
@@ -78,5 +79,13 @@ public class MessageRecord {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

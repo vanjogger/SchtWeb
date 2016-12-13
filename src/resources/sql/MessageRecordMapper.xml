@@ -13,15 +13,24 @@
         <result column="f_code" property="code"/>
         <result column="f_err_msg" property="errMsg"/>
         <result column="f_ip" property="ip"/>
+        <result column="f_type" property="type"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.MessageRecord">
-        insert into t_message_record(f_id,f_telephone,f_message,f_create_time,f_status,f_code,f_err_msg,f_ip)
-        values(#{id},#{telephone},#{message},#{createTime},#{status},#{code},#{errMsg},#{ip})
+        insert into t_message_record(f_id,f_telephone,f_message,f_create_time,f_status,f_code,f_err_msg,f_ip,f_type)
+        values(#{id},#{telephone},#{message},#{createTime},#{status},#{code},#{errMsg},#{ip},#{type})
     </insert>
     <select id="findById" resultMap="my_message_record">
         select * from t_message_record where f_id=#{id}
     </select>
     <select id="findByCode" resultMap="my_message_record">
         SELECT * from t_message_record where f_code=#{code} and f_create_time>#{time} and f_status='0'
+    </select>
+
+    <select id="listByMobile" resultMap="my_message_record">
+        SELECT * from t_message_record where f_telephone=#{mobile} and f_type = #{type} and f_status='0' order by f_create_time desc
+    </select>
+
+    <select id="listByMobileAndCode" resultMap="my_message_record">
+        SELECT * from t_message_record where f_telephone=#{mobile} and f_code = #{code} and f_status='0' order by f_create_time desc
     </select>
 </mapper>

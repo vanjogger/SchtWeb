@@ -4116,3 +4116,6 @@ f_content varchar(1000) default '',
 f_target_id varchar(32) default '',
 f_create_time bigint default 0
 );
+
+alter table t_message_record add f_type varchar(10);
+

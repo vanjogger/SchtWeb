@@ -93,7 +93,7 @@ public class SmsUtil {
 	}
 	public static void main(String[] args) {
 		System.out.println(queryNum());
-	//	System.out.println(sendSms("18706645733","您的验证码是：【1234】。请不要把验证码泄露给其他人。"));
+		System.out.println(sendSms("18706645733","您的验证码是：【1234】。请不要把验证码泄露给其他人。"));
 	}
 
 }

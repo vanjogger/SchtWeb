@@ -181,8 +181,11 @@
           {id:'order_limit_list',text:'订单时限设置',href:'/orderLimitSet/find',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="tssz:list">
-          {id:'tg_list',text:'推送设置',href:'/pushSet/find',closeable:true}
+          {id:'tg_list',text:'推送设置',href:'/pushSet/find',closeable:true},
                 </shiro:hasPermission>
+          <shiro:hasPermission name="sms:list">
+          {id:'sms_list',text:'短信余额查询',href:'/common/querySms',closeable:true}
+          </shiro:hasPermission>
         ]}
 
       ]
