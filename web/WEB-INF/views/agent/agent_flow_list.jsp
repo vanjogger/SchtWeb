@@ -15,17 +15,17 @@
 
   <form id="searchForm" class="form-horizontal">
     <div class="row">
-        <div class="control-group span6">
-            <label class="control-label"   style="width:90px;">商家账号：</label>
-            <div class="controls">
-                <input type="text" class="control-text" name="shopAccount"   style="width:120px;">
-            </div>
+      <div class="control-group span6">
+        <label class="control-label"   style="width:90px;">代理商账号：</label>
+        <div class="controls">
+          <input type="text" class="control-text" name="agentAccount"   style="width:120px;">
         </div>
+      </div>
 
         <div class="control-group span6">
-            <label class="control-label" style="width:90px;">商家名称：</label>
+            <label class="control-label" style="width:90px;">代理商名称：</label>
             <div class="controls">
-                <input type="text" class="control-text" name="shopName"   style="width:120px;">
+                <input type="text" class="control-text" name="agentName"   style="width:120px;">
             </div>
         </div>
 
@@ -64,17 +64,18 @@
     var del_url = "/admin/updateStatus";
   BUI.use(['common/search','common/page','bui/grid','bui/overlay','bui/form'],function (Search,Page,Grid,Overlay,Form) {
     var  columns = [
-              {title:'商家账号',dataIndex:'shopAccount',width:150},
-              {title:'商家名称',dataIndex:'shopName',width:150},
-              {title:'类型',dataIndex:'type',width:150,renderer:function(value,obj){
+              {title:'代理商账号',dataIndex:'agentAccount',width:100},
+              {title:'代理商名称',dataIndex:'agentName',width:100},
+              {title:'类型',dataIndex:'type',width:100,renderer:function(value,obj){
                   if(obj.type=='HandFee'){
                       return "手动调整";
                   }else if(obj.type=='TxFee'){
                       return "提现扣费";
-                  }else if(obj.type=='BuyFee'){
-                      return "购物奖励";
+                  }else if(obj.type=='OrderFee'){
+                      return "订单";
                   }
               }},
+              {title:'变动前金额',dataIndex:'beforeAmount',width:150},
               {title:'流水金额',dataIndex:'amount',width:150},
               {title:'变动后金额',dataIndex:'afterAmount',width:150},
               {title:'流水时间',dataIndex:'dateStr',width:150}
@@ -88,7 +89,7 @@
                 return editStr;
               }}*/
             ];
-            store = Search.createStore('/shopFlow/listData');
+            store = Search.createStore('/agentFlow/listData');
             gridCfg = Search.createGridCfg(columns,{
               tbar : {
                 items : [

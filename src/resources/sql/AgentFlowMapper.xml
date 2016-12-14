@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.AgentFlowDao">
+    <resultMap id="my_agent_flow" type="com.scht.admin.entity.AgentFlow">
+        <id column="f_id" property="id"/>
+        <result column="f_agent_id" property="agentId"/>
+        <result column="f_agent_account" property="agentAccount"/>
+        <result column="f_type" property="type"/>
+        <result column="f_before_amount" property="beforeAmount"/>
+        <result column="f_amount" property="amount"/>
+        <result column="f_after_amount" property="afterAmount"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_agent_name" property="agentName"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.AgentFlow">
+        insert into t_agent_flow(f_id,f_agent_id,f_agent_account,f_type,f_before_amount,f_amount,f_after_amount,f_create_time)
+        values(#{id},#{agentId},#{agentAccount},#{type},#{beforeAmount},#{amount},#{afterAmount},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.AgentFlow">
+        update t_agent_flow
+        <set>
+            <if test="agentId!=null and agentId!=''">
+                f_agent_id = #{agentId},
+            </if>
+            <if test="agentAccount!=null and agentAccount!=''">
+                f_agent_account = #{agentAccount},
+            </if>
+            <if test="type!=null and type!=''">
+                f_type = #{type},
+            </if>
+            <if test="beforeAmount!=null and beforeAmount!=''">
+                f_before_amount = #{beforeAmount},
+            </if>
+            <if test="amount!=null and amount!=''">
+                f_amount = #{amount},
+            </if>
+            <if test="afterAmount!=null and afterAmount!=''">
+                f_after_amount = #{afterAmount},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_agent_flow">
+        select * from t_agent_flow where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_agent_flow">
+        select * from t_agent_flow where 1=1 order by f_create_time desc
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_agent_flow">
+        select t.*,a.f_realName as f_agent_name from t_agent_flow t,base_admin a
+        <where>
+            t.f_agent_id = a.f_id
+            <if test="agentName != null and agentName != ''">
+                and  a.f_realName like CONCAT("%",#{agentName},"%")
+            </if>
+            <if test="agentAccount != null and agentAccount != ''">
+                and a.f_loginName like CONCAT("%",#{agentAccount},"%")
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and t.f_create_time >= #{startDate}
+                    ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and t.f_create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+        order by t.f_create_time desc
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(t.f_id) from t_agent_flow t,base_admin a
+        <where>
+            t.f_agent_id = a.f_id
+            <if test="agentName != null and agentName != ''">
+                and  a.f_realName like CONCAT("%",#{agentName},"%")
+            </if>
+            <if test="agentAccount != null and agentAccount != ''">
+                and a.f_loginName like CONCAT("%",#{agentAccount},"%")
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and t.f_create_time >= #{startDate}
+                    ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and t.f_create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete" parameterType="HashMap">
+       DELETE t_agent_flow  where f_id IN
+        <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+
+ </mapper>

@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by vanjoger on 2016/11/27.
@@ -63,6 +61,10 @@ public class ProductCommentController extends BaseController {
     public String beforeEdit(String id,Model model){
         if(StringUtil.isNotNull(id)){
             ProductComment comment = this.baseService.findById(ProductCommentDao.class,id);
+            if(StringUtil.isNotNull(comment.getImages())){
+                List list = Arrays.asList(comment.getImages().split(","));
+                model.addAttribute("list",list);
+            }
             model.addAttribute("dto",comment);
         }
         return "product/product_comment_edit";

@@ -9,13 +9,14 @@
         <result column="f_account" property="shopAccount"/>
         <result column="f_name" property="shopName"/>
         <result column="f_type" property="type"/>
+        <result column="f_before_amount" property="beforeAmount"/>
         <result column="f_amount" property="amount"/>
         <result column="f_after_amount" property="afterAmount"/>
         <result column="f_create_time" property="createTime"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.ShopFlow">
-        insert into t_shop_flow(f_id,f_shop_id,f_amount,f_after_amount,f_create_time,f_type)
-        values(#{id},#{shopId},#{amount},#{afterAmount},#{createTime},#{type})
+        insert into t_shop_flow(f_id,f_shop_id,f_amount,f_after_amount,f_create_time,f_type,f_before_amount)
+        values(#{id},#{shopId},#{amount},#{afterAmount},#{createTime},#{type},#{beforeAmount})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.ShopFlow">
         update t_shop_flow
@@ -29,6 +30,9 @@
             </if>
             <if test="afterAmount!=null and afterAmount!=''">
                 f_after_amount = #{afterAmount},
+            </if>
+            <if test="beforeAmount!=null and beforeAmount!=''">
+                f_before_amount = #{beforeAmount},
             </if>
             <if test="createTime!=null and createTime!=''">
                 f_create_time = #{createTime},

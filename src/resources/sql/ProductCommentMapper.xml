@@ -11,6 +11,7 @@
         <result column="f_order_id" property="orderId"/>
         <result column="f_shop_id" property="shopId"/>
         <result column="f_grade" property="grade"/>
+        <result column="f_images" property="images"/>
         <result column="f_content" property="content"/>
         <result column="f_member_id" property="memberId"/>
         <result column="f_create_time" property="createTime"/>
@@ -21,8 +22,8 @@
         <result column="f_member_name" property="memberName"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.ProductComment">
-        insert into t_product_comment(f_id,f_product_id,f_product_name,f_order_id,f_shop_id,f_grade,f_content,f_member_id,f_create_time,f_status,f_reply_id,f_reply_content,f_reply_time)
-        values(#{id},#{productId},#{productName},#{orderId},#{shopId},#{grade},#{content},#{memberId},#{createTime},#{status},#{replyId},#{replyContent},#{replyTime})
+        insert into t_product_comment(f_id,f_product_id,f_product_name,f_order_id,f_shop_id,f_grade,f_content,f_member_id,f_create_time,f_status,f_reply_id,f_reply_content,f_reply_time,f_images)
+        values(#{id},#{productId},#{productName},#{orderId},#{shopId},#{grade},#{content},#{memberId},#{createTime},#{status},#{replyId},#{replyContent},#{replyTime},#{images})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.ProductComment">
         update t_product_comment
@@ -53,6 +54,9 @@
             </if>
             <if test="status!=null and status!=''">
                 f_status = #{status},
+            </if>
+            <if test="images!=null and images!=''">
+                f_images = #{images},
             </if>
             <if test="replyId!=null and replyId!=''">
                 f_reply_id = #{replyId},

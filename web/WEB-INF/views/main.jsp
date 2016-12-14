@@ -186,8 +186,17 @@
           <shiro:hasPermission name="sms:list">
           {id:'sms_list',text:'短信余额查询',href:'/common/querySms',closeable:true}
           </shiro:hasPermission>
-        ]}
-
+        ]},
+        {
+          text:'代理商资金',
+          items:[
+            <shiro:hasPermission name="dlszj:list">
+            {id:'dlszj_list',text:'代理商资金管理',href:'/agentMoney/list',closeable:true},
+            </shiro:hasPermission>
+            <shiro:hasPermission name="agentflow:list">
+            {id:'agent_flow_list',text:'代理商资金流水',href:'/agentFlow/list',closeable:true}
+            </shiro:hasPermission>
+          ]}
       ]
     },{
       id:'system',
@@ -197,9 +206,6 @@
         items:[
           <shiro:hasPermission name="admin:list">
           {id:'admin_list',text:'用户管理',href:'/admin/list',closeable:true},
-          </shiro:hasPermission>
-          <shiro:hasPermission name="dlszj:list">
-          {id:'dlszj_list',text:'代理商资金管理',href:'/agentMoney/list',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="role:list">
           {id:'role_list',text:'角色管理',href:'/role/list',closeable:true},

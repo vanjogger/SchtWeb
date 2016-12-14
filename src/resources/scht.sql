@@ -4120,3 +4120,19 @@ f_create_time bigint default 0
 
 alter table t_message_record add f_type varchar(10);
 
+alter table t_product_comment add f_images varchar(1000);
+
+alter table t_shop_flow add f_before_amount varchar(20);
+
+
+CREATE TABLE t_agent_flow(
+f_id varchar(32) primary key,
+f_agent_id varchar(32) default '',
+f_agent_account varchar(50) default '',
+f_type varchar(10) default '',
+f_before_amount varchar(20) default '',
+f_amount varchar(20) default '',
+f_after_amount varchar(20) default '',
+f_create_time bigint default 0
+);
+

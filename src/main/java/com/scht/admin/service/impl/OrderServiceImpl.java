@@ -17,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,6 +37,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     ProductDao productDao;
+
+    @Autowired
+    ShopMoneyDao shopMoneyDao;
+    @Autowired
+    AgentMoneyDao agentMoneyDao;
 
     @Autowired
     BaseMyBatisDao baseMyBatisDao;
@@ -132,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
             message += "已发货，请注意查收！";
         }
         PushRecord record = PushRecord.createMemberOrder(order.getMemberId(), "订单发货提醒",message, order.getId());
-        this.baseMyBatisDao.insert(PushRecordDao.class,record);
+        this.baseMyBatisDao.insert(PushRecordDao.class, record);
         PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
         executor.execute(thread);
     }
@@ -140,6 +142,36 @@ public class OrderServiceImpl implements OrderService {
     //货款给商家
     private void addShopMoney(Order order){
         //todo:
+        List<ShopMoney> moneys = this.shopMoneyDao.listByShopId(order.getShopId());
+        ShopMoney money = null;
+        String beforeAmount = "0";
+        if(StringUtil.isNotEmpty(moneys)){
+            money = moneys.get(0);
+            beforeAmount = money.getAvailAmount();
+            money.setAvailAmount(StringNumber.add(money.getAvailAmount(),order.getTotalMoney()));
+            money.setTotalAmount(StringNumber.add(money.getTotalAmount(), order.getTotalMoney()));
+            this.baseMyBatisDao.update(ShopMoneyDao.class,money);
+        }else{
+            money = new ShopMoney();
+            money.setId(UUIDFactory.random());
+            money.setShopId(order.getShopId());
+            money.setShopName(order.getShopName());
+            money.setAvailAmount(order.getTotalMoney());
+            money.setFrozenAmount("0");
+            money.setTotalAmount(order.getTotalMoney());
+            this.baseMyBatisDao.insert(ShopMoneyDao.class,money);
+        }
+        //保存商家资金流水
+        ShopFlow flow = new ShopFlow();
+        flow.setId(UUIDFactory.random());
+        flow.setShopId(order.getShopId());
+        flow.setShopName(order.getShopName());
+        flow.setBeforeAmount(beforeAmount);
+        flow.setAmount(order.getTotalMoney());
+        flow.setAfterAmount(money.getAvailAmount());
+        flow.setCreateTime(new Date().getTime());
+        flow.setType(AmountType.OrderFee.name());
+        this.baseMyBatisDao.insert(ShopFlowDao.class,flow);
     }
 
     //代理商资金记录
@@ -147,7 +179,34 @@ public class OrderServiceImpl implements OrderService {
         Admin admin = this.baseMyBatisDao.findById(AdminDao.class, order.getAgentId());
         if("1".equals(admin.getType())){
             //todo:代理商
-
+            AgentMoney money = this.agentMoneyDao.findByAgentId(order.getAgentId());
+            String beforeAmount = "0";
+            if(money!=null){
+                beforeAmount = money.getAvailAmount();
+                money.setAvailAmount(StringNumber.add(money.getAvailAmount(),order.getTotalMoney()));
+                money.setTotalAmount(StringNumber.add(money.getTotalAmount(), order.getTotalMoney()));
+                this.baseMyBatisDao.update(AgentMoneyDao.class,money);
+            }else{
+                money = new AgentMoney();
+                money.setAvailAmount(order.getTotalMoney());
+                money.setFrozenAmount("0");
+                money.setTotalAmount(order.getTotalMoney());
+                money.setAgentId(admin.getId());
+                money.setAgentName(admin.getLoginName());
+                money.setId(UUIDFactory.random());
+                this.baseMyBatisDao.insert(AgentMoneyDao.class,money);
+            }
+            //保存资金流水
+            AgentFlow flow = new AgentFlow();
+            flow.setId(UUIDFactory.random());
+            flow.setAgentId(admin.getId());
+            flow.setAgentAccount(admin.getLoginName());
+            flow.setBeforeAmount(beforeAmount);
+            flow.setAmount(order.getTotalMoney());
+            flow.setAfterAmount(money.getAvailAmount());
+            flow.setType(AmountType.OrderFee.name());
+            flow.setCreateTime(new Date().getTime());
+            this.baseMyBatisDao.insert(AgentFlowDao.class,flow);
         }
     }
 

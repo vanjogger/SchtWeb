@@ -6,18 +6,27 @@ import com.scht.util.DateUtil;
  * Created by vanjoger on 2016/11/27.
  * 商家资金流水
  */
-public class ShopFlow {
+public class AgentFlow {
 
     private String id;
-    private String shopId;
-    private String shopAccount;
-    private String shopName;
+    private String agentId;
+    private String agentAccount;
     private String type;
     private String beforeAmount;//变动前金额
     private String amount;//变动金额
     private String afterAmount;//变动后金额
     private Long createTime;
     private String dateStr;
+
+    private String agentName;
+
+    public String getAgentName() {
+        return agentName;
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
 
     public String getBeforeAmount() {
         return beforeAmount;
@@ -43,28 +52,20 @@ public class ShopFlow {
         this.id = id;
     }
 
-    public String getShopId() {
-        return shopId;
+    public String getAgentId() {
+        return agentId;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
     }
 
-    public String getShopAccount() {
-        return shopAccount;
+    public String getAgentAccount() {
+        return agentAccount;
     }
 
-    public void setShopAccount(String shopAccount) {
-        this.shopAccount = shopAccount;
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setAgentAccount(String agentAccount) {
+        this.agentAccount = agentAccount;
     }
 
     public String getAmount() {

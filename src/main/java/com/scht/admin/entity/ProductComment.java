@@ -13,6 +13,7 @@ public class ProductComment {
     private String orderId;
     private String shopId;
     private String grade;
+    private String images;
     private String content;
     private String memberId;
     private Long createTime;
@@ -26,6 +27,14 @@ public class ProductComment {
     private String memberName;
     private String dateStr;
     private String replayDateStr;
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
 
     public String getReplayDateStr() {
         if(replyTime!=null)

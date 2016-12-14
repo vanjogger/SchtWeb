@@ -5,7 +5,7 @@ package com.scht.admin.bean;
  */
 public enum AmountType {
 
-        BuyFee("购物奖"),
+        OrderFee("订单金额"),
         HandFee("手动调整"),
         TxFee("提现扣费"),
         Recharge("充值");
