@@ -160,6 +160,9 @@
             <if test="typeId != null and typeId != ''">
                 and f_type_id=#{typeId}
             </if>
+            <if test="type != null and type != ''">
+                and f_product_type=#{type}
+            </if>
             <if test="status != null and status != ''">
                 and f_status =#{status}
             </if>
