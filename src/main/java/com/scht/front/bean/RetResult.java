@@ -86,6 +86,8 @@ public class RetResult implements Serializable {
         public static final String Sms_InValid = "10013";
         //用户旧密码错误
         public static final String User_Old_Pwd_Error = "10014";
+		//收货地址不存在
+		public static final String User_Address_Not_Exist = "10015";
 
 		// 商家接口返回码以 200打头
 		//商家不存在

@@ -55,6 +55,9 @@
             <if test="memberName != null and memberName != ''">
                 and m.f_member_name like CONCAT("%",#{memberName},"%")
             </if>
+            <if test="memberId != null and memberId != ''">
+                and t.f_member_id=#{memberId}
+            </if>
         </where>
         limit #{start},#{limit}
     </select>
@@ -65,6 +68,9 @@
             <if test="memberName != null and memberName != ''">
                 and m.f_member_name like CONCAT("%",#{memberName},"%")
             </if>
+            <if test="memberId != null and memberId != ''">
+                and t.f_member_id=#{memberId}
+            </if>
         </where>
     </select>
 
@@ -73,4 +79,10 @@
         <foreach collection="array" item="id" index="index" open="(" close=")" separator=",">#{id}</foreach>
     </delete>
 
+    <select id="listByMemberId" resultMap="my_member_address">
+      select *  from t_member_address where f_member_id=#{memberId} order by f_id asc
+    </select>
+    <select id="findDefault" resultMap="my_member_address">
+        select * from t_member_address where f_member_id=#{memberId} and f_is_default='1';
+    </select>
  </mapper>

@@ -29,6 +29,7 @@
         <item Key="10012">短信发送频繁，30分钟同一手机号码最多发送5条短信</item>
         <item Key="10013">短信验证码已失效</item>
         <item Key="10014">您输入的旧密码错误</item>
+        <item Key="10015">收货地址不存在</item>
         <item Key="20001">商家不存在</item>
         <item Key="20002">密码错误</item>
         <item Key="20003">商家银行卡不存在</item>
