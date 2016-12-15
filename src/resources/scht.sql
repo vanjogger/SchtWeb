@@ -4120,3 +4120,27 @@ f_create_time bigint default 0
 
 alter table t_message_record add f_type varchar(10);
 
+ -- shopCollection
+ CREATE TABLE t_shop_collection(
+f_id varchar(32) primary key,
+f_member_id varchar(32) default '',
+f_shop_id varchar(32) default '',
+f_shop_name varchar(256) default '',
+f_shop_icon varchar(512) default '',
+f_link_name varchar(256) default '',
+f_link_mobile varchar(256) default '',
+f_link_address varchar(512) default '',
+f_create_time bigint default 0
+);
+
+-- productCollection
+
+CREATE TABLE t_product_collection(
+f_id varchar(32) primary key,
+f_member_id varchar(32) default '',
+f_product_id varchar(32) default '',
+f_product_name varchar(512) default '',
+f_product_icon varchar(512) default '',
+f_product_price varchar(32) default '',
+f_create_time bigint default 0
+);

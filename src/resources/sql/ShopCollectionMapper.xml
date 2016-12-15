@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ShopCollectionDao">
+
+    <resultMap id="my_shop_collection" type="com.scht.admin.entity.ShopCollection">
+        <id column="f_id" property="id"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_shop_name" property="shopName"/>
+        <result column="f_shop_icon" property="shopIcon"/>
+        <result column="f_link_name" property="linkName"/>
+        <result column="f_link_mobile" property="linkMobile"/>
+        <result column="f_link_address" property="linkAddress"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ShopCollection">
+        insert into t_shop_collection(f_id,f_member_id,f_shop_id,f_shop_name,f_shop_icon,f_link_name,f_link_mobile,f_link_address,f_create_time)
+        values(#{id},#{memberId},#{shopId},#{shopName},#{shopIcon},#{linkName},#{linkMobile},#{linkAddress},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ShopCollection">
+        update t_shop_collection
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                f_member_id = #{memberId},
+            </if>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="shopName!=null and shopName!=''">
+                f_shop_name = #{shopName},
+            </if>
+            <if test="shopIcon!=null and shopIcon!=''">
+                f_shop_icon = #{shopIcon},
+            </if>
+            <if test="linkName!=null and linkName!=''">
+                f_link_name = #{linkName},
+            </if>
+            <if test="linkMobile!=null and linkMobile!=''">
+                f_link_mobile = #{linkMobile},
+            </if>
+            <if test="linkAddress!=null and linkAddress!=''">
+                f_link_address = #{linkAddress},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_shop_collection">
+        select * from t_shop_collection where f_id=#{id}
+    </select>
+    <select id="searchByPage" resultMap="my_shop_collection" parameterType="HashMap">
+        SELECT * from t_shop_collection
+        <where>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+        </where>
+        order by f_create_time desc limit #{start}, #{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        SELECT count(f_id) from t_shop_collection
+        <where>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+        </where>
+    </select>
+    <delete id="delete">
+        delete from t_shop_collection where f_id in 
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+</mapper>

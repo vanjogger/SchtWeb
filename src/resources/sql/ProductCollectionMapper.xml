@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ProductCollectionDao">
+
+    <resultMap id="my_product_collection" type="com.scht.admin.entity.ProductCollection">
+        <id column="f_id" property="id"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_product_id" property="productId"/>
+        <result column="f_product_name" property="productName"/>
+        <result column="f_product_icon" property="productIcon"/>
+        <result column="f_product_price" property="productPrice"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.ProductCollection">
+        insert into t_product_collection(f_id,f_member_id,f_product_id,f_product_name,f_product_icon,f_product_price,f_create_time)
+        values(#{id},#{memberId},#{productId},#{productName},#{productIcon},#{productPrice},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.ProductCollection">
+        update t_product_collection
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                f_member_id = #{memberId},
+            </if>
+            <if test="productId!=null and productId!=''">
+                f_product_id = #{productId},
+            </if>
+            <if test="productName!=null and productName!=''">
+                f_product_name = #{productName},
+            </if>
+            <if test="productIcon!=null and productIcon!=''">
+                f_product_icon = #{productIcon},
+            </if>
+            <if test="productPrice!=null and productPrice!=''">
+                f_product_price = #{productPrice},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_product_collection">
+        select * from t_product_collection where f_id=#{id}
+    </select>
+    <select id="searchByPage" resultMap="my_product_collection" parameterType="HashMap">
+        select * from t_product_collection
+        <where>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="productId != null and productId != ''">
+                and f_product_id=#{productId}
+            </if>
+        </where>
+        order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        select count(f_id) from t_product_collection
+        <where>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="productId != null and productId != ''">
+                and f_product_id=#{productId}
+            </if>
+        </where>
+    </select>
+    <delete id="delete">
+        delete from t_product_collection where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+</mapper>
