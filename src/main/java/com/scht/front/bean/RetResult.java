@@ -86,6 +86,8 @@ public class RetResult implements Serializable {
         public static final String Sms_InValid = "10013";
         //用户旧密码错误
         public static final String User_Old_Pwd_Error = "10014";
+		//收货地址不存在
+		public static final String User_Address_Not_Exist = "10015";
 
 		// 商家接口返回码以 200打头
 		//商家不存在
@@ -99,6 +101,10 @@ public class RetResult implements Serializable {
 		public static final String Order_Not_exist = "30001"; //订单不存在
 		public static final String Order_Status_Error = "30002"; //订单状态不允许该操作
 		public static final String Order_Product_Error = "30003"; //商品不存在或库存不足
-		
+
+
+		//商品 400 开头
+		public static final String Product_Not_Exist = "40001"; //商品不存在
+		public static final String Collection_Exist = "40010";//该收藏已存在
 	}
 }
