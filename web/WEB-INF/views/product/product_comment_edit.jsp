@@ -54,7 +54,18 @@
     </div>
 
 
-    <div class="row">
+    <div class="row" style="height:100px;">
+      <div class="control-group span20">
+        <label class="control-label">评论图片：</label>
+        <div class="controls">
+            <c:forEach items="${list}" var="e">
+              <img src="${e}" width="80px" height="80px">;
+            </c:forEach>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 10px;">
       <div class="control-group span20">
         <label class="control-label">评论内容：</label>
         <div class="controls">
