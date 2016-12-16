@@ -11,9 +11,9 @@ import java.util.List;
  */
 @Repository
 public interface ProductCommentDao {
-    List<ProductComment> list(@Param("productId")String productId, @Param("start")int start, @Param("size")int size);
+    List<ProductComment> list(@Param("memberId")String memberId,@Param("productId")String productId, @Param("start")int start, @Param("size")int size);
 
-    Integer count(@Param("productId")String productId);
+    Integer count(@Param("memberId")String memberId,@Param("productId")String productId);
 
     List<ProductComment> queryByMemberIdandProductId(@Param("memberId")String memberId, @Param("productId")String productId);
 }

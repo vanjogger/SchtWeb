@@ -28,13 +28,13 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     BaseMyBatisDao baseMyBatisDao;
 
     @Override
-    public RetResult list(String productId, int pageNo, int pageSize) {
+    public RetResult list(String memberId,String productId, int pageNo, int pageSize) {
         RetResult result = null;
         try{
             if(pageNo<1)
                 pageNo = 1;
-            List<ProductComment> list = this.productCommentDao.list(productId,(pageNo-1)*pageSize,pageSize);
-            Integer total = this.productCommentDao.count(productId);
+            List<ProductComment> list = this.productCommentDao.list(memberId,productId,(pageNo-1)*pageSize,pageSize);
+            Integer total = this.productCommentDao.count(memberId,productId);
 
             RetData data = new RetData(pageNo,pageSize,list,total);
             result = new RetResult(RetResult.RetCode.OK);
@@ -88,6 +88,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
             this.baseMyBatisDao.insert(ProductCommentDao.class, comment);
 
             result = new RetResult(RetResult.RetCode.OK);
+            order.setMemberAssess("1");
+            this.baseMyBatisDao.update(OrderDao.class, order);
         }catch (Exception e){
             e.printStackTrace();
             result = new RetResult(RetResult.RetCode.Execute_Error);

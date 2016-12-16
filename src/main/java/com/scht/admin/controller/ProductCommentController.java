@@ -1,7 +1,9 @@
 package com.scht.admin.controller;
 
+import com.scht.admin.dao.OrderDao;
 import com.scht.admin.dao.ProductCommentDao;
 import com.scht.admin.entity.Admin;
+import com.scht.admin.entity.Order;
 import com.scht.admin.entity.ProductComment;
 import com.scht.admin.entity.ShopBank;
 import com.scht.admin.service.BaseService;
@@ -78,7 +80,12 @@ public class ProductCommentController extends BaseController {
             Admin admin = (Admin) getCurrentUser(request);
             comment.setReplyId(admin.getId());
             comment.setReplyTime(new Date().getTime());
-            this.baseService.update(ProductCommentDao.class,comment);
+            this.baseService.update(ProductCommentDao.class, comment);
+            Order order = this.baseService.findById(OrderDao.class, comment.getOrderId());
+            if(order != null) {
+                order.setShopAssess("1");
+                this.baseService.update(OrderDao.class, order);
+            }
             //保存日志
             this.saveLog("回复商品评论：" + comment.getId(), request);
             return this.FmtResult(true, "修改成功", null);

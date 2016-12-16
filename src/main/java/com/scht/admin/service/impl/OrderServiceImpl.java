@@ -295,6 +295,8 @@ public class OrderServiceImpl implements OrderService {
         order.setId(UUIDFactory.random());
         order.setNo(OrderUtil.createNo());
         order.setCreateTime(System.currentTimeMillis());
+        order.setMemberAssess("0");
+        order.setShopAssess("0");
         if(ProductTypeEnum.EXTEND.name().equals(product.getProductType())) {
             order.setStatus(OrderStatus.PAY.name());
             order.setExpress("0");
@@ -305,15 +307,21 @@ public class OrderServiceImpl implements OrderService {
                 result = new RetResult(RetResult.RetCode.Order_Product_Error);
                 return result;
             }
-            order.setStatus(OrderStatus.CREATE.name());
+            //todo：商家的五折商品也不需要支付
+            if(!StringUtil.isNullOrEmpty(product.getShopId()) && ProductTypeEnum.DISCOUNT.name().equals(product.getProductType())){
+                order.setStatus(OrderStatus.PAY.name());
+            }else{
+                order.setStatus(OrderStatus.CREATE.name());
+                OrderLimitSet set = this.baseMyBatisDao.findById(OrderLimitSetDao.class,"");
+                if(set != null && set.getPayLimit() > 0) {
+                    order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getPayLimit()));
+                }
+            }
             order.setExpress(express);
             order.setUserName(userName);
             order.setAddress(address);
             order.setTelephone(telephone);
-            OrderLimitSet set = this.baseMyBatisDao.findById(OrderLimitSetDao.class,"");
-            if(set != null && set.getPayLimit() > 0) {
-                order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getPayLimit()));
-            }
+
         }
         order.setRemark(remark);
         order.setOrderType(product.getProductType());
