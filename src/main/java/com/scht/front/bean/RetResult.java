@@ -88,6 +88,14 @@ public class RetResult implements Serializable {
         public static final String User_Old_Pwd_Error = "10014";
 		//收货地址不存在
 		public static final String User_Address_Not_Exist = "10015";
+		//对商品已经评论过
+		public static final String Already_Comment = "10016";
+		//订单不存在 不能评论
+		public static final String Not_Allowed_Comment_Order = "10017";
+		//商品不存在 不能评论
+		public static final String Not_Allowed_Comment_Product = "10018";
+		//会员不存在 不能评论
+		public static final String Not_Allowed_Comment_Member = "10019";
 
 		// 商家接口返回码以 200打头
 		//商家不存在
@@ -96,6 +104,9 @@ public class RetResult implements Serializable {
 		public static final String Shop_Pwd_Error = "20002";
 		//银行卡不存在
 		public static final String Shop_Bank_Not_Exist = "20003";
+
+		//删除对象不存在
+		public static final String Object_Not_Exist = "20010";
 
 		//订单接口返回 以 300 开头
 		public static final String Order_Not_exist = "30001"; //订单不存在

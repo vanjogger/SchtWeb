@@ -30,9 +30,14 @@
         <item Key="10013">短信验证码已失效</item>
         <item Key="10014">您输入的旧密码错误</item>
         <item Key="10015">收货地址不存在</item>
+        <item Key="10016">已经评价过啦</item>
+        <item Key="10017">订单不存在，无法评论</item>
+        <item Key="10018">商品不存在，无法评论</item>
+        <item Key="10019">用户不存在，无法评论</item>
         <item Key="20001">商家不存在</item>
         <item Key="20002">密码错误</item>
         <item Key="20003">商家银行卡不存在</item>
+        <item Key="20010">数据不存在</item>
         <item Key="30001">订单不存在</item>
         <item Key="30002">订单状态不允许操作</item>
         <item Key="30003">商品不存在或库存不足</item>

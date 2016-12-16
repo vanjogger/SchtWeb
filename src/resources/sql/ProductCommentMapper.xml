@@ -137,4 +137,31 @@
     </delete>
 
 
+    <select id="list" parameterType="HashMap" resultMap="my_product_comment">
+        select t.*
+        from t_product_comment t
+        <where>
+          1=1
+            <if test="productId != null and productId != ''">
+                and t.f_product_id=#{productId}
+            </if>
+        </where>
+        order by t.f_create_time desc limit #{start},#{size}
+    </select>
+    <select id="count" parameterType="HashMap" resultType="int">
+        select count(t.f_id)
+        from t_product_comment t
+        <where>
+           1=1
+            <if test="productId != null and productId != ''">
+                and t.f_product_id=#{productId}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryByMemberIdandProductId"  parameterType="HashMap" resultMap="my_product_comment">
+        select t.*
+        from t_product_comment t where t.f_product_id=#{productId} and t.f_member_id=#{memberId}
+        order by t.f_create_time desc
+    </select>
 </mapper>

@@ -1,0 +1,47 @@
+package com.scht.front.controller;
+
+import com.alibaba.fastjson.JSON;
+import com.scht.admin.service.AdvertService;
+import com.scht.admin.service.NoticeService;
+import com.scht.admin.service.ProductCommentService;
+import com.scht.common.BaseFrontController;
+import com.scht.front.bean.RetResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+/**
+ * Created by vanjoger on 2016/12/11.
+ */
+@Controller
+@RequestMapping("/rest/productComment")
+public class RestProductCommentController extends BaseFrontController {
+
+    @Autowired
+    ProductCommentService productCommentService;
+
+
+    @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Object list(@RequestParam("productId") String productId,@RequestParam("pageNo")int pageNo,@RequestParam("pageSize")int pageSize){
+       RetResult result = this.productCommentService.list(productId,pageNo,pageSize);
+       return JSON.toJSON(result);
+    }
+
+    @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Object save(@RequestParam("orderId") String orderId,@RequestParam("productId")String productId,@RequestParam("grade")String grade,@RequestParam("images")String images,
+                              @RequestParam("memberId")String memberId,@RequestParam("content")String content){
+        RetResult result = this.productCommentService.save(orderId, productId, grade, images, content, memberId);
+        return JSON.toJSON(result);
+    }
+
+    @RequestMapping(value = "/delete", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Object delete(@RequestParam("id") String id){
+        RetResult result = this.productCommentService.delete(id);
+        return JSON.toJSON(result);
+    }
+}
