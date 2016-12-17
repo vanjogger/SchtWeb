@@ -124,9 +124,13 @@ public class ShopServiceImpl implements ShopService {
             if (StringUtil.isNotEmpty(list)) {
                 Shop shop = list.get(0);
                 if(shop.getPassword().equals(MD5Util.getMD5ofStr(password))){
-                    result = new RetResult(RetResult.RetCode.OK);
-                    RetData data = new RetData(shop);
-                    result.setData(data);
+                    if(!"NORMAL".equals(shop.getStatus())){
+                        result = new RetResult(RetResult.RetCode.Shop_Status_Valid);
+                    }else{
+                        result = new RetResult(RetResult.RetCode.OK);
+                        RetData data = new RetData(shop);
+                        result.setData(data);
+                    }
                 }else{
                     result = new RetResult(RetResult.RetCode.Shop_Pwd_Error);
                 }

@@ -37,6 +37,7 @@
         <item Key="20001">商家不存在</item>
         <item Key="20002">密码错误</item>
         <item Key="20003">商家银行卡不存在</item>
+        <item Key="20004">商家状态异常</item>
         <item Key="20010">数据不存在</item>
         <item Key="30001">订单不存在</item>
         <item Key="30002">订单状态不允许操作</item>

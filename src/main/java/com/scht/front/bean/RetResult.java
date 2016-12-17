@@ -104,6 +104,8 @@ public class RetResult implements Serializable {
 		public static final String Shop_Pwd_Error = "20002";
 		//银行卡不存在
 		public static final String Shop_Bank_Not_Exist = "20003";
+		//商家状态非法
+		public static final String Shop_Status_Valid = "20004";
 
 		//删除对象不存在
 		public static final String Object_Not_Exist = "20010";
