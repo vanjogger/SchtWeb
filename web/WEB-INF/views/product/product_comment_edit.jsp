@@ -17,6 +17,7 @@
 <div class="container">
   <form id="J_Form" class="form-horizontal" action="/productComment/save">
     <input type="hidden" name="id" value="${dto.id}"/>
+    <input type="hidden" name="orderId" value="${dto.orderId}"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label">商品名称：</label>

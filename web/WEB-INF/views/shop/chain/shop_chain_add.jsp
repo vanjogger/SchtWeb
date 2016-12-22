@@ -24,7 +24,7 @@
 <body>
 
 <div class="container">
-  <form id="J_Form" class="form-horizontal" action="/shop/save">
+  <form id="J_Form" class="form-horizontal" action="/chainShop/save">
     <input type="hidden" name="type" value="1"/>
     <input type="hidden" name="provinceId" id="provinceId" />
     <input type="hidden" name="provinceName" id="provinceName"/>
@@ -34,7 +34,7 @@
     <input type="hidden" name="districtName"  id="districtName"/>
     <div class="row">
       <div class="control-group span20">
-        <label class="control-label"><s>*</s>商家名称：</label>
+        <label class="control-label"><s>*</s>链接名称：</label>
         <div class="controls">
           <input name="name" type="text" data-rules="{required:true,maxlength:20}" value="" class="input-large"/>
         </div>
@@ -42,40 +42,23 @@
     </div>
     <div class="row">
       <div class="control-group span20">
-        <label class="control-label"><s>*</s>商家账号：</label>
+        <label class="control-label"><s>*</s>关联商家账号：</label>
         <div class="controls">
-          <input name="account" type="text" data-rules="{required:true,maxlength:20}" value="" class="input-large"/>
+          <input name="account" type="text"  data-tip="{text:'关联商家，可不填'}" value="" class="input-large"/>
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="control-group span20">
-        <label class="control-label"><s>*</s>商家密码：</label>
-        <div class="controls">
-          <input name="password" type="password" data-rules="{required:true,maxlength:20}" value="${dto.password}" class="input-large"/>
+      <label class="control-label">头像：</label>
+      <div class="span8">
+        <div id="J_Uploader">
         </div>
       </div>
+      <input type="hidden" name="icon" id="icon" />
     </div>
-
-    <div class="control-group">
-      <label class="control-label"><s>*</s>商家分类：</label>
-      <div class="controls">
-        <select name="shopTypeId"  data-rules="{required:true}" data-loader="{url:'/shopType/listAll',property:'items',dataType:'json'}"></select>
-      </div>
-    </div>
-
-    <div class="control-group"  style="height:120px;">
-      <label class="control-label">商家图标：</label>
-      <div class="controls">
-        <div id="J_Uploader" style="margin-left: 100px;">
-        </div>
-        <input type="hidden" name="icon" id="icon" value="${dto.icon}"/>
-      </div>
-    </div>
-
     <div class="row">
       <div class="control-group span20">
-        <label class="control-label">商家Code：</label>
+        <label class="control-label">链接Code：</label>
         <div class="controls">
           <select name="code" id="code">
             <option value=""> -- 请选择 -- </option>
@@ -83,24 +66,6 @@
               <option value="${e.key}">${e.value}</option>
             </c:forEach>
           </select>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="control-group span20">
-        <label class="control-label">联系人：</label>
-        <div class="controls">
-          <input name="linkName" type="text" data-rules="{maxlength:50}" value="" class="input-large"/>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="control-group span20">
-        <label class="control-label">联系电话：</label>
-        <div class="controls">
-          <input name="linkMobile" type="text" data-rules="{maxlength:20}" value="" class="input-large"/>
         </div>
       </div>
     </div>
@@ -120,36 +85,25 @@
       </div>
     </div>
 
-
-
-    <div class="control-group">
-      <label class="control-label">地&nbsp;&nbsp;&nbsp;&nbsp;址：</label>
-      <div class="controls  control-row-auto">
-        <textarea  name="linkAddress" type="text" data-rules="{maxlength:100}" value="" class="control-row4 input-large"></textarea>
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="control-group span20">
-        <label class="control-label">商家位置：</label>
-        <div class="controls">
-
-          经度：<input type="text" name="lng" id="lng"  class="control-text" style="width:80px;"/> 纬度：<input type="text" id="lnt" name="lnt"  class="control-text" style="width:80px;"/>
-          <input type="button" value="标注位置" id="btnShow"/>
-        </div>
-      </div>
-    </div>
-
     <div class="control-group">
       <label class="control-label">备注：</label>
       <div class="controls  control-row-auto">
         <textarea  name="remark" type="text" data-rules="{maxlength:500}" value="" class="control-row4 input-large"></textarea>
       </div>
-
     </div>
-
-
+    <div class="control-group">
+      <label class="control-label">状态：</label>
+      <div class="controls  control-row-auto">
+        <input type="radio" name="status" value="NORMAL" checked/>开启
+        <input type="radio" name="status" value="FROZEN"/>关闭
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">排序：</label>
+      <div class="controls  control-row-auto">
+     <input type="text" class="control-text input-normal" value="1"  name="sort"  data-rules="{regexp:/^\d+$/}" data-messages="{regexp:'请填写整数'}"/>
+      </div>
+    </div>
     <div class="row form-actions actions-bar">
       <div class="span13 offset3 ">
         <button type="submit" class="button button-primary">保存</button>
@@ -157,21 +111,6 @@
       </div>
     </div>
   </form>
-</div>
-
-<div class="dmdDialog">
-  <div class="dmdBg"></div>
-  <div class="demend">
-    <a class="dclose" href="javascript:;" onclick="closeDialog();"></a>
-    <div class="dform">
-      <div id="allmap"></div>
-      <div id="r-result">请输入:<input type="text" id="suggestId" size="20" value="百度" style="width:250px;" /></div>
-      <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
-    </div>
-    <div class="dsuccess">
-      <a class="button button-primary confirmBtn" href="javascript:;" onclick="savePoint();">确定</a>
-    </div>
-  </div>
 </div>
 
 
@@ -204,10 +143,10 @@
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'shop_list',
+              id : 'chain_shop_list',
               isClose : true
             });
-            top.topManager.reloadPage('shop_list');
+            top.topManager.reloadPage('chain_shop_list');
           }
         },'info');
       }
@@ -229,7 +168,6 @@
         //上传的最大个数
         max: [1, '文件的最大个数不能超过{0}个'],
         //文件大小的最小值,这个单位是kb
-        minSize: [10, '文件的大小不能小于{0}KB'],
         //文件大小的最大值,单位也是kb
         maxSize: [2048, '文件大小不能大于2M']
       }
@@ -238,9 +176,7 @@
   });
 
   $(function(){
-    $('#btnShow').on('click',function () {
-      $(".dmdDialog").show();
-    });
+
     loadArea(1);
   })
 
@@ -276,86 +212,6 @@
       error:function(){}
     })
   }
-</script>
-
-<script type="text/javascript">
-  var xPoint,yPonit;
-  // 百度地图API功能
-  var map = new BMap.Map("allmap");
-  map.centerAndZoom(new BMap.Point(117.977485,37.388595), 11);
-  map.setCurrentCity("滨州");          // 设置地图显示的城市 此项是必须设置的
-  map.enableScrollWheelZoom(true);
-  map.addControl(new BMap.NavigationControl());
-  //单击获取点击的经纬度
-  map.addEventListener("click",function(e){
-    xPoint=e.point.lng;
-    yPoint=e.point.lat;
-    var point = new BMap.Point(e.point.lng, e.point.lat);
-
-    var marker = new BMap.Marker(point);
-    map.clearOverlays();
-    map.addOverlay(marker);
-  });
-  function G(id) {
-    return document.getElementById(id);
-  }
-
-  function closeDialog(){
-    $('.dmdDialog').hide();
-  }
-  function savePoint(){
-    $('#lng').val(xPoint);
-    $('#lnt').val(yPoint);
-    $('.dmdDialog').hide();
-  }
-
-  var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
-          {"input" : "suggestId"
-            ,"location" : map
-          });
-
-  ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
-    var str = "";
-    var _value = e.fromitem.value;
-    var value = "";
-    if (e.fromitem.index > -1) {
-      value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-    }
-    str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
-
-    value = "";
-    if (e.toitem.index > -1) {
-      _value = e.toitem.value;
-      value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-    }
-    str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
-    G("searchResultPanel").innerHTML = str;
-  });
-
-  var myValue;
-  ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
-    var _value = e.item.value;
-    myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-    G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
-
-    setPlace();
-  });
-
-  function setPlace(){
-    map.clearOverlays();    //清除地图上所有覆盖物
-    function myFun(){
-      var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
-      xPoint=pp.lng;
-      yPoint=pp.lat;
-      map.centerAndZoom(pp, 18);
-      map.addOverlay(new BMap.Marker(pp));    //添加标注
-    }
-    var local = new BMap.LocalSearch(map, { //智能搜索
-      onSearchComplete: myFun
-    });
-    local.search(myValue);
-  }
-
 </script>
 
 </body>

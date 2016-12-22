@@ -4160,3 +4160,24 @@ f_product_icon varchar(512) default '',
 f_product_price varchar(32) default '',
 f_create_time bigint default 0
 );
+
+
+CREATE TABLE t_one_link(
+f_id varchar(32) primary key,
+f_name varchar(512) not null,
+f_account varchar(100) default '',
+f_icon varchar(512) default '',
+f_status varchar(32) not null,
+f_agent_id varchar(32) default '',
+f_remark varchar(1000) default '',
+f_create_time bigint default 0,
+f_code varchar(100) default '',
+f_province_id varchar(100) default '',
+f_province_name varchar(100) default '',
+f_city_id varchar(100) default '',
+f_city_name varchar(100) default '',
+f_district_id varchar(100) default '',
+f_district_name varchar(100) default '',
+f_shop_id varchar(32) DEFAULT '',
+f_sort INT DEFAULT 0
+);
