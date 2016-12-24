@@ -148,7 +148,7 @@
 <!-- commit test123  laowang -->
       </div>
     </div>
-    <form id="login" method="post" onsubmit="return check()"  action="login">
+    <form id="login" method="post" onsubmit="return check()"  action="/login">
       <table border="0" width="100%" cellpadding="3" cellspacing="3">
         <tbody>
         <tr>
