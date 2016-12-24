@@ -12,8 +12,8 @@ import org.xml.sax.InputSource;
 
 public class SmsUtil {
 
-	private static String account = "";
-	private static String password = "";
+	private static String account = "cf_binhengkeji";
+	private static String password = "df7cc5566e319e82e0a685cbecdb13dd";
 	private static String SEND_URL = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
 	private static String QUERY_URL = "http://106.ihuyi.cn/webservice/sms.php?method=GetNum";
 
@@ -92,8 +92,8 @@ public class SmsUtil {
 		return null;
 	}
 	public static void main(String[] args) {
-		System.out.println(queryNum());
-		System.out.println(sendSms("18706645733","您的验证码是：【1234】。请不要把验证码泄露给其他人。"));
+//		System.out.println(queryNum());
+		System.out.println(sendSms("13306499202", "您的验证码是：1321。请不要把验证码泄露给其他人。"));
 	}
 
 }
