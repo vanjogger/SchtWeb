@@ -24,6 +24,25 @@ public class OneLink {
     private Integer sort; //排序 ，前台显示使用
     private String shopId; //关联的shopId
 
+    private String subName; //副标题
+    private String url; //链接路径
+
+    public String getSubName() {
+        return subName;
+    }
+
+    public void setSubName(String subName) {
+        this.subName = subName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public String getShopId() {
         return shopId;
     }

@@ -22,7 +22,9 @@ public interface ShopDao {
     Integer countShop(Map params);
 
 
-    List<RestShop> list(@Param("shopTypeKey")String shopTypeKey, @Param("sortType")String sortType, @Param("type")String type, @Param("code")String code, @Param("start")int start, @Param("size")int size);
+    List<RestShop> list(@Param("name")String name,@Param("shopTypeKey")String shopTypeKey, @Param("sortType")String sortType, @Param("type")String type, @Param("code")String code, @Param("start")int start, @Param("size")int size);
 
-    Integer count(@Param("shopTypeKey")String shopTypeKey,@Param("sortType") String sortType,@Param("type")String type, @Param("code")String code);
+    Integer count(@Param("name")String name,@Param("shopTypeKey")String shopTypeKey,@Param("sortType") String sortType,@Param("type")String type, @Param("code")String code);
+
+    List<RestShop> juliList(@Param("lat")String lat, @Param("lng")String lng,@Param("name")String name, @Param("shopTypeKey")String shopTypeKey, @Param("type")String type, @Param("start")int i, @Param("limit")int pageSize);
 }

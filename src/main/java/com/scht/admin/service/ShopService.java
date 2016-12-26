@@ -31,5 +31,7 @@ public interface ShopService {
 
     RetResult updatePwd(String id, String oldPwd, String newPwd);
 
-    RetResult list(String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize);
+    RetResult list(String name,String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize);
+
+    RetResult juliList(String lat,String lng,String name, String shopTypeKey, String type, int pageNo, int pageSize);
 }

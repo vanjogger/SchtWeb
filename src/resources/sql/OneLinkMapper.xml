@@ -22,14 +22,22 @@
         <result column="f_district_name" property="districtName"/>
         <result column="f_sort" property="sort"/>
         <result column="f_shop_id" property="shopId"/>
+        <result column="f_sub_name" property="subName"/>
+        <result column="f_url" property="url"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.OneLink">
-        insert into t_one_link(f_shop_id,f_id,f_name,f_account,f_icon,f_status,f_agent_id,f_remark,f_create_time,f_code,f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name,f_sort)
-        values(#{shopId},#{id},#{name},#{account},#{icon},#{status},#{agentId},#{remark},#{createTime},#{code},#{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName},#{sort})
+        insert into t_one_link(f_sub_name,f_url,f_shop_id,f_id,f_name,f_account,f_icon,f_status,f_agent_id,f_remark,f_create_time,f_code,f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name,f_sort)
+        values(#{subName},#{url},#{shopId},#{id},#{name},#{account},#{icon},#{status},#{agentId},#{remark},#{createTime},#{code},#{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName},#{sort})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.OneLink">
         update t_one_link
         <set>
+            <if test="subName!=null and subName!=''">
+                f_sub_name = #{subName},
+            </if>
+            <if test="url!=null and url!=''">
+                f_url = #{url},
+            </if>
             <if test="shopId!=null and shopId!=''">
                 f_shop_id = #{shopId},
             </if>

@@ -95,7 +95,14 @@
         </div>
       </div>
     </div>
-
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">人均消费：</label>
+        <div class="controls">
+          <input name="perPrice" type="text" data-rules="{maxlength:20}" value="" class="input-large"/>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label">联系电话：</label>

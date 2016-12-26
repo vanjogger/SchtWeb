@@ -42,9 +42,25 @@
     </div>
     <div class="row">
       <div class="control-group span20">
+        <label class="control-label"><s>*</s>链接副标题：</label>
+        <div class="controls">
+          <input name="subName" type="text"   value="" class="input-large"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
         <label class="control-label"><s>*</s>关联商家账号：</label>
         <div class="controls">
           <input name="account" type="text"  data-tip="{text:'关联商家，可不填'}" value="" class="input-large"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label"><s>*</s>跳转链接：</label>
+        <div class="controls">
+          <input name="url" type="text"  data-tip="{text:'跳转链接，可不填'}" value="" class="input-large"/>
         </div>
       </div>
     </div>

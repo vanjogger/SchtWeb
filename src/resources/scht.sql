@@ -4181,3 +4181,7 @@ f_district_name varchar(100) default '',
 f_shop_id varchar(32) DEFAULT '',
 f_sort INT DEFAULT 0
 );
+
+alter table t_one_link add f_sub_name varchar(512) default '';
+alter table t_one_link add f_url varchar(512) default '';
+alter table t_shop add f_per_price varchar(512) DEFAULT '';

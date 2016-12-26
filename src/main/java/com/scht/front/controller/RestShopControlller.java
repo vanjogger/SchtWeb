@@ -33,7 +33,7 @@ public class RestShopControlller extends BaseFrontController{
     @ResponseBody
     public Object login(@RequestParam("account") String account, @RequestParam("password") String password){
         logger.info("shop login ： account= "+account+" & password:"+password);
-        RetResult result = this.shopService.restLogin(account,password);
+        RetResult result = this.shopService.restLogin(account, password);
        return JSON.toJSON(result);
     }
 
@@ -56,10 +56,18 @@ public class RestShopControlller extends BaseFrontController{
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @ResponseBody
     public Object list(@RequestParam(value="shopTypeKey",required = false) String shopTypeKey,@RequestParam(value="sortType",required = false)String sortType,
+                       @RequestParam(value = "name", required = false) String name,
                        @RequestParam(value="type",required = false)String type, @RequestParam(value="code",required = false)String code,@RequestParam("pageNo") int pageNo,
                        @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
+        RetResult result = this.shopService.list(name, shopTypeKey, sortType, type, code, pageNo, pageSize);
+        return JSON.toJSON(result);
+    }
 
-        RetResult result = this.shopService.list(shopTypeKey,sortType,type,code,pageNo,pageSize);
+    @RequestMapping(value = "/juliList", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object juliList(String lat,String lng,String name, String shopTypeKey, String type, @RequestParam(value = "pageNo", defaultValue = "1")int pageNo, @RequestParam(value = "pageSize",
+    defaultValue = "10")int pageSize){
+        RetResult result = this.shopService.juliList(lat,lng,name, shopTypeKey, type, pageNo, pageSize);
         return JSON.toJSON(result);
     }
 

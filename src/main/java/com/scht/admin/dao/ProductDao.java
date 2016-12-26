@@ -27,4 +27,8 @@ public interface ProductDao {
     List<RestProduct> list(@Param("shopId")String id, @Param("title")String productName, @Param("start")int start, @Param("size")int size);
 
     Integer count(@Param("shopId")String id, @Param("title")String productName);
+
+    List<Product> searchSaleCountGroupByShopId(String[] shopIds);
+
+    List<Product> searchExtendProductByShopIds(String[] shopIds);
 }

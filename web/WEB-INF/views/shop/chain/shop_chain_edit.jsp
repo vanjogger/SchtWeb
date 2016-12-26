@@ -27,11 +27,11 @@
   <form id="J_Form" class="form-horizontal" action="/chainShop/update">
     <input type="hidden" name="id" value="${dto.id}"/>
     <input type="hidden" name="provinceId" id="provinceId" value="${dto.provinceId}"/>
-    <input type="hidden" name="provinceName" value="${dto.provinceName}"/>
+    <input type="hidden" name="provinceName" id="provinceName" value="${dto.provinceName}"/>
     <input type="hidden" name="cityId" id="cityId" value="${dto.cityId}"/>
-    <input type="hidden" name="cityName" value="${dto.cityName}"/>
+    <input type="hidden" name="cityName" id="cityName" value="${dto.cityName}"/>
     <input type="hidden" name="districtId" id="districtId" value="${dto.districtId}"/>
-    <input type="hidden" name="districtName" value="${dto.districtName}"/>
+    <input type="hidden" name="districtName" id="districtName" value="${dto.districtName}"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>链接名称：</label>
@@ -42,9 +42,25 @@
     </div>
     <div class="row">
       <div class="control-group span20">
+        <label class="control-label"><s>*</s>链接副标题：</label>
+        <div class="controls">
+          <input name="subName" type="text"   value="${dto.subName}" class="input-large"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
         <label class="control-label"><s>*</s>关联商家账号：</label>
         <div class="controls">
           <input name="account" type="text"  data-tip="{text:'关联商家，可不填'}" value="${dto.account}" class="input-large"/>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label"><s>*</s>跳转链接：</label>
+        <div class="controls">
+          <input name="url" type="text"  data-tip="{text:'跳转链接，可不填'}" value="${dto.url}" class="input-large"/>
         </div>
       </div>
     </div>

@@ -33,10 +33,28 @@ public class Shop {
     private String districtId;//所在区域
     private String districtName;
 
+    private String perPrice; //店铺人均消费
 
 
+    private int saleCount; //商家总销量
     private List<SubShop> list;
     private int subSize;
+
+    public int getSaleCount() {
+        return saleCount;
+    }
+
+    public void setSaleCount(int saleCount) {
+        this.saleCount = saleCount;
+    }
+
+    public String getPerPrice() {
+        return perPrice;
+    }
+
+    public void setPerPrice(String perPrice) {
+        this.perPrice = perPrice;
+    }
 
     public int getSubSize() {
         if(StringUtil.isNotEmpty(list))

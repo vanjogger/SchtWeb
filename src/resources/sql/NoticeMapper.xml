@@ -76,7 +76,7 @@
     </update>
 
     <select id="list" parameterType="HashMap" resultMap="base_notice">
-        select t.*, t.f_name as typeName,t.f_no as typeNo
+        select t.*, n.f_name as typeName,n.f_no as typeNo
         from base_notice t, base_notice_type n
         where n.f_no = #{no}
     </select>

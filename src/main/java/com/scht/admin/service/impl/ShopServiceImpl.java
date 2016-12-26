@@ -1,12 +1,8 @@
 package com.scht.admin.service.impl;
 
 import com.scht.admin.bean.Status;
-import com.scht.admin.dao.BaseMyBatisDao;
-import com.scht.admin.dao.ShopDao;
-import com.scht.admin.dao.ShopMoneyDao;
-import com.scht.admin.entity.Admin;
-import com.scht.admin.entity.Shop;
-import com.scht.admin.entity.ShopMoney;
+import com.scht.admin.dao.*;
+import com.scht.admin.entity.*;
 import com.scht.admin.service.ShopService;
 import com.scht.front.bean.RestShop;
 import com.scht.front.bean.RetData;
@@ -17,9 +13,7 @@ import com.scht.util.UUIDFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by vanjoger on 2016/11/26.
@@ -32,6 +26,10 @@ public class ShopServiceImpl implements ShopService {
     BaseMyBatisDao baseMyBatisDao;
     @Autowired
     ShopMoneyDao shopMoneyDao;
+@Autowired
+    ShopTypeDao shopTypeDao;
+    @Autowired
+    ProductDao productDao;
 
     @Override
     public List<Shop> listByAccount(String account) {
@@ -148,7 +146,7 @@ public class ShopServiceImpl implements ShopService {
     public RetResult updateInfo(String id, String linkName, String linkMobile, String linkAddress) {
         RetResult result = null;
         try {
-            Shop shop = baseMyBatisDao.findById(ShopDao.class,id);
+            Shop shop = baseMyBatisDao.findById(ShopDao.class, id);
             if (shop!=null) {
                 shop.setLinkName(linkName);
                 shop.setLinkMobile(linkMobile);
@@ -189,14 +187,27 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public RetResult list(String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize) {
+    public RetResult list(String name,String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize) {
         RetResult result = null;
         try{
             if(pageNo<1)
                 pageNo = 1;
-            List<RestShop> list = this.shopDao.list(shopTypeKey,sortType,type,code,(pageNo-1)*pageSize,pageSize);
-            Integer count = this.shopDao.count(shopTypeKey,sortType,type,code);
-
+            List<RestShop> list = this.shopDao.list(name,shopTypeKey,sortType,type,code,(pageNo-1)*pageSize,pageSize);
+            Integer count = this.shopDao.count(name,shopTypeKey,sortType,type,code);
+            initSaleCount(list);
+            ShopType shopType = null;
+            if(!StringUtil.isNullOrEmpty(shopTypeKey)) {
+                List<ShopType> types = shopTypeDao.listByKey(shopTypeKey);
+                if(types != null && types.size() > 0) {
+                    shopType = types.get(0);
+                }
+            }
+            if(!StringUtil.isNullOrEmpty(type) && shopType == null) {
+                shopType = this.baseMyBatisDao.findById(ShopTypeDao.class, type);
+            }
+            if(shopType != null && "1".equals(shopType.getIsProduct())) {
+                initProducts(list);
+            }
             RetData data = new RetData(pageNo,pageSize,list,count);
             result = new RetResult(RetResult.RetCode.OK);
             result.setData(data);
@@ -205,5 +216,81 @@ public class ShopServiceImpl implements ShopService {
             result = new RetResult(RetResult.RetCode.Execute_Error);
         }
         return result;
+    }
+
+    @Override
+    public RetResult juliList(String lat,String lng,String name, String shopTypeKey, String type, int pageNo, int pageSize) {
+        RetResult result = null;
+        try{
+            if(pageNo<1)
+                pageNo = 1;
+            List<RestShop> list = this.shopDao.juliList(lat, lng, name, shopTypeKey, type, (pageNo - 1) * pageSize, pageSize);
+            Integer count = this.shopDao.count(name,shopTypeKey,null,type,null);
+            initSaleCount(list);
+            ShopType shopType = null;
+            if(!StringUtil.isNullOrEmpty(shopTypeKey)) {
+                List<ShopType> types = shopTypeDao.listByKey(shopTypeKey);
+                if(types != null && types.size() > 0) {
+                    shopType = types.get(0);
+                }
+            }
+            if(!StringUtil.isNullOrEmpty(type) && shopType == null) {
+                shopType = this.baseMyBatisDao.findById(ShopTypeDao.class, type);
+            }
+            if(shopType != null && "1".equals(shopType.getIsProduct())) {
+                initProducts(list);
+            }
+            RetData data = new RetData(pageNo,pageSize,list,count);
+            result = new RetResult(RetResult.RetCode.OK);
+            result.setData(data);
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
+    }
+
+    private void initProducts(List<RestShop> list){
+        if(list != null && list.size() > 0) {
+            List<String> shopIds = new ArrayList<>();
+            for(RestShop shop : list){
+                shopIds.add(shop.getId());
+            }
+            List<Product> products = productDao.searchExtendProductByShopIds(shopIds.toArray(new String[0]));
+            if(products != null && products.size() > 0) {
+                Map<String,List<Product>> map = new HashMap<>();
+                List<Product> temp = null;
+                for(Product product : products) {
+                    if(map.get(product.getShopId()) != null) {
+                        temp = map.get(product.getShopId());
+                    }else{
+                        temp = new ArrayList<>();
+                    }
+                    temp.add(product);
+                    map.put(product.getShopId(), temp);
+                }
+                for(RestShop shop : list) {
+                    shop.setProducts(map.get(shop.getId()));
+                }
+            }
+        }
+    }
+    private void initSaleCount(List<RestShop> list){
+        if(list != null && list.size() > 0) {
+            List<String> shopIds = new ArrayList<>();
+            for(RestShop shop : list){
+                shopIds.add(shop.getId());
+            }
+            List<Product> products = productDao.searchSaleCountGroupByShopId(shopIds.toArray(new String[0]));
+            if(products != null && products.size() > 0) {
+                Map<String,Integer> map = new HashMap<>();
+                for(Product product : products){
+                    map.put(product.getShopId(), product.getSaleCount() + product.getVirtualCount());
+                }
+                for(RestShop shop : list) {
+                    shop.setSaleCount(map.get(shop.getId()) == null ? 0 : map.get(shop.getId()));
+                }
+            }
+        }
     }
 }

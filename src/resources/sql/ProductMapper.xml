@@ -238,5 +238,21 @@
         </where>
     </select>
 
+    <select id="searchSaleCountGroupByShopId" resultMap="my_product">
+        select sum(f_sale_count) as f_sale_count, sum(f_virtual_count) as f_virtual_count,f_shop_id from t_product
+where f_shop_id in
+ <foreach collection="array" item="ids" open="(" separator="," close=")">
+     #{ids}
+         </foreach>
+        group by f_shop_id
+    </select>
+
+    <select id="searchExtendProductByShopIds" resultMap="my_product">
+        SELECT * from t_product where f_product_type='EXTEND' and  f_shop_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </select>
+
 
 </mapper>

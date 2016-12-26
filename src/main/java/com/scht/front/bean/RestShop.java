@@ -1,5 +1,9 @@
 package com.scht.front.bean;
 
+import com.scht.admin.entity.Product;
+
+import java.util.List;
+
 /**
  * Created by vanjoger on 2016/12/12.
  */
@@ -14,9 +18,48 @@ public class RestShop {
     private String linkMobile;
     private String linkAddress;
     private Float lng;
-    private Long lat;
+    private Float lat;
     private String code;
     private String remark;
+    private String perPrice;
+
+    private int saleCount;
+
+    private String juli; //距离， 单位
+
+    private List<Product> products; //推广商品列表
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public String getJuli() {
+        return juli;
+    }
+
+    public void setJuli(String juli) {
+        this.juli = juli;
+    }
+
+    public String getPerPrice() {
+        return perPrice;
+    }
+
+    public void setPerPrice(String perPrice) {
+        this.perPrice = perPrice;
+    }
+
+    public int getSaleCount() {
+        return saleCount;
+    }
+
+    public void setSaleCount(int saleCount) {
+        this.saleCount = saleCount;
+    }
 
     public String getRemark() {
         return remark;
@@ -106,11 +149,11 @@ public class RestShop {
         this.lng = lng;
     }
 
-    public Long getLat() {
+    public Float getLat() {
         return lat;
     }
 
-    public void setLat(Long lat) {
+    public void setLat(Float lat) {
         this.lat = lat;
     }
 
