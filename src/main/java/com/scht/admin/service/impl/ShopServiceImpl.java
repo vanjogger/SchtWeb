@@ -202,9 +202,6 @@ public class ShopServiceImpl implements ShopService {
                     shopType = types.get(0);
                 }
             }
-            if(!StringUtil.isNullOrEmpty(type) && shopType == null) {
-                shopType = this.baseMyBatisDao.findById(ShopTypeDao.class, type);
-            }
             if(shopType != null && "1".equals(shopType.getIsProduct())) {
                 initProducts(list);
             }
@@ -233,9 +230,6 @@ public class ShopServiceImpl implements ShopService {
                 if(types != null && types.size() > 0) {
                     shopType = types.get(0);
                 }
-            }
-            if(!StringUtil.isNullOrEmpty(type) && shopType == null) {
-                shopType = this.baseMyBatisDao.findById(ShopTypeDao.class, type);
             }
             if(shopType != null && "1".equals(shopType.getIsProduct())) {
                 initProducts(list);
