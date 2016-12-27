@@ -214,7 +214,10 @@
           {id:'permission_list',text:'权限管理',href:'/permission/list',closeable:true},
                 </shiro:hasPermission>
           <shiro:hasPermission name="log:list">
-          {id:'log_list',text:'日志管理',href:'/log/list',closeable:true}
+          {id:'log_list',text:'日志管理',href:'/log/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="hotkey:list">
+          {id:'hot_key_list',text:'热词搜索',href:'/hotkey/list',closeable:true}
           </shiro:hasPermission>
         ]
       }]

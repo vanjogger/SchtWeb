@@ -226,7 +226,7 @@
                 and a.f_key = #{shopTypeKey}
             </if>
             <if test="name != null and name != ''">
-                and t.f_name like '%'#{name}'%'
+                and t.f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="type!=null and type!=''">
                 and t.f_type = #{type}
@@ -249,7 +249,7 @@
                 and a.f_key = #{shopTypeKey}
             </if>
             <if test="name != null and name != ''">
-                and t.f_name like '%'#{name}'%'
+                and t.f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="type!=null and type!=''">
                 and t.f_type = #{type}
@@ -269,7 +269,7 @@
                 and a.f_key = #{shopTypeKey}
             </if>
             <if test="name != null and name != ''">
-                and t.f_name like '%'#{name}'%'
+                and t.f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="type!=null and type!=''">
                 and t.f_type = #{type}

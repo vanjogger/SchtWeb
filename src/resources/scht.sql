@@ -4185,3 +4185,10 @@ f_sort INT DEFAULT 0
 alter table t_one_link add f_sub_name varchar(512) default '';
 alter table t_one_link add f_url varchar(512) default '';
 alter table t_shop add f_per_price varchar(512) DEFAULT '';
+
+CREATE TABLE t_hot_key(
+f_id varchar(32) primary key,
+f_name varchar(100) not null,
+f_sort int default 0,
+f_create_time bigint default 0
+);
