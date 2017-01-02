@@ -46,7 +46,8 @@ public class MessageRecordServiceImpl implements MessageRecordService {
             // 6位随机码
             String randomCode = StringUtil.getRandomNum(6);
 
-            String content = "用户您好！您的手机验证码是" + randomCode + "，请您及时输入。若5分钟内未输入，需要重新获取验证码。";
+//            String content = "用户您好！您的手机验证码是" + randomCode + "，请您及时输入。若5分钟内未输入，需要重新获取验证码。";
+            String content = "您的验证码是："+randomCode+"。请不要把验证码泄露给其他人。";
             // 发送短信 预留
             Map map = SmsUtil.sendSms(mobile, content);
             System.out.println("短信接口返回：---------  "+map);
