@@ -39,7 +39,7 @@ public class RestOneLinkController extends BaseController {
         RetResult result = null;
         try {
             Map<String, Object> map = new HashMap<>();
-            if(!StringUtil.isNullOrEmpty(lng) && !StringUtil.isNullOrEmpty(lat)) {
+            if(StringUtil.isNullOrEmpty(code) && !StringUtil.isNullOrEmpty(lng) && !StringUtil.isNullOrEmpty(lat)) {
                 code = LocationUtil.geoRegion(lat, lng);
             }
             if (!StringUtil.isNullOrEmpty(code)) {
