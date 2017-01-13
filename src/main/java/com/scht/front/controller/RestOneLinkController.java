@@ -7,6 +7,7 @@ import com.scht.admin.service.BaseService;
 import com.scht.common.BaseController;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
+import com.scht.util.LocationUtil;
 import com.scht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,12 +32,16 @@ public class RestOneLinkController extends BaseController {
 
     @RequestMapping(value = "list",produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object list(String code, @RequestParam(value = "pageNo",defaultValue = "1") int pageNo,
+    public Object list(String code,
+                       String lng, String lat,@RequestParam(value = "pageNo",defaultValue = "1") int pageNo,
                        @RequestParam(value = "pageSize", defaultValue = "10")int pageSize){
 
         RetResult result = null;
         try {
             Map<String, Object> map = new HashMap<>();
+            if(!StringUtil.isNullOrEmpty(lng) && !StringUtil.isNullOrEmpty(lat)) {
+                code = LocationUtil.geoRegion(lat, lng);
+            }
             if (!StringUtil.isNullOrEmpty(code)) {
                 map.put("districtId", code);
             }
