@@ -142,6 +142,9 @@
         from t_product_comment t
         <where>
           1=1
+            <if test="shopId != null and shopId != ''">
+                and t.f_shop_id=#{shopId}
+            </if>
             <if test="memberId != null and memberId != ''">
                 and t.f_member_Id=#{memberId}
             </if>
@@ -156,6 +159,9 @@
         from t_product_comment t
         <where>
            1=1
+            <if test="shopId != null and shopId != ''">
+                and t.f_shop_id=#{shopId}
+            </if>
             <if test="memberId != null and memberId != ''">
                 and t.f_member_Id=#{memberId}
             </if>

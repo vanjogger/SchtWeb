@@ -1,8 +1,11 @@
 package com.scht.front.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.scht.admin.dao.ShopDao;
+import com.scht.admin.service.BaseService;
 import com.scht.admin.service.ShopService;
 import com.scht.common.BaseFrontController;
+import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.sql.ResultSetMetaData;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +32,17 @@ public class RestShopControlller extends BaseFrontController{
 
     @Autowired
     ShopService shopService;
+
+    @Autowired
+    BaseService baseService;
+
+    @RequestMapping(value = "/find", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public Object find(String id){
+        RetResult result = new RetResult(RetResult.RetCode.OK);
+        RetData data = new RetData( this.baseService.findById(ShopDao.class, id));
+        return JSON.toJSON(result);
+    }
 
     @RequestMapping(value = "/login", produces = "application/json;charset=UTF-8")
     @ResponseBody

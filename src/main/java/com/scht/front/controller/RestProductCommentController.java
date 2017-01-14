@@ -25,8 +25,8 @@ public class RestProductCommentController extends BaseFrontController {
 
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object list(@RequestParam("productId") String productId,@RequestParam("pageNo")int pageNo,@RequestParam("pageSize")int pageSize,@RequestParam(value="memberId",required = false)String memberId){
-       RetResult result = this.productCommentService.list(memberId,productId,pageNo,pageSize);
+    public Object list(@RequestParam("shopId")String shopId,@RequestParam("productId") String productId,@RequestParam("pageNo")int pageNo,@RequestParam("pageSize")int pageSize,@RequestParam(value="memberId",required = false)String memberId){
+       RetResult result = this.productCommentService.list(shopId,memberId,productId,pageNo,pageSize);
        return JSON.toJSON(result);
     }
 
