@@ -248,6 +248,9 @@
             <if test="shopTypeKey!=null and shopTypeKey!=''">
                 and a.f_key = #{shopTypeKey}
             </if>
+            <if test="code != null and code != ''">
+                and (t.f_district_id = #{code} or t.f_city_id=#{code})
+            </if>
             <if test="name != null and name != ''">
                 and t.f_name like CONCAT("%",#{name},"%")
             </if>
@@ -267,6 +270,9 @@
             t.f_shop_type_id = a.f_id and t.f_status = 'NORMAL'
             <if test="shopTypeKey!=null and shopTypeKey!=''">
                 and a.f_key = #{shopTypeKey}
+            </if>
+            <if test="districtId != null and districtId != ''">
+                 and (t.f_district_id = #{districtId} or t.f_city_id=#{districtId})
             </if>
             <if test="name != null and name != ''">
                 and t.f_name like CONCAT("%",#{name},"%")

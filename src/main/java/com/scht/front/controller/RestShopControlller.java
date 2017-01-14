@@ -65,9 +65,9 @@ public class RestShopControlller extends BaseFrontController{
 
     @RequestMapping(value = "/juliList", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object juliList(String lat,String lng,String name, String shopTypeKey, String type, @RequestParam(value = "pageNo", defaultValue = "1")int pageNo, @RequestParam(value = "pageSize",
+    public Object juliList(String code,String lat,String lng,String name, String shopTypeKey, String type, @RequestParam(value = "pageNo", defaultValue = "1")int pageNo, @RequestParam(value = "pageSize",
     defaultValue = "10")int pageSize){
-        RetResult result = this.shopService.juliList(lat,lng,name, shopTypeKey, type, pageNo, pageSize);
+        RetResult result = this.shopService.juliList(code,lat,lng,name, shopTypeKey, type, pageNo, pageSize);
         return JSON.toJSON(result);
     }
 

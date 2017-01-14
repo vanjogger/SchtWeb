@@ -102,7 +102,7 @@
                 and f_status = #{status}
             </if>
             <if test="districtId != null and districtId != ''">
-                and f_district_id=#{districtId}
+                and (f_district_id=#{districtId} or f_city_id=#{districtId})
             </if>
             <if test="name != null and name != ''">
                 and f_name like concat('%',concat(#{name},'%'))
@@ -127,7 +127,7 @@
                 and f_status = #{status}
             </if>
             <if test="districtId != null and districtId != ''">
-                and f_district_id=#{districtId}
+                and (f_district_id=#{districtId} or f_city_id=#{districtId})
             </if>
             <if test="name != null and name != ''">
                 and f_name like concat('%',concat(#{name},'%'))

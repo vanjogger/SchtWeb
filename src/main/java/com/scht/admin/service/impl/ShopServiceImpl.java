@@ -193,7 +193,7 @@ public class ShopServiceImpl implements ShopService {
             if(pageNo<1)
                 pageNo = 1;
             List<RestShop> list = this.shopDao.list(name,shopTypeKey,sortType,type,code,(pageNo-1)*pageSize,pageSize);
-            Integer count = this.shopDao.count(name,shopTypeKey,sortType,type,code);
+            Integer count = this.shopDao.count(null,name,shopTypeKey,sortType,type,code);
             initSaleCount(list);
             ShopType shopType = null;
             if(!StringUtil.isNullOrEmpty(shopTypeKey)) {
@@ -216,13 +216,13 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public RetResult juliList(String lat,String lng,String name, String shopTypeKey, String type, int pageNo, int pageSize) {
+    public RetResult juliList(String code,String lat,String lng,String name, String shopTypeKey, String type, int pageNo, int pageSize) {
         RetResult result = null;
         try{
             if(pageNo<1)
                 pageNo = 1;
-            List<RestShop> list = this.shopDao.juliList(lat, lng, name, shopTypeKey, type, (pageNo - 1) * pageSize, pageSize);
-            Integer count = this.shopDao.count(name,shopTypeKey,null,type,null);
+            List<RestShop> list = this.shopDao.juliList(code,lat, lng, name, shopTypeKey, type, (pageNo - 1) * pageSize, pageSize);
+            Integer count = this.shopDao.count(code,name,shopTypeKey,null,type,null);
             initSaleCount(list);
             ShopType shopType = null;
             if(!StringUtil.isNullOrEmpty(shopTypeKey)) {
