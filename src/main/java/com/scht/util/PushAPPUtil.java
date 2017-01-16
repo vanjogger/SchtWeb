@@ -4,9 +4,11 @@ import cn.jpush.api.JPushClient;
 import cn.jpush.api.common.resp.APIConnectionException;
 import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.model.Message;
+import cn.jpush.api.push.model.Options;
 import cn.jpush.api.push.model.Platform;
 import cn.jpush.api.push.model.PushPayload;
 import cn.jpush.api.push.model.audience.Audience;
+import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
 import com.scht.admin.entity.PushSet;
 import net.sf.json.JSONObject;
@@ -39,30 +41,33 @@ public class PushAPPUtil {
             map.put("title", title);
             Message message = Message.newBuilder().addExtra("time_to_live",86400*3)
                     .setMsgContent(String.valueOf(JSONObject.fromObject(map))).build();
-            Notification notification = Notification.ios(title, map);
+            Notification notification = Notification.newBuilder().addPlatformNotification(IosNotification.newBuilder()
+                    .setSound("happy").setAlert(title).addExtras(map).disableBadge().build()).build();
+                   // Notification.ios(title, map);
             Notification androidNoti = Notification.android(map.get("content"), title, map);
             PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.alias(alias));
 //            PushPayload payload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.alias(alias)).setNotification(notification)
 //                    .setNotification(androidNoti).build();
-            PushPayload payLoadIOS = builder.setNotification(notification).build();
+            PushPayload payLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
             PushPayload payLoadAndroid = builder.setNotification(androidNoti).build();
             if("member".equalsIgnoreCase(type)){
-                new JPushClient(set.getIosMasterSecret(),set.getIosAppKey()).sendPush(payLoadIOS);
-                new JPushClient(set.getAndroidMasterSecret(),set.getAndroidAppKey()).sendPush(payLoadAndroid);
+                try {
+                    new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(payLoadIOS);
+                }catch (Exception e){}
+                try {
+                    new JPushClient(set.getAndroidMasterSecret(), set.getAndroidAppKey()).sendPush(payLoadAndroid);
+                }catch (Exception e){}
             }else  if("shop".equalsIgnoreCase(type)) {
-                new JPushClient(set.getIosMasterSecret(),set.getIosAppKey()).sendPush(payLoadIOS);
-                new JPushClient(set.getAndroidMasterSecret(),set.getAndroidAppKey()).sendPush(payLoadAndroid);
+                try {
+                    new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(payLoadIOS);
+                }catch (Exception e){}
+                try {
+                    new JPushClient(set.getAndroidMasterSecret(), set.getAndroidAppKey()).sendPush(payLoadAndroid);
+                }catch (Exception e){}
             }
             return true;
-        } catch (APIConnectionException e) {
-            System.out.println("connect error");
-            return false;
-        } catch (APIRequestException e) {
-            System.out.println("http status : " + e.getStatus());
-            System.out.println("Error Code: " + e.getErrorCode());
-            System.out.println("Error Message: " + e.getErrorMessage());
-            System.out.println("Msg ID: " + e.getMsgId());
+        }  catch (Exception e) {
             return false;
         }
     }
@@ -83,34 +88,40 @@ public class PushAPPUtil {
         try {
             Message message = Message.newBuilder().addExtra("time_to_live", 86400 * 3)
                     .setMsgContent(JSONObject.fromObject(map).toString()).build();
-            Notification notification = Notification.ios(title, map) ;
+            Notification notification = Notification.newBuilder().addPlatformNotification(IosNotification.newBuilder()
+            .setSound("happy").addExtras(map).setAlert(title).disableBadge().build()).build();
+                    //Notification.ios(title, map) ;
             Notification androidNoti = Notification.android(map.get("content"), title, map);
             PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.tag(tags));
-            PushPayload pushPayLoadIOS = builder.setNotification(notification).build();
+            PushPayload pushPayLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
             PushPayload pushPayLoadAndroid = builder.setNotification(androidNoti).build();
 //            PushPayload pushPayload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.tag(tags)).setNotification(notification).setNotification(androidNoti)
 //                    .build();
             if("member".equalsIgnoreCase(type)){
-                new JPushClient(set.getIosMasterSecret(),set.getIosAppKey()).sendPush(pushPayLoadIOS);
-                new JPushClient(set.getAndroidMasterSecret(),set.getAndroidAppKey()).sendPush(pushPayLoadAndroid);
+                try {
+                    new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(pushPayLoadIOS);
+                }catch (Exception e){}
+                try {
+                    new JPushClient(set.getAndroidMasterSecret(), set.getAndroidAppKey()).sendPush(pushPayLoadAndroid);
+                }catch (Exception e){}
             }else  if("shop".equalsIgnoreCase(type)) {
-                new JPushClient(set.getIosMasterSecret(),set.getIosAppKey()).sendPush(pushPayLoadIOS);
-                new JPushClient(set.getAndroidMasterSecret(),set.getAndroidAppKey()).sendPush(pushPayLoadAndroid);
+                try {
+                    new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(pushPayLoadIOS);
+                }catch (Exception e){}
+                try {
+                    new JPushClient(set.getAndroidMasterSecret(), set.getAndroidAppKey()).sendPush(pushPayLoadAndroid);
+                }catch (Exception e){}
             }else{
-                new JPushClient(set.getIosMasterSecret(),set.getIosAppKey()).sendPush(pushPayLoadIOS);
-                new JPushClient(set.getAndroidMasterSecret(),set.getAndroidAppKey()).sendPush(pushPayLoadAndroid);
-
+                try {
+                    new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(pushPayLoadIOS);
+                }catch (Exception e){}
+                try {
+                    new JPushClient(set.getAndroidMasterSecret(), set.getAndroidAppKey()).sendPush(pushPayLoadAndroid);
+                }catch (Exception e){}
             }
             return true;
-        } catch (APIConnectionException e) {
-            System.out.println("connect error");
-            return false;
-        } catch (APIRequestException e) {
-            System.out.println("http status : " + e.getStatus());
-            System.out.println("Error Code: " + e.getErrorCode());
-            System.out.println("Error Message: " + e.getErrorMessage());
-            System.out.println("Msg ID: " + e.getMsgId());
+        } catch (Exception e) {
             return false;
         }
     }

@@ -41,6 +41,7 @@ public class RestShopControlller extends BaseFrontController{
     public Object find(String id){
         RetResult result = new RetResult(RetResult.RetCode.OK);
         RetData data = new RetData( this.baseService.findById(ShopDao.class, id));
+        result.setData(data);
         return JSON.toJSON(result);
     }
 
