@@ -16,31 +16,44 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by vanjoger on 2016/12/11.
  */
 @Controller
-@RequestMapping("/rest/productComment")
+@RequestMapping("/rest/productComment/")
 public class RestProductCommentController extends BaseFrontController {
 
     @Autowired
     ProductCommentService productCommentService;
 
-
-    @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
+    @RequestMapping(value = "list",produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object list(@RequestParam("shopId")String shopId,@RequestParam("productId") String productId,@RequestParam("pageNo")int pageNo,@RequestParam("pageSize")int pageSize,@RequestParam(value="memberId",required = false)String memberId){
+    public Object ddss( String shopId,  String productId ,
+                        @RequestParam(value = "pageNo",defaultValue = "1")int pageNo,
+                       @RequestParam(value = "pageSize", defaultValue = "10")int pageSize,
+                        String memberId){
+//        return JSON.toJSON(new RetResult(RetResult.RetCode.OK));
        RetResult result = this.productCommentService.list(shopId,memberId,productId,pageNo,pageSize);
        return JSON.toJSON(result);
     }
 
+//    @RequestMapping(value = "list", produces = "application/json;charset=UTF-8")
+//    @ResponseBody
+//    public Object list(@RequestParam("shopId")String shopId,@RequestParam("productId") String productId,
+//                       @RequestParam(value = "pageNo",defaultValue = "1")int pageNo,
+//                       @RequestParam(value = "pageSize", defaultValue = "10")int pageSize,
+//                       @RequestParam("memberId")String memberId){
+//       RetResult result = this.productCommentService.list(shopId,memberId,productId,pageNo,pageSize);
+//       return JSON.toJSON(result);
+//    }
+
     @RequestMapping(value = "/save", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object save(@RequestParam("orderId") String orderId,@RequestParam("productId")String productId,@RequestParam("grade")String grade,@RequestParam("images")String images,
-                              @RequestParam("memberId")String memberId,@RequestParam("content")String content){
+    public Object save(String orderId,String productId,
+                     String grade, String images, String memberId,String content){
         RetResult result = this.productCommentService.save(orderId, productId, grade, images, content, memberId);
         return JSON.toJSON(result);
     }
 
     @RequestMapping(value = "/delete", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object delete(@RequestParam("id") String id){
+    public Object delete(String id){
         RetResult result = this.productCommentService.delete(id);
         return JSON.toJSON(result);
     }

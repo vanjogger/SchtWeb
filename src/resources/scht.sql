@@ -4121,6 +4121,7 @@ f_create_time bigint default 0
 alter table t_message_record add f_type varchar(10);
 
 alter table t_product_comment add f_images varchar(1000);
+alter table t_product_comment add f_member_id varchar(32);
 
 alter table t_shop_flow add f_before_amount varchar(20);
 

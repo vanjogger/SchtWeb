@@ -29,6 +29,20 @@ public class RestProductCollectionController extends BaseController {
     @Autowired
     BaseService baseService;
 
+    //判断是否收藏了
+    @RequestMapping(value = "collected",produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object collected(String memberId, String productId) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+        map.put("productId", productId);
+        if(this.baseService.count4Page(ProductCollectionDao.class, map) > 0) {
+            return JSON.toJSON(new RetResult(RetResult.RetCode.OK));
+        }
+        return JSON.toJSON(new RetResult(RetResult.RetCode.System_Error));
+    }
+
+
     @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
     @ResponseBody
     public Object list(String memberId, @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
@@ -68,8 +82,15 @@ public class RestProductCollectionController extends BaseController {
                 Map<String,Object> map = new HashMap<>();
                 map.put("memberId", memberId);
                 map.put("productId", productId);
-                if(this.baseService.count4Page(ProductCollectionDao.class, map) > 0) {
-                    result = new RetResult(RetResult.RetCode.Collection_Exist);
+                map.put("start",0);
+                map.put("limit", Integer.MAX_VALUE);
+                List<ProductCollection> list = this.baseService.searchByPage(ProductCollectionDao.class, map);
+                if(list != null && list.size() > 0) {
+                    for(ProductCollection productCollection : list){
+                        this.baseService.delete(ProductCollectionDao.class,new String[]{productCollection.getId()});
+                    }
+                    result = new RetResult(RetResult.RetCode.OK);
+                    result.setResMsg("收藏已取消");
                 }else {
                     ProductCollection collection = new ProductCollection();
                     collection.setId(UUIDFactory.random());
@@ -81,6 +102,7 @@ public class RestProductCollectionController extends BaseController {
                     collection.setCreateTime(System.currentTimeMillis());
                     this.baseService.insert(ProductCollectionDao.class, collection);
                     result = new RetResult(RetResult.RetCode.OK);
+                    result.setResMsg("收藏成功");
                 }
             }
         }

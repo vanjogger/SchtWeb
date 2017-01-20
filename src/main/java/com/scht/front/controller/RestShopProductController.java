@@ -22,7 +22,7 @@ public class RestShopProductController extends BaseFrontController {
 
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object list(@RequestParam("id") String id, @RequestParam("productName") String productName, @RequestParam("pageNo") int pageNo,
+    public Object list(@RequestParam("id") String id, String productName, @RequestParam(value = "pageNo",defaultValue = "1") int pageNo,
                        @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
         RetResult result = this.productService.list(id,productName,pageNo,pageSize);
         return JSON.toJSON(result);

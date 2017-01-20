@@ -15,7 +15,7 @@
 <body>
 
 <div class="container">
-  <form id="J_Form" class="form-horizontal" action="/product/save">
+  <form id="J_Form" class="form-horizontal" method="post" action="/product/save">
     <input type="hidden" name="productType" value="${type}"/>
     <div class="row">
       <div class="control-group span20">

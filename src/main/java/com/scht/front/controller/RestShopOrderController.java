@@ -23,7 +23,7 @@ public class RestShopOrderController extends BaseFrontController {
 
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object list(@RequestParam("shopId") String shopId, @RequestParam("status") String status, @RequestParam("pageNo") int pageNo,
+    public Object list(@RequestParam("shopId") String shopId,   String status, @RequestParam(value = "pageNo",defaultValue = "1") int pageNo,
                        @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
        RetResult result = this.orderService.list(shopId,status,pageNo,pageSize);
        return JSON.toJSON(result);

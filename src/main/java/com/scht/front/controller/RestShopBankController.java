@@ -41,7 +41,7 @@ public class RestShopBankController extends BaseFrontController {
 
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object list(@RequestParam("id") String id,@RequestParam("pageNo") int pageNo,
+    public Object list(@RequestParam("id") String id,@RequestParam(value = "pageNo",defaultValue = "1") int pageNo,
                        @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
         RetResult result = this.shopBankService.list(id, pageNo, pageSize);
         return JSON.toJSON(result);

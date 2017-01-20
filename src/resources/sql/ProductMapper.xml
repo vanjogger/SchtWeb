@@ -217,7 +217,6 @@
      </select>
 
 
-
     <select id="list" parameterType="HashMap" resultMap="rest_product">
       SELECT t.f_id,t.f_title,p.f_name as f_type_name,t.f_type_id,t.f_description,t.f_price,t.f_market_price,t.f_images,t.f_stock,t.f_sale_count,t.f_virtual_count,t.f_comment_count
       FROM t_product t,t_product_type p

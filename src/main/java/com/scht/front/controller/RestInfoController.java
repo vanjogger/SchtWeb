@@ -33,14 +33,14 @@ public class RestInfoController extends BaseFrontController {
 
     @RequestMapping(value = "/queryNotice", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object queryNotice(@RequestParam("no") String no){
+    public Object queryNotice( String no){
         RetResult result = this.noticeService.list(no);
         return JSON.toJSON(result);
     }
 
     @RequestMapping(value = "/noticeDetail", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object noticeDetail(@RequestParam("id") String id){
+    public Object noticeDetail( String id){
         RetResult result = this.noticeService.detail(id);
         return JSON.toJSON(result);
     }

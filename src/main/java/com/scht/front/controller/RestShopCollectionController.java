@@ -37,6 +37,19 @@ public class RestShopCollectionController extends BaseController {
     @Autowired
     BaseService baseService;
 
+    //判断是否收藏了
+    @RequestMapping(value = "collected",produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object collected(String memberId, String shopId) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+        map.put("shopId", shopId);
+        if(this.baseService.count4Page(ShopCollectionDao.class, map) > 0) {
+            return JSON.toJSON(new RetResult(RetResult.RetCode.OK));
+        }
+        return JSON.toJSON(new RetResult(RetResult.RetCode.System_Error));
+    }
+
 
     @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
     @ResponseBody
@@ -76,8 +89,15 @@ public class RestShopCollectionController extends BaseController {
                 Map<String,Object> map = new HashMap<>();
                 map.put("memberId", memberId);
                 map.put("shopId", shopId);
-                if(this.baseService.count4Page(ShopCollectionDao.class, map) > 0) {
-                    result = new RetResult(RetResult.RetCode.Collection_Exist);
+                map.put("start",0);
+                map.put("limit", Integer.MAX_VALUE);
+                List<ShopCollection> list = this.baseService.searchByPage(ShopCollectionDao.class,map);
+                if(list != null && list.size() > 0) {
+                    for(ShopCollection shopCollection : list){
+                        this.baseService.delete(ShopCollectionDao.class, new String[]{shopCollection.getId()});
+                        result = new RetResult(RetResult.RetCode.OK);
+                        result.setResMsg("收藏已取消");
+                    }
                 }else {
                     ShopCollection collection = new ShopCollection();
                     collection.setId(UUIDFactory.random());
@@ -91,6 +111,7 @@ public class RestShopCollectionController extends BaseController {
                     collection.setCreateTime(System.currentTimeMillis());
                     this.baseService.insert(ShopCollectionDao.class, collection);
                     result = new RetResult(RetResult.RetCode.OK);
+                    result.setResMsg("收藏成功");
                 }
             }
         }
