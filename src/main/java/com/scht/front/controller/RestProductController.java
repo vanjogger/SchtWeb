@@ -34,8 +34,12 @@ public class RestProductController  extends BaseController{
 
     @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object list(String shopId, String title, String order, @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
-                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize, String type){
+    public Object list(@RequestParam(value = "shopId", required = false)String shopId,
+                       @RequestParam(value = "title", required = false) String title,
+                       @RequestParam(value = "order", required = false)String order,
+                       @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                       @RequestParam(value = "type", required = false)String type){
         Map<String,Object> map = new HashMap<>();
         map.put("front","true");
         map.put("status", Status.NORMAL.name());

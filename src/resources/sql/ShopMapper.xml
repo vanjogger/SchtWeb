@@ -229,7 +229,8 @@
                 and t.f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="type!=null and type!=''">
-                and t.f_type = #{type}
+                and (t.f_shop_type_id = #{type} or t.f_shop_type_id in (select
+                f_id from t_shop_type where f_parent_id=#{type}))
             </if>
             <if test="code!=null and code!=''">
                 and t.f_code = #{code}
@@ -255,7 +256,8 @@
                 and t.f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="type!=null and type!=''">
-                and t.f_type = #{type}
+                and (t.f_shop_type_id = #{type} or t.f_shop_type_id in (select
+                f_id from t_shop_type where f_parent_id=#{type}))
             </if>
 
         </where>
@@ -278,7 +280,8 @@
                 and t.f_name like CONCAT("%",#{name},"%")
             </if>
             <if test="type!=null and type!=''">
-                and t.f_type = #{type}
+                and (t.f_shop_type_id = #{type} or t.f_shop_type_id in (select
+                f_id from t_shop_type where f_parent_id=#{type}))
             </if>
             <if test="code!=null and code!=''">
                 and t.f_code = #{code}

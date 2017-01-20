@@ -119,10 +119,10 @@
                 and f_agent_id=#{agentId}
             </if>
             <if test="shopId !=null and shopId !=''">
-                <if test="shopId == '0'">
+                <if test='shopId == "0"'>
                     and f_self='0'
                 </if>
-                <if test="shopId != '0'">
+                <if test='shopId != "0"'>
                   and f_shop_id=#{shopId}
                 </if>
             </if>
@@ -175,10 +175,10 @@
                 and f_agent_id=#{agentId}
             </if>
             <if test="shopId !=null and shopId !=''">
-                <if test="shopId == '0'">
+                <if test='shopId == "0"'>
                     and f_self='0'
                 </if>
-                <if test="shopId != '0'">
+                <if test='shopId != "0"'>
                     and f_shop_id=#{shopId}
                 </if>
             </if>
