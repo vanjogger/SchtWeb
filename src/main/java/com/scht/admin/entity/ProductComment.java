@@ -25,8 +25,17 @@ public class ProductComment {
 
     //不关联数据库
     private String memberName;
+    private String replayName;
     private String dateStr;
     private String replayDateStr;
+
+    public String getReplayName() {
+        return replayName;
+    }
+
+    public void setReplayName(String replayName) {
+        this.replayName = replayName;
+    }
 
     public String getImages() {
         return images;

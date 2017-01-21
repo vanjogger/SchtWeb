@@ -1,10 +1,7 @@
 package com.scht.admin.service.impl;
 
 import com.scht.admin.dao.*;
-import com.scht.admin.entity.Member;
-import com.scht.admin.entity.Order;
-import com.scht.admin.entity.Product;
-import com.scht.admin.entity.ProductComment;
+import com.scht.admin.entity.*;
 import com.scht.admin.service.ProductCommentService;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
@@ -13,6 +10,7 @@ import com.scht.util.UUIDFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,6 +24,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     ProductCommentDao productCommentDao;
     @Autowired
     BaseMyBatisDao baseMyBatisDao;
+    @Autowired
+    MemberDao memberDao;
 
     @Override
     public RetResult list(String shopId,String memberId,String productId, int pageNo, int pageSize) {
@@ -35,7 +35,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
                 pageNo = 1;
             List<ProductComment> list = this.productCommentDao.list(shopId,memberId,productId,(pageNo-1)*pageSize,pageSize);
             Integer total = this.productCommentDao.count(shopId,memberId,productId);
-
+            initList(list);
             RetData data = new RetData(pageNo,pageSize,list,total);
             result = new RetResult(RetResult.RetCode.OK);
             result.setData(data);
@@ -117,5 +117,29 @@ public class ProductCommentServiceImpl implements ProductCommentService {
             result = new RetResult(RetResult.RetCode.Execute_Error);
         }
         return result;
+    }
+
+    private void initList(List<ProductComment> list){
+        if(list == null || list.size() == 0) return;
+        List<String> memberIds = new ArrayList<>();
+        for(ProductComment comment : list){
+            Member member = this.baseMyBatisDao.findById(MemberDao.class, comment.getMemberId());
+            if(member != null){
+                comment.setMemberName(member.getAccount());
+            }
+            if(!StringUtil.isNullOrEmpty(comment.getReplyId())){
+                Shop shop = this.baseMyBatisDao.findById(ShopDao.class, comment.getReplyId());
+                if(shop == null){
+                    Admin admin = this.baseMyBatisDao.findById(AdminDao.class, comment.getReplyId());
+                    if(admin != null){
+                        comment.setReplayName(admin.getAddress());
+                    }
+                }else{
+                    comment.setReplayName(shop.getAccount());
+                }
+            }
+        }
+
+
     }
 }
