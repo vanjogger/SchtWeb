@@ -25,6 +25,25 @@ public class Member {
     //一下字段不存入数据库
     private String date; //时间字符串，不存数据库
 
+    private long shopCollects; //收藏的商家数量
+    private long productColects; //收藏的商品数量
+
+    public long getShopCollects() {
+        return shopCollects;
+    }
+
+    public void setShopCollects(long shopCollects) {
+        this.shopCollects = shopCollects;
+    }
+
+    public long getProductColects() {
+        return productColects;
+    }
+
+    public void setProductColects(long productColects) {
+        this.productColects = productColects;
+    }
+
     public String getId() {
         return id;
     }

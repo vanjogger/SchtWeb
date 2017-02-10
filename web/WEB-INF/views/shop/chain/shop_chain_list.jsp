@@ -74,7 +74,7 @@
         {title:'序号',dataIndex:'sort',width:50},
         {title:'图标',dataIndex:'',width:100,renderer:function(value,obj){
             if(obj.icon == undefined || obj.icon == ''){
-                return "<img src='/resources/image/default_user.gif' width='80'/>";
+                return "<img src='/resources/images/default_user.gif' width='80'/>";
             }
             return  "<img src='"+obj.icon+"' width='80'/>";
         }},

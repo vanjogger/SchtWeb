@@ -3,6 +3,8 @@ package com.scht.front.controller;
 import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.Status;
 import com.scht.admin.dao.MemberDao;
+import com.scht.admin.dao.ProductCollectionDao;
+import com.scht.admin.dao.ShopCollectionDao;
 import com.scht.admin.entity.Member;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.MemberService;
@@ -12,12 +14,15 @@ import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
 import com.scht.util.MD5Util;
 import com.scht.util.UUIDFactory;
+import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.CacheRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by vanjoger on 2016/12/3.
@@ -66,6 +71,10 @@ public class RestMemberController  extends BaseController{
     public Object find(String id){
         try {
             Member member = this.baseService.findById(MemberDao.class, id);
+            Map<String,Object> map = new HashMap<>();
+            map.put("memberId",member.getId());
+           member.setShopCollects(this.baseService.count4Page(ShopCollectionDao.class, map));
+            member.setProductColects(this.baseService.count4Page(ProductCollectionDao.class, map));
             RetResult result = new RetResult(RetResult.RetCode.OK);
             RetData data = new RetData(member);
             result.setData(data);

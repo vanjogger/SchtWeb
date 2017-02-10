@@ -61,7 +61,7 @@
     var  columns = [
       {title:'头像',dataIndex:'',width:100,renderer:function(value,obj){
         if(obj.headIcon == undefined || obj.headIcon == ''){
-          return "<img src='/resources/image/default_user.gif' width='80'/>";
+          return "<img src='/resources/images/default_user.gif' width='80'/>";
         }
         return  "<img src='"+obj.headIcon+"' width='80'/>";
       }},
