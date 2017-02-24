@@ -46,6 +46,8 @@ public class RestPayBackController extends BaseController {
     BaseService baseService;
 
     //微信返回
+    @RequestMapping(value = "weixinpay", produces = "text/plain;charset=utf-8")
+    @ResponseBody
     public String weixinPay(HttpServletRequest request){
         String respMessage = "";
         try {

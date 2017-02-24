@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +36,12 @@ public class RestShopControlller extends BaseFrontController{
 
     @Autowired
     BaseService baseService;
+
+    @RequestMapping(value = "/view")
+    public Object view(String id,ModelMap map){
+       map.put("data", this.baseService.findById(ShopDao.class, id));
+        return "/pages/shop";
+    }
 
     @RequestMapping(value = "/find", produces = "application/json;charset=UTF-8")
     @ResponseBody

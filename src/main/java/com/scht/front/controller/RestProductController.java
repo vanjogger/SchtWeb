@@ -11,6 +11,7 @@ import com.scht.front.bean.RetResult;
 import com.scht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,5 +85,12 @@ public class RestProductController  extends BaseController{
         RetData data = new RetData(product);
         result.setData(data);
         return JSON.toJSON(result);
+    }
+
+    @RequestMapping(value = "view")
+    public Object view(String id, ModelMap map, HttpServletRequest request){
+        Product product = this.baseService.findById(ProductDao.class, id);
+       map.put("data", product);
+       return "/pages/product";
     }
 }
