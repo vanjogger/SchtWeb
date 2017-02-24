@@ -43,12 +43,16 @@
       <div class="control-group span20">
         <label class="control-label">是否自营：</label>
         <div class="controls">
-          <label class="radio" for="self1"><input ID="self1" type="radio" onclick="shShop(this)" name="self" value="0" CHECKED>自营商品</label>&nbsp;&nbsp;&nbsp;
-          <label class="radio" for="self2"><input id="self2" type="radio" onclick="shShop(this)" name="self" value="1">商家销售</label>
+          <label class="radio" for="self1">
+            <input ID="self1" type="radio" onclick="shShop(this)" name="self" value="0" ${type=='NORMAL'?'checked':''}>自营商品</label>&nbsp;&nbsp;&nbsp;
+          <label class="radio" for="self2">
+            <input id="self2" type="radio" onclick="shShop(this)" name="self" value="1"
+            ${type!='NORMAL'?'checked':''}
+             ${type=='NORMAL'?'DISABLED':''}>商家销售</label>
         </div>
       </div>
     </div>
-    <div class="row" id="shops_div" style="display: none;">
+    <div class="row" id="shops_div" style="display: ${type=='NORMAL'?'none':''};">
       <div class="control-group span20">
         <label class="control-label">所属商家：</label>
         <div class="controls control-row4" style="height:150px;">

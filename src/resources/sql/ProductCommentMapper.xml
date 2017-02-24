@@ -74,7 +74,7 @@
     <select id="findById" resultMap="my_product_comment">
         select n.*,m.f_account as f_member_name
         from t_product_comment n,base_member m
-         where n.f_id=#{id}
+         where n.f_member_id = m.f_id and n.f_id=#{id}
     </select>
 
     <select id="findAll" resultMap="my_product_comment">

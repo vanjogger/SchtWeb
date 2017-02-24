@@ -45,7 +45,7 @@
         <div class="controls">
           <label class="radio" for="self1"><input ID="self1" type="radio" onclick="shShop(this)"
                                                   name="self" value="0" ${data.self == '0'?'checked':''}>自营商品</label>&nbsp;&nbsp;&nbsp;
-          <label class="radio" for="self2"><input id="self2" type="radio" onclick="shShop(this)"
+          <label class="radio" for="self2"><input id="self2" type="radio" onclick="shShop(this)"  ${data.productType=='NORMAL'?'DISABLED':''}
                                                   name="self" value="1" ${data.self == '1'?'checked':''}>商家销售</label>
         </div>
       </div>

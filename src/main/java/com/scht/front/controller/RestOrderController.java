@@ -11,6 +11,7 @@ import com.scht.admin.entity.Shop;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.OrderProductService;
 import com.scht.admin.service.OrderService;
+import com.scht.admin.service.ShopService;
 import com.scht.common.BaseController;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,8 @@ public class RestOrderController extends BaseController {
 
     @Autowired
     OrderProductService orderProductService;
+    @Autowired
+    ShopService shopService;
     //订单列表
     @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
     @ResponseBody
@@ -64,7 +68,8 @@ public class RestOrderController extends BaseController {
         if(!StringUtil.isNullOrEmpty(status)) {
             map.put("status", status);
         }
-        List list = this.baseService.searchByPage(OrderDao.class, map);
+        List<Order> list = this.baseService.searchByPage(OrderDao.class, map);
+        initList(list);
         int count = this.baseService.count4Page(OrderDao.class, map);
         RetResult result = new RetResult(RetResult.RetCode.OK);
         RetData data = new RetData(pageNo,pageSize, list,count);
@@ -232,5 +237,26 @@ public class RestOrderController extends BaseController {
             }
         }
         return JSON.toJSON(result);
+    }
+
+    private void initList(List<Order> list){
+        if(list == null || list.size() == 0) return ;
+        List<String> shopIds = new ArrayList<>();
+        for(Order order : list) {
+            shopIds.add(order.getShopId());
+        }
+        Map<String,Shop> shopMap = new HashMap<>();
+        if(shopIds.size() > 0) {
+            List<Shop> shopList = shopService.listByIds(shopIds.toArray(new String[0]));
+            if(shopList != null && shopList.size() > 0) {
+                for(Shop shop : shopList) {
+                    shopMap.put(shop.getId(), shop);
+                }
+            }
+        }
+        for(Order order : list){
+            order.setShopName(shopMap.get(order.getShopId()) != null ? shopMap.get(order.getShopId()).getName() : "自营店铺");
+            order.setList(orderProductService.listByOrderId(order.getId()));
+        }
     }
 }

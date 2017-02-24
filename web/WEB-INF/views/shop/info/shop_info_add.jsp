@@ -116,7 +116,6 @@
       <label class="control-label">所在区域：</label>
       <div class="controls  control-row-auto">
         <select id="t_province" name="t_province" onchange="loadArea(2)">
-
         </select>
         <select id="t_city"  name="t_city" onchange="loadArea(3)">
 
@@ -242,14 +241,23 @@
 
   });
 
+  var defaultDistrict = "371602";
   $(function(){
     $('#btnShow').on('click',function () {
       $(".dmdDialog").show();
     });
-    loadArea(1);
+    if(defaultDistrict) {
+      loadArea(1, defaultDistrict.substring(0,2) + "0000");
+
+        loadArea(2,defaultDistrict.substring(0,4) + "00");
+        loadArea(3, defaultDistrict);
+    }else{
+      loadArea(1);
+    }
+
   })
 
-  function loadArea(i){
+  function loadArea(i,_r){
     var parentId = "";
     if(i==2){
       parentId = $("#t_province").val();
@@ -267,7 +275,10 @@
           if(res.success){
             var html = "<option value=''>-- 请选择 --</option>";
             $.each(res.data,function(j,n){
-              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+              if(_r && n.id==_r) {
+                html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+              }else
+               html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
             })
             if(i==1){
               $("#t_province").html(html);

@@ -77,7 +77,7 @@
 
     <select id="list" parameterType="HashMap" resultMap="base_notice">
         select t.*, n.f_name as typeName,n.f_no as typeNo
-        from base_notice t, base_notice_type n
+        from base_notice t left join base_notice_type n on  t.f_type_id = n.f_id
         where n.f_no = #{no}
     </select>
 </mapper>

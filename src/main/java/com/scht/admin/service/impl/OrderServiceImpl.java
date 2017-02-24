@@ -307,9 +307,16 @@ public class OrderServiceImpl implements OrderService {
                 result = new RetResult(RetResult.RetCode.Order_Product_Error);
                 return result;
             }
+            order.setExpress(express);
+            order.setUserName(userName);
+            order.setAddress(address);
+            order.setTelephone(telephone);
             //todo：商家的五折商品也不需要支付
             if(!StringUtil.isNullOrEmpty(product.getShopId()) && ProductTypeEnum.DISCOUNT.name().equals(product.getProductType())){
                 order.setStatus(OrderStatus.PAY.name());
+                if("0".equals(order.getExpress())){
+                    order.setCode(OrderUtil.getUniqueCode());
+                }
             }else{
                 order.setStatus(OrderStatus.CREATE.name());
                 OrderLimitSet set = this.baseMyBatisDao.findById(OrderLimitSetDao.class,"");
@@ -317,11 +324,6 @@ public class OrderServiceImpl implements OrderService {
                     order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getPayLimit()));
                 }
             }
-            order.setExpress(express);
-            order.setUserName(userName);
-            order.setAddress(address);
-            order.setTelephone(telephone);
-
         }
         order.setRemark(remark);
         order.setOrderType(product.getProductType());
@@ -339,6 +341,13 @@ public class OrderServiceImpl implements OrderService {
         orderProduct.setMoney(StringNumber.mul(product.getPrice(), amount + ""));
 
         order.setTotalMoney(orderProduct.getMoney());
+        if(StringNumber.compareTo(order.getTotalMoney(),"0") <=0) {
+            order.setStatus(OrderStatus.PAY.name());
+            order.setPayTime(System.currentTimeMillis());
+            if("0".equals(order.getExpress())){
+                order.setCode(OrderUtil.getUniqueCode());
+            }
+        }
 
         //保存
         this.baseMyBatisDao.insert(OrderProductDao.class, orderProduct);

@@ -73,14 +73,15 @@
       {title:'商品名称',dataIndex:'title',width:150},
       {title:'分类名称',dataIndex:'typeName',width:100},
       {title:'商品价格',dataIndex:'price',width:80},
-      {title:'所属商家',dataIndex:'a',width:150,renderer:function(v,o){
+        <c:if test="${type != 'NORMAL'}">
+      {title:'所属商家',dataIndex:'a',width:150,id:"shop_id",renderer:function(v,o){
         if(o.self == '1'){
           return o.shopName;
         }else{
           return "自营商品";
         }
       }},
-
+      </c:if>
       {title:'实际销量',dataIndex:'saleCount',width:80},
       {title:'状态',dataIndex:'sort',width:120,renderer:function(v,o){
         return o.status == 'NORMAL'?'上架':'下架';
