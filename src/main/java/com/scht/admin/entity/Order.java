@@ -46,12 +46,21 @@ public class Order {
 
     //一下不存数据库
     private String shopName; //商家名称
+    private String shopIcon; //商家图标
     private List<OrderProduct> list; //订单商品列表
     private String createDate;
     private String payDate;
     private String dispatchDate;
     private String successDate;
     private String overDate;
+
+    public String getShopIcon() {
+        return shopIcon;
+    }
+
+    public void setShopIcon(String shopIcon) {
+        this.shopIcon = shopIcon;
+    }
 
     public String getId() {
         return id;

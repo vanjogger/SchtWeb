@@ -15,6 +15,17 @@ public class OrderProduct {
     private int amount; //商品数量
     private String money; //商品总价
 
+    //not save
+    private String productDesc; //商品介绍
+
+    public String getProductDesc() {
+        return productDesc;
+    }
+
+    public void setProductDesc(String productDesc) {
+        this.productDesc = productDesc;
+    }
+
     public String getId() {
         return id;
     }

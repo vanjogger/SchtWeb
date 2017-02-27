@@ -86,6 +86,7 @@ public class RestOrderController extends BaseController {
             if(!StringUtil.isNullOrEmpty(order.getShopId())){
                 Shop shop = this.baseService.findById(ShopDao.class, order.getShopId());
                 order.setShopName(shop.getName());
+                order.setShopIcon(shop.getIcon());
             }
             order.setList(orderProductService.listByOrderId(order.getId()));
             RetData data = new RetData(order);
