@@ -119,5 +119,13 @@ public class RetResult implements Serializable {
 		//商品 400 开头
 		public static final String Product_Not_Exist = "40001"; //商品不存在
 		public static final String Collection_Exist = "40010";//该收藏已存在
+
+		//问题
+		public static final String Quest_Record_Than = "50001"; //今日超出数量
+		public static final String Quest_Not_Have = "50002"; //没有问题了
+		public static final String Quest_Not_Exist = "50003"; //未找到问题
+		public static final String Quest_Answer_Error = "50004"; //回答错误
+		public static final String Quest_Has_Answer = "50005"; //一会打该问题
+
 	}
 }

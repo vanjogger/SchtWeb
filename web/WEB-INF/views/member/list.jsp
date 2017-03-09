@@ -69,6 +69,7 @@
       {title:'昵称',dataIndex:'nick',width:150},
       {title:'联系电话',dataIndex:'telephone',width:150},
       {title:'注册时间',dataIndex:'date',width:150},
+      {title:'余额',dataIndex:'money',width:100},
       {title:'状态',dataIndex:'status',width:150,renderer:function(value,obj){
         if(obj.status=='NORMAL'){
           return "开启";

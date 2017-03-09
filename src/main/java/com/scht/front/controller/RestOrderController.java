@@ -161,10 +161,11 @@ public class RestOrderController extends BaseController {
     //订单支付
     @RequestMapping(value = "pay", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object orderPay(String orderId, String memberId, String payType, HttpServletRequest request){
+    public Object orderPay(String orderId, String memberId, String payType,
+                           boolean balance,HttpServletRequest request){
         RetResult result = null;
         try{
-            result = orderService.pay(orderId, memberId, payType,request, getRequestIp(request));
+            result = orderService.pay(orderId, memberId, payType,balance,request, getRequestIp(request));
         }catch (Exception e){
             result = new RetResult(RetResult.RetCode.System_Error);
         }

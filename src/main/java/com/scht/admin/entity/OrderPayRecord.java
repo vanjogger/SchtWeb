@@ -13,6 +13,8 @@ public class OrderPayRecord {
     private String orderNo; //对应的订单编号
     private String memberId; //会员id
 
+    private String totalMoney;//总金额
+    private String balance; //使用余额
     private String money; //支付金额
     private String payType; //支付方式
 
@@ -26,6 +28,21 @@ public class OrderPayRecord {
     private String tradeNo; //第三方支付平台的交易号码，支付成功后返回
     private String buyer; //买家账号或openId， 支付成功后返回
 
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
+    public String getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(String totalMoney) {
+        this.totalMoney = totalMoney;
+    }
 
     public String getId() {
         return id;

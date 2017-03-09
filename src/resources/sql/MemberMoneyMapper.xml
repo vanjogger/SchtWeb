@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.MemberMoneyDao">
+
+    <resultMap id="my_member_money" type="com.scht.admin.entity.MemberMoney">
+        <id column="f_id" property="id"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_money" property="money"/>
+        <result column="f_frozen_money" property="frozenMoney"/>
+        <result column="f_total_money" property="totalMoney"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.MemberMoney">
+        insert into t_member_money(f_id,f_member_id,f_money,f_frozen_money,f_total_money)
+        values(#{id},#{memberId},#{money},#{frozenMoney},#{totalMoney})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.MemberMoney">
+        update t_member_money
+        <set>
+            <if test="money!=null and money!=''">
+                f_money = #{money},
+            </if>
+            <if test="frozenMoney!=null and frozenMoney!=''">
+                f_frozen_money = #{frozenMoney},
+            </if>
+            <if test="totalMoney!=null and totalMoney!=''">
+                f_total_money = #{totalMoney},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_member_money">
+        select * from t_member_money where f_member_id=#{id}
+    </select>
+
+    <select id="listByMemberIds" resultMap="my_member_money">
+        SELECT  * from t_member_money where f_member_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </select>
+
+</mapper>

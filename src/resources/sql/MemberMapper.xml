@@ -94,6 +94,12 @@
             </if>
         </where>
     </select>
+    <select id="listByIds" resultMap="base_member">
+        select * from base_member where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </select>
 
 
 </mapper>

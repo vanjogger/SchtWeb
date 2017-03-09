@@ -82,7 +82,23 @@
             {id:'member_list',text:'会员信息管理',href:'/admin/member/list',closeable:true},
             </shiro:hasPermission>
             <shiro:hasPermission name="memberAddress:list">
-            {id:'member_address_list',text:'收货地址管理',href:'/memberAddress/list',closeable:true}
+            {id:'member_address_list',text:'收货地址管理',href:'/memberAddress/list',closeable:true},
+            </shiro:hasPermission>
+            <shiro:hasPermission name="memberFlow:list">
+            {id:'member_flow_list',text:'会员资金流水',href:'/memberFlow/list',closeable:true}
+            </shiro:hasPermission>
+          ]},
+          {
+          text:'有奖问答',
+          items:[
+            <shiro:hasPermission name="question_set">
+            {id:'quest_set',text:'问答设置',href:'/questSet/find',closeable:true},
+            </shiro:hasPermission>
+            <shiro:hasPermission name="question:list">
+            {id:'quest_list',text:'问题管理',href:'/question/list',closeable:true},
+            </shiro:hasPermission>
+            <shiro:hasPermission name="question:record">
+            {id:'quest_record',text:'问答记录',href:'/questRecord/list',closeable:true}
             </shiro:hasPermission>
           ]}
         ]
@@ -183,6 +199,7 @@
           <shiro:hasPermission name="tssz:list">
           {id:'tg_list',text:'推送设置',href:'/pushSet/find',closeable:true},
                 </shiro:hasPermission>
+
           <shiro:hasPermission name="sms:list">
           {id:'sms_list',text:'短信余额查询',href:'/common/querySms',closeable:true}
           </shiro:hasPermission>

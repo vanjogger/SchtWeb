@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.QuestionDao">
+
+    <resultMap id="my_question" type="com.scht.admin.entity.Question">
+        <id column="f_id" property="id"/>
+        <result column="f_shop_id" property="shopId"/>
+        <result column="f_title" property="title"/>
+        <result column="f_sum_count" property="sumCount"/>
+        <result column="f_money" property="money"/>
+        <result column="f_count" property="count"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_status" property="status"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.Question">
+        insert into t_question(f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status)
+        values(#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Question">
+        update t_question
+        <set>
+            <if test="shopId!=null and shopId!=''">
+                f_shop_id = #{shopId},
+            </if>
+            <if test="title!=null and title!=''">
+                f_title = #{title},
+            </if>
+            <if test="sumCount!=null and sumCount!=''">
+                f_sum_count = #{sumCount},
+            </if>
+            <if test="money!=null and money!=''">
+                f_money = #{money},
+            </if>
+            <if test="status != null and status != ''">
+                f_status = #{status},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_question">
+        select * from t_question where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_question">
+        select * from t_question order by f_create_time desc
+    </select>
+    <sql id="querySql">
+        <where>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+            <if test="shopName != null and shopName != ''">
+                and f_shop_id in (select f_id from t_shop where f_name like concat('%',concat(#{shopName},'%')))
+            </if>
+            <if test="title != null and title != ''">
+                and f_title like concat('%',concat(#{title}, '%'))
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+        </where>
+    </sql>
+    <select id="searchByPage" resultMap="my_question" parameterType="HashMap">
+        select * from t_question
+        <include refid="querySql"/>
+        order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        select count(f_id) from t_question
+        <include refid="querySql"/>
+    </select>
+    <delete id="delete">
+        delete from t_question where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <select id="findForMember" resultMap="my_question">
+        select * from t_question where f_id not in (
+        select f_quest_id from t_quest_record where f_member_id=#{memberId}
+        )
+        and f_status='NORMAL'
+        order by f_create_time desc limit 0,1
+    </select>
+    <update id="updateCount">
+        update t_question set f_count=f_count+1 where f_id=#{id}
+    </update>
+</mapper>

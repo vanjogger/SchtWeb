@@ -15,6 +15,7 @@ public class DateUtil {
     public static String pattern_13 = "yyyy-MM-dd HH";
     public static String pattern_16 = "yyyy-MM-dd HH:mm";
     public static String pattern_19 = "yyyy-MM-dd HH:mm:ss";
+    private static long currentDayStart;
 
     /**
      * 相差天数
@@ -201,10 +202,23 @@ public class DateUtil {
         c.add(Calendar.DAY_OF_MONTH, days);
         return c.getTimeInMillis();
     }
+
+    //今日开始时间
+    public static long getCurrentDayStart() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
+        return calendar.getTimeInMillis();
+    }
+
     public static void main(String[] args) {
 //
-        System.out.println(getDateFromLong(addDays(System.currentTimeMillis(),35)));
+        System.out.println(getDateFromLong(addDays(System.currentTimeMillis(), 35)));
     }
+
 
 
 }

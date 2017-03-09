@@ -3,9 +3,11 @@ package com.scht.front.controller;
 import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.Status;
 import com.scht.admin.dao.MemberDao;
+import com.scht.admin.dao.MemberMoneyDao;
 import com.scht.admin.dao.ProductCollectionDao;
 import com.scht.admin.dao.ShopCollectionDao;
 import com.scht.admin.entity.Member;
+import com.scht.admin.entity.MemberMoney;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.MemberService;
 import com.scht.admin.service.MessageRecordService;
@@ -59,6 +61,10 @@ public class RestMemberController  extends BaseController{
         member.setCreateTime(System.currentTimeMillis());
         member.setStatus(Status.NORMAL.name());
         this.baseService.insert(MemberDao.class, member);
+        //会员资金
+        MemberMoney money = new MemberMoney(member.getId());
+        money.setId(UUIDFactory.random());
+        this.baseService.insert(MemberMoneyDao.class, money);
         result = new RetResult(RetResult.RetCode.OK);
         RetData data = new RetData(member);
         result.setData(data);
@@ -72,9 +78,10 @@ public class RestMemberController  extends BaseController{
         try {
             Member member = this.baseService.findById(MemberDao.class, id);
             Map<String,Object> map = new HashMap<>();
-            map.put("memberId",member.getId());
+            map.put("memberId", member.getId());
            member.setShopCollects(this.baseService.count4Page(ShopCollectionDao.class, map));
             member.setProductColects(this.baseService.count4Page(ProductCollectionDao.class, map));
+            member.setMoney(((MemberMoney)this.baseService.findById(MemberMoneyDao.class, member.getId())).getMoney());
             RetResult result = new RetResult(RetResult.RetCode.OK);
             RetData data = new RetData(member);
             result.setData(data);

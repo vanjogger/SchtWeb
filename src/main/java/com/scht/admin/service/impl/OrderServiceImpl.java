@@ -1,6 +1,5 @@
 package com.scht.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.*;
 import com.scht.admin.dao.*;
 import com.scht.admin.entity.*;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -171,7 +169,7 @@ public class OrderServiceImpl implements OrderService {
         flow.setAfterAmount(money.getAvailAmount());
         flow.setCreateTime(new Date().getTime());
         flow.setType(AmountType.OrderFee.name());
-        this.baseMyBatisDao.insert(ShopFlowDao.class,flow);
+        this.baseMyBatisDao.insert(ShopFlowDao.class, flow);
     }
 
     //代理商资金记录
@@ -341,6 +339,8 @@ public class OrderServiceImpl implements OrderService {
         orderProduct.setMoney(StringNumber.mul(product.getPrice(), amount + ""));
 
         order.setTotalMoney(orderProduct.getMoney());
+        order.setBalance("0");
+        order.setRealMoney(order.getTotalMoney());
         if(StringNumber.compareTo(order.getTotalMoney(),"0") <=0) {
             order.setStatus(OrderStatus.PAY.name());
             order.setPayTime(System.currentTimeMillis());
@@ -435,32 +435,16 @@ public class OrderServiceImpl implements OrderService {
                 return;
             }
             order.setPayTime(r.getPayTime());
+            order.setBalance(r.getBalance());
+            order.setRealMoney(r.getMoney());
             order.setPayType(r.getPayType());
-            order.setStatus(OrderStatus.PAY.name());
-            order.setLimitTime(0l);
-            if("0".equals(order.getExpress())){
-                order.setCode(OrderUtil.getUniqueCode());
-            }
-            //订单支付完成
-            this.baseMyBatisDao.update(OrderDao.class, order);
-            if(!StringUtil.isNullOrEmpty(order.getShopId())) {//给商家推送消息
-                List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
-                PushRecord record = PushRecord.createShopOrder(order.getShopId(), "新订单提醒",
-                        "您好，您有一个新订单，商品“" + product.get(0).getProductName() + "”,会员账号“" + order.getMemberAccount() + "”", order.getId());
-                this.baseMyBatisDao.insert(PushRecordDao.class,record);
-                PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
-                executor.execute(thread);
-            }
+            payOver(order);
         }
     }
 
     @Override
-    public RetResult pay(String orderId, String memberId, String payType, HttpServletRequest request, String ip) throws IOException, DocumentException {
+    public RetResult pay(String orderId, String memberId, String payType, boolean balance, HttpServletRequest request, String ip) throws IOException, DocumentException {
         RetResult result = null;
-        if(StringUtil.isNullOrEmpty(payType) || PayType.valueOf(payType) == null){
-            result = new RetResult(RetResult.RetCode.Illegal_Request);
-            return result;
-        }
         Member member = this.baseMyBatisDao.findById(MemberDao.class, memberId);
         if(member == null) {
             result = new RetResult(RetResult.RetCode.User_Not_Exist);
@@ -477,13 +461,46 @@ public class OrderServiceImpl implements OrderService {
         if(result != null) {
             return result;
         }
+        String payMoney = order.getRealMoney();
+        String useBalance = "0";
+        if(balance) {
+            //使用余额，判断余额
+            MemberMoney memberMoney = this.baseMyBatisDao.findById(MemberMoneyDao.class, memberId);
+            if(StringNumber.compareTo(memberMoney.getMoney(), payMoney) > 0) {
+                payMoney = "0";
+                useBalance = order.getRealMoney();
+            }else{
+                payMoney = StringNumber.sub(payMoney, memberMoney.getMoney());
+                useBalance = memberMoney.getMoney();
+            }
+        }
+        if(StringNumber.compareTo(payMoney, "0") > 0) {
+            if(StringUtil.isNullOrEmpty(payType) || PayType.valueOf(payType) == null){
+                result = new RetResult(RetResult.RetCode.Illegal_Request);
+                return result;
+            }
+        }else{
+            //余额支付完成
+            payType = PayType.BALANCE.name();
+            order.setPayType(payType);
+            order.setPayTime(System.currentTimeMillis());
+            //完成订单
+            order.setBalance(useBalance);
+            order.setRealMoney(payMoney);
+            payOver(order);
+            result = new RetResult(RetResult.RetCode.OK);
+            return result;
+        }
+
         OrderPayRecord payRecord = new OrderPayRecord();
         payRecord.setId(UUIDFactory.random());
         payRecord.setNo(OrderUtil.createNo());
         payRecord.setOrderId(order.getId());
         payRecord.setOrderNo(order.getNo());
         payRecord.setMemberId(memberId);
-        payRecord.setMoney(order.getTotalMoney());
+        payRecord.setTotalMoney(order.getTotalMoney());
+        payRecord.setBalance(useBalance);
+        payRecord.setMoney(payMoney);
         payRecord.setPayType(payType);
         payRecord.setStatus(PayStatus.WAIT.name());
         payRecord.setCreateTime(System.currentTimeMillis());
@@ -506,6 +523,44 @@ public class OrderServiceImpl implements OrderService {
             result = new RetResult(RetResult.RetCode.System_Error);
         }
         return result;
+    }
+
+    private void payOver(Order order){
+        order.setStatus(OrderStatus.PAY.name());
+        order.setLimitTime(0l);
+        if("0".equals(order.getExpress())){
+            order.setCode(OrderUtil.getUniqueCode());
+        }
+        //订单支付完成
+        this.baseMyBatisDao.update(OrderDao.class, order);
+        if(!StringUtil.isNullOrEmpty(order.getShopId())) {//给商家推送消息
+            List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
+            PushRecord record = PushRecord.createShopOrder(order.getShopId(), "新订单提醒",
+                    "您好，您有一个新订单，商品“" + product.get(0).getProductName() + "”,会员账号“" + order.getMemberAccount() + "”", order.getId());
+            this.baseMyBatisDao.insert(PushRecordDao.class,record);
+            PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
+            executor.execute(thread);
+        }
+        //如果使用了余额
+        if(StringNumber.compareTo(order.getBalance(),"0") > 0) {
+            //会员资金流水
+            MemberMoney memberMoney = this.baseMyBatisDao.findById(MemberMoneyDao.class, order.getMemberId());
+            String beforeMoney = memberMoney.getMoney();
+            memberMoney.setMoney(StringNumber.sub(memberMoney.getMoney(), order.getBalance()));
+            //资金流水
+            MemberFlow flow = new MemberFlow();
+            flow.setId(UUIDFactory.random());
+            flow.setMemberId(memberMoney.getMemberId());
+            flow.setMemberAccount(((Member)this.baseMyBatisDao.findById(MemberDao.class, memberMoney.getMemberId())).getAccount());
+            flow.setType(MemberFlowType.ORDER.name());
+            flow.setBeforeAmount(beforeMoney);
+            flow.setAmount("-" + order.getBalance());
+            flow.setAfterAmount(memberMoney.getMoney());
+            flow.setCreateTime(System.currentTimeMillis());
+            this.baseMyBatisDao.insert(MemberFlowDao.class, flow);
+            this.baseMyBatisDao.update(MemberMoneyDao.class, memberMoney);
+        }
+
     }
 
     /**************    *******************/

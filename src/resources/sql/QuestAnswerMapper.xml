@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.QuestAnswerDao">
+
+    <resultMap id="my_quest_answer" type="com.scht.admin.entity.QuestAnswer">
+        <id column="f_id" property="id"/>
+        <result column="f_quest_id" property="questId"/>
+        <result column="f_content" property="content"/>
+        <result column="f_answer" property="answer"/>
+        <result column="f_sort" property="sort"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.QuestAnswer">
+        insert into t_quest_answer(f_id,f_quest_id,f_content,f_answer,f_sort)
+        values(#{id},#{questId},#{content},#{answer},#{sort})
+    </insert>
+     <insert id="insertBatch" parameterType="List">
+          insert into t_quest_answer(f_id,f_quest_id,f_content,f_answer,f_sort)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.id},#{item.questId},#{item.content},#{item.answer},#{item.sort})
+        </foreach>
+     </insert>
+    <select id="findById" resultMap="my_quest_answer">
+        select * from t_quest_answer where f_id=#{id}
+    </select>
+    <select id="listByQuest" resultMap="my_quest_answer">
+        select * from t_quest_answer where f_quest_id=#{id} order by f_sort
+    </select>
+    <select id="listForSuc" resultMap="my_quest_answer">
+        select * from t_quest_answer where f_quest_id=#{questId} and f_answer='1'
+    </select>
+    <delete id="deleteByQuest">
+        delete from t_quest_answer where f_quest_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+</mapper>

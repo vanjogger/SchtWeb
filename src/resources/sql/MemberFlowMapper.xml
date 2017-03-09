@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.MemberFlowDao">
+
+    <resultMap id="my_member_flow" type="com.scht.admin.entity.MemberFlow">
+        <id column="f_id" property="id"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_member_account" property="memberAccount"/>
+        <result column="f_type" property="type"/>
+        <result column="f_before_amount" property="beforeAmount"/>
+        <result column="f_amount" property="amount"/>
+        <result column="f_after_amount" property="afterAmount"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.MemberFlow">
+        insert into t_member_flow(f_id,f_member_id,f_member_account,f_type,f_before_amount,f_amount,f_after_amount,f_create_time)
+        values(#{id},#{memberId},#{memberAccount},#{type},#{beforeAmount},#{amount},#{afterAmount},#{createTime})
+    </insert>
+
+    <select id="findById" resultMap="my_member_flow">
+        select * from t_member_flow where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_member_flow">
+        select * from t_member_flow where 1=1 order by f_create_time desc
+    </select>
+
+    <select id="searchByPage" parameterType="HashMap" resultMap="my_member_flow">
+        select * from t_member_flow
+         <include refid="querySql"/>
+        order by f_create_time desc
+        limit #{start},#{limit}
+    </select>
+    <select id="count4Page" parameterType="HashMap" resultType="int">
+        select count(f_id) from t_member_flow
+        <include refid="querySql"/>
+    </select>
+    <sql id="querySql">
+        <where>
+           f_member_id=#{memberId}
+
+            <if test="memberAccount != null and memberAccount != ''">
+                and f_member_account like CONCAT("%",#{memberAccount},"%")
+            </if>
+            <if test="startDate!=null and startDate!=0">
+                <![CDATA[
+                    and f_create_time >= #{startDate}
+                    ]]>
+            </if>
+            <if test="endDate!=null and endDate!=0">
+                <![CDATA[
+                and f_create_time <= #{endDate}
+                ]]>
+            </if>
+        </where>
+    </sql>
+</mapper>

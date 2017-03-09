@@ -4193,3 +4193,66 @@ f_name varchar(100) not null,
 f_sort int default 0,
 f_create_time bigint default 0
 );
+
+CREATE TABLE t_question(
+f_id varchar(32) primary key,
+f_shop_id varchar(32) default '',
+f_title varchar(512) default '',
+f_sum_count int default 0,
+f_money varchar(100) default '0',
+f_count int default 0,
+f_status varchar(32) DEFAULT '',
+f_create_time bigint default 0
+);
+
+CREATE TABLE t_quest_answer(
+f_id varchar(32) primary key,
+f_quest_id varchar(32) default '',
+f_content varchar(512) default '',
+f_answer char(1) default '0',
+f_sort varchar(32) default ''
+);
+
+CREATE TABLE t_quest_set(
+f_id varchar(32) primary key,
+f_day_count int default 0
+);
+
+CREATE TABLE t_quest_record(
+f_id varchar(32) primary key,
+f_member_id varchar(32) default '',
+f_quest_id varchar(32) default '',
+f_quest_title varchar(512) default '',
+f_money varchar(100) DEFAULT '',
+f_suc char(1) default '0',
+f_create_time bigint default 0,
+f_suc_answer varchar(1000) default '',
+f_answer varchar(1000) default ''
+);
+
+CREATE TABLE t_member_money(
+f_id varchar(32) primary key,
+f_member_id varchar(100) default '',
+f_money varchar(100) default '0',
+f_frozen_money varchar(100) default '0',
+f_total_money varchar(100) default '0'
+);
+
+
+CREATE TABLE t_member_flow(
+f_id varchar(32) primary key,
+f_member_id varchar(32) default '',
+f_member_account varchar(100) default '',
+f_type varchar(32) default '',
+f_before_amount varchar(100) default '',
+f_amount varchar(100) default '',
+f_after_amount varchar(100) default '',
+f_create_time bigint default 0,
+f_date_str varchar(100) default ''
+);
+
+alter table t_order add f_balance varchar(100) DEFAULT '';
+alter table t_order add f_real_money VARCHAR (100) DEFAULT '';
+
+alter table t_order_pay_record add f_total_money VARCHAR(100) DEFAULT '';
+alter table t_order_pay_record add f_balance varchar(100) DEFAULT '';

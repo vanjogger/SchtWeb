@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.QuestSetDao">
+
+    <resultMap id="my_quest_set" type="com.scht.admin.entity.QuestSet">
+        <id column="f_id" property="id"/>
+        <result column="f_day_count" property="dayCount"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.QuestSet">
+        insert into t_quest_set(f_id,f_day_count)
+        values(#{id},#{dayCount})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.QuestSet">
+        update t_quest_set
+        <set>
+            <if test="dayCount!=null and dayCount!=''">
+                f_day_count = #{dayCount},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_quest_set">
+        select * from t_quest_set
+    </select>
+</mapper>

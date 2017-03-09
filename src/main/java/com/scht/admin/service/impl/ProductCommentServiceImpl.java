@@ -126,6 +126,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
             Member member = this.baseMyBatisDao.findById(MemberDao.class, comment.getMemberId());
             if(member != null){
                 comment.setMemberName(member.getAccount());
+                comment.setMemberImg(member.getHeadIcon());
             }
             if(!StringUtil.isNullOrEmpty(comment.getReplyId())){
                 Shop shop = this.baseMyBatisDao.findById(ShopDao.class, comment.getReplyId());

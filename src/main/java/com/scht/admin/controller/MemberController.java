@@ -2,7 +2,9 @@ package com.scht.admin.controller;
 
 import com.scht.admin.bean.Status;
 import com.scht.admin.dao.MemberDao;
+import com.scht.admin.dao.MemberMoneyDao;
 import com.scht.admin.entity.Member;
+import com.scht.admin.entity.MemberMoney;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.MemberService;
 import com.scht.common.BaseController;
@@ -19,7 +21,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,7 +62,24 @@ public class MemberController extends BaseController {
         }
         pageInfo.setParams(map);
         pageInfo = this.page(MemberDao.class, pageInfo);
+        initResult(pageInfo.getResult());
         return this.getPageResult(pageInfo);
+    }
+
+    private void initResult(List<Member> list) {
+        if(list == null || list.size() == 0) return;
+        List<String> ids = new ArrayList<>();
+        for(Member member : list) {
+            ids.add(member.getId());
+        }
+        List<MemberMoney> moneyList = memberService.listMoney(ids.toArray(new String[0]));
+        Map<String,MemberMoney> map = new HashMap<>();
+        for(MemberMoney money : moneyList) {
+            map.put(money.getMemberId(), money);
+        }
+        for(Member member : list) {
+            member.setMoney(map.get(member.getId()).getMoney());
+        }
     }
 
     @RequestMapping("add")
@@ -76,6 +97,9 @@ public class MemberController extends BaseController {
         member.setId(UUIDFactory.random());
         member.setCreateTime(System.currentTimeMillis());
         baseService.insert(MemberDao.class, member);
+        MemberMoney money = new MemberMoney(member.getId());
+        money.setId(UUIDFactory.random());
+        this.baseService.insert(MemberMoneyDao.class, money);
         this.saveLog("添加会员账号：" + member.getAccount(), request);
         return this.FmtResult(true,"添加成功",null);
     }
@@ -109,4 +133,6 @@ public class MemberController extends BaseController {
         this.saveLog((Status.NORMAL.name().equals(status)?"开启":"冻结")+"会员账号："+member.getAccount(),request);
         return this.FmtResult(true,"操作成功",null);
     }
+
+
 }

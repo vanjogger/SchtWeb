@@ -11,6 +11,8 @@
         <result column="f_member_id" property="memberId"/>
         <result column="f_order_no" property="orderNo"/>
         <result column="f_money" property="money"/>
+        <result column="f_total_money" property="totalMoney"/>
+        <result column="f_balance" property="balance"/>
         <result column="f_pay_type" property="payType"/>
         <result column="f_status" property="status"/>
         <result column="f_create_time" property="createTime"/>
@@ -19,8 +21,8 @@
         <result column="f_buyer" property="buyer"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.OrderPayRecord">
-        insert into t_order_pay_record(f_id,f_no,f_order_id,f_member_id,f_order_no,f_money,f_pay_type,f_status,f_create_time,f_pay_time,f_trade_no,f_buyer)
-        values(#{id},#{no},#{orderId},#{memberId},#{orderNo},#{money},#{payType},#{status},#{createTime},#{payTime},#{tradeNo},#{buyer})
+        insert into t_order_pay_record(f_balance,f_total_money,f_id,f_no,f_order_id,f_member_id,f_order_no,f_money,f_pay_type,f_status,f_create_time,f_pay_time,f_trade_no,f_buyer)
+        values(#{balance},#{totalMoney},#{id},#{no},#{orderId},#{memberId},#{orderNo},#{money},#{payType},#{status},#{createTime},#{payTime},#{tradeNo},#{buyer})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.OrderPayRecord">
         update t_order_pay_record

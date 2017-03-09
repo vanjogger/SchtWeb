@@ -23,7 +23,7 @@ public class XmlMapUtil {
     private static String Mapper_PreFix = "my";
 
     public static void main(String[] args) {
-        Class clazz = HotKey.class;
+        Class clazz = MemberFlow.class;
         System.out.println(createTableSql(clazz));
         System.out.println(createResultMapper(clazz));
         System.out.println(createSaveSql(clazz));

@@ -28,6 +28,8 @@ public class Order {
 
     private String status; //OrderStatus
     private String totalMoney;//订单总金额
+    private String balance; //使用余额
+    private String realMoney; //实际支付多少钱
     private String remark; //订单备注
 
     private String express; //是否需要发货， 0 到店消费， 1 发货
@@ -53,6 +55,22 @@ public class Order {
     private String dispatchDate;
     private String successDate;
     private String overDate;
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
+    public String getRealMoney() {
+        return realMoney;
+    }
+
+    public void setRealMoney(String realMoney) {
+        this.realMoney = realMoney;
+    }
 
     public String getShopIcon() {
         return shopIcon;

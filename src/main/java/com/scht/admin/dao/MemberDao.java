@@ -3,6 +3,7 @@ package com.scht.admin.dao;
 import com.scht.admin.entity.Member;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,4 +16,6 @@ public interface MemberDao {
 
 
     Integer countMember(Map params);
+
+    List<Member> listByIds(String[] ids);
 }

@@ -24,9 +24,18 @@ public class Member {
 
     //一下字段不存入数据库
     private String date; //时间字符串，不存数据库
+    private String money; //会员余额
 
     private long shopCollects; //收藏的商家数量
     private long productColects; //收藏的商品数量
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
 
     public long getShopCollects() {
         return shopCollects;
