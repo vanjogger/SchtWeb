@@ -13,14 +13,17 @@
         <result column="f_count" property="count"/>
         <result column="f_create_time" property="createTime"/>
         <result column="f_status" property="status"/>
+        <result column="f_icon" property="icon"/>
+        <result column="f_content" property="content"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.Question">
-        insert into t_question(f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status)
-        values(#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status})
+        insert into t_question(f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status,f_icon,f_content)
+        values(#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status},#{icon},#{content,jdbcType=VARCHAR})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Question">
         update t_question
         <set>
+            f_icon=#{icon},f_content=#{content},
             <if test="shopId!=null and shopId!=''">
                 f_shop_id = #{shopId},
             </if>
@@ -36,6 +39,7 @@
             <if test="status != null and status != ''">
                 f_status = #{status},
             </if>
+
         </set>
         where f_id=#{id}
     </update>

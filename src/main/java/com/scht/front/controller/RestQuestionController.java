@@ -21,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Administrator on 2017/3/2.
@@ -77,7 +80,7 @@ public class RestQuestionController extends BaseController {
     //拉取下一个问题
     @RequestMapping(value = "quest", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object quest(String memberId){
+    public Object quest(String memberId, HttpServletRequest request){
         //判断今天回答问题数量
         QuestSet set = this.baseService.findById(QuestSetDao.class, "");
         if(set != null && set.getDayCount() > 0) {
@@ -91,6 +94,18 @@ public class RestQuestionController extends BaseController {
         if(question == null) {
             RetResult result = new RetResult(RetResult.RetCode.Quest_Not_Have);
             return JSON.toJSON(result);
+        }else{
+            if(!StringUtil.isNullOrEmpty(question.getContent())) { //内容里面的图片路径改为绝对路径
+                Pattern pattern = Pattern.compile("<img[^>]*src=\"([^\"]*)\"[^>]*[^>]*>");
+                Matcher matcher = pattern.matcher(question.getContent());
+                String url = "http://" + request.getServerName();
+                while (matcher.find()) {
+                    String temp = matcher.group(1);
+                    if (!temp.substring(0, 7).equals("http://")) {
+                        question.setContent(question.getContent().replaceAll(temp, url + temp));
+                    }
+                }
+            }
         }
         RetResult result = new RetResult(RetResult.RetCode.OK);
         RetData data = new RetData(question);

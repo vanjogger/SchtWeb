@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.Map;
 
@@ -45,13 +48,48 @@ public class UploadController extends BaseController {
         return  json.toString();
     }
 
-
-    @RequestMapping(value = "/uploadImage")
+    @RequestMapping(value = "/uploadImg",produces = "text/plain;charset=utf-8")
     @ResponseBody
-    public String uploadImage(@RequestParam(value = "file") MultipartFile file, HttpServletRequest request,
+    public String uploadImg(String image, HttpServletRequest request) {
+        JSONObject json = null;
+        if (null != image) {
+            BASE64Decoder decoder = new BASE64Decoder();
+            try {
+                //Base64解码
+                byte[] b = decoder.decodeBuffer(image);
+                //生成图片
+                String fileName = System.currentTimeMillis() + ".jpeg";
+
+                String path = "/upload/" + DateUtil.getFormatDate(new Date(), "yyyyMMdd");
+
+                String targetPath = request.getSession().getServletContext().getRealPath(path);
+                if(!new File(targetPath).exists()) {
+                    new File(targetPath).mkdirs();
+                }
+                String imgFilePath = targetPath + File.separator + fileName;//新生成的图片
+                OutputStream out = new FileOutputStream(imgFilePath);
+                out.write(b);
+                out.flush();
+                out.close();
+                path = path+File.separator + fileName;
+                path = path.replaceAll("\\\\","/");
+              json = this.FmtResult(true, null, path);
+            } catch (Exception e) {
+                e.printStackTrace();
+                json = this.FmtResult(false, null, "上传文件失败");
+            }
+        }else{
+            json = this.FmtResult(false, null,"文件不存在");
+        }
+        return json.toString();
+
+    }
+
+    @RequestMapping(value = "/uploadImage",produces = "text/plain;charset=utf-8")
+    @ResponseBody
+    public String uploadImage(@RequestParam(value = "file",required = false) MultipartFile file, HttpServletRequest request,
                               HttpSession session) {
             JSONObject json = saveUploadImage(session, file);
-
             return json.toString();
     }
 

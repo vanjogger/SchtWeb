@@ -11,6 +11,15 @@ public class QuestAnswer {
     private String content;//答案
     private boolean answer; //是否正确答案， true 正确， false 错误
     private String sort; //序号，如： ABCD
+    private String icon; //
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 
     public String getId() {
         return id;

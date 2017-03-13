@@ -10,16 +10,17 @@
         <result column="f_content" property="content"/>
         <result column="f_answer" property="answer"/>
         <result column="f_sort" property="sort"/>
+        <result column="f_icon" property="icon"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.QuestAnswer">
-        insert into t_quest_answer(f_id,f_quest_id,f_content,f_answer,f_sort)
-        values(#{id},#{questId},#{content},#{answer},#{sort})
+        insert into t_quest_answer(f_id,f_quest_id,f_content,f_answer,f_sort,f_icon)
+        values(#{id},#{questId},#{content},#{answer},#{sort},#{icon})
     </insert>
      <insert id="insertBatch" parameterType="List">
-          insert into t_quest_answer(f_id,f_quest_id,f_content,f_answer,f_sort)
+          insert into t_quest_answer(f_id,f_quest_id,f_content,f_answer,f_sort,f_icon)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.id},#{item.questId},#{item.content},#{item.answer},#{item.sort})
+            (#{item.id},#{item.questId},#{item.content},#{item.answer},#{item.sort},#{item.icon})
         </foreach>
      </insert>
     <select id="findById" resultMap="my_quest_answer">

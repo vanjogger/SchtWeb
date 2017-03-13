@@ -4256,3 +4256,7 @@ alter table t_order add f_real_money VARCHAR (100) DEFAULT '';
 
 alter table t_order_pay_record add f_total_money VARCHAR(100) DEFAULT '';
 alter table t_order_pay_record add f_balance varchar(100) DEFAULT '';
+
+alter table t_question add f_icon varchar(512) default '';
+alter table t_question add f_content longtext;
+alter table t_quest_answer add f_icon varchar(512) DEFAULT '';

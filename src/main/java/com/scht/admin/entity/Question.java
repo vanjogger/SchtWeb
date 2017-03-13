@@ -20,11 +20,29 @@ public class Question {
     private int count; //已经回答了多少题
     private long createTime; //添加时间
     private String status; //状态 Status
+    private String icon; // 图片
+    private String content; //内容
 
     //not save
     private List<QuestAnswer> list; //答案列表
     private String shopName; //商家名称
     private String dateStr; //时间
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getStatus() {
         return status;

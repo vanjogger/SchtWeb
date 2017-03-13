@@ -72,12 +72,30 @@
       </div>
     </div>
     <div class="row">
+      <label class="control-label"><s>*</s>问题图片：</label>
+      <div class="span8">
+        <div id="J_Uploader">
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="control-group span20">
+        <label class="control-label"><s>*</s>问题解析：</label>
+        <div style="display:inline;height:40px;margin-left: 10px;">
+            <textarea name="content" id="content" cols=""
+                      rows="" class="textinput" style="width:700px;height:350px;visibility:hidden;"
+                      maxlength="1000">${data.content}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span24">
         <label class="control-label">问题答案：</label>
         <div class="panel-body">
           <table class=" table bui-grid-table">
             <tr>
               <th class="center">选项</th>
+              <th class="center" style="width:310px;">图片</th>
               <th class="center" style="width:310px;">答案</th>
               <th class="center">是否正确</th>
               <th></th>
@@ -87,6 +105,21 @@
               <tr>
                 <td><input type="text" class="control-text input-small"
                            value="${e.sort}" data-rules="{required:true}" name="a_sort"/> </td>
+                <c:choose>
+                  <c:when test="${ei.first}">
+                    <td id="icon0">
+                      <input id="file" type="file" multiple="multiple" accept="image/*" style="display:none;"/>
+                      <img src="${empty e.icon?'/resources/images/default_goods.gif':e.icon}" style="width:80px" onclick="a_icon_id='icon0';return $('#file').click()"/>
+                      <input type="hidden" name="a_icon" value="${e.icon}"/>
+                    </td>
+                  </c:when>
+                  <c:otherwise>
+                    <td id="icon${ei.count}">
+                      <img src="${empty e.icon?'/resources/images/default_goods.gif':e.icon}" style="width:80px" onclick="a_icon_id='icon${ei.count}';return $('#file').click()"/>
+                      <input type="hidden" name="a_icon" value="${e.icon}"/>
+                    </td>
+                  </c:otherwise>
+                </c:choose>
                 <td><input type="text" class="control-text input-large"
                            value="${e.content}" data-rules="{required:true}" name="a_content"/> </td>
                 <td><input type="checkbox" name="a_answer" ${e.answer?'checked':''}/> </td>
@@ -104,27 +137,11 @@
         </div>
       </div>
     </div>
-    <%--<div class="row">--%>
-    <%--<div class="control-group span20">--%>
-    <%--<label class="control-label">商品状态：</label>--%>
-    <%--<div class="controls">--%>
-    <%--<label class="radio" for="status1"><input ID="status1" type="radio" name="status" value="NORMAL" CHECKED>上架</label>&nbsp;&nbsp;&nbsp;--%>
-    <%--<label class="radio" for="status2"><input id="status2" type="radio" name="status" value="FROZEN">下架</label>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="row">--%>
-    <%--<div class="control-group span20">--%>
-    <%--<label class="control-label">排序：</label>--%>
-    <%--<div class="controls">--%>
-    <%--<input type="text" name="sort" value="1" data-rules="{regexp:/^\d+$/}" data-messages="{regexp:'请输入整数'}"--%>
-    <%--class="input-small control-text"/>--%>
-    <%--</div>--%>
-    <%--</div>--%>
-    <%--</div>--%>
+
     <div class="row form-actions ">
       <div class="span13 offset3 ">
         <input type="hidden" name="jsonStr" id="jsonStr"/>
+        <input type="hidden" name="icon" id="icon" value="${data.icon}"/>
         <input type="hidden" name="id" value="${data.id}"/>
         <button type="submit" class="button button-primary" >保存</button>
         <button type="button" class="button" onclick="back()">返回</button>
@@ -140,11 +157,19 @@
 
 
 <script type="text/javascript">
+
+  var icon_i=100;
   function addTr(_node){
+    var t_id = "icon" + icon_i;
     var html='<tr><td><input type="text" class="control-text input-small" data-rules="{required:true}" name="a_sort"/> </td>'
+            +'<td id="'+t_id+'">'
+            +'<img src="/resources/images/default_goods.gif" style="width:80px" ' +
+            'onclick="a_icon_id=\''+t_id+'\';return $(\'#file\').click()"/>'+
+            '<input type="hidden" name="a_icon"/>  </td>'
             +'<td><input type="text" class="control-text input-large" data-rules="{required:true}" name="a_content"/> </td>'
             +'<td><input type="checkbox" name="a_answer"/> </td>'
             +' <td><a class="button" onclick="removeTr(this)">-</a> </td></tr>';
+    icon_i++;
     $("#answer").append(html);
   }
   function removeTr(_n){
@@ -172,7 +197,12 @@
     $("#shopId").val($(_t).val());
     $("#shopName").val($(_t).find("option:selected").text());
   }
-
+  var editor;
+  KindEditor.ready(function(K) {
+    editor = K.create('textarea[name="content"]', {
+      allowFileManager: true
+    });
+  });
 
   BUI.use('common/page'); //页面链接跳转
   BUI.use(['bui/tree','bui/form','bui/uploader'],function (Tree,Form,Uploader) {
@@ -182,6 +212,8 @@
       submitType:"ajax",
       listeners:{
         beforesubmit:function(){
+          $("#icon").val($("#J_Uploader img").attr("src"));
+          $("#content").val(editor.html());
           var answers = $("#answer tr");
           var html = [], suc = false;
           for(var i=0; i < answers.length; i++){
@@ -189,7 +221,8 @@
             var content = $(answers[i]).find("input[name='a_content']").val();
             var a ={
               "sort" : sort,
-              "content" : content
+              "content" : content,
+              "icon" : $(answers[i]).find("input[name='a_icon']").val()
             };
             if($(answers[i]).find("input[name='a_answer']").is(":checked")) {
               suc = true;
@@ -218,7 +251,30 @@
       }
     });
     form.render();
-
+    var uploader = new Uploader.Uploader({
+      //指定使用主题
+      render: '#J_Uploader',
+      url: '/upload/buiUpload',
+      queue: {
+        resultTpl:{
+          'success': '<div class="success"><img src="{url}" title="{name}" width="100%;padding:5px;"/></div>',
+          'error': '<div class="error"><span class="uploader-error">{msg}</span></div>'
+        }
+      },
+      rules: {
+        //上传的最大个数
+        max: [1, '文件的最大个数不能超过{0}个'],
+        //文件大小的最大值,单位也是kb
+        maxSize: [2048, '文件大小不能大于2M']
+      }
+    }).render();
+    if('${data.icon}' != ''){
+    //图片
+    $("#J_Uploader ul").append('<li class="bui-queue-item bui-queue-item-success">' +
+            '<div class="success"><img src="${data.icon}" ' +
+            'width="100%;padding:5px;"></div> ' +
+            '<span class="action"><span class="bui-queue-item-del">删除</span></span></li>');
+    }
   });
 
   function back(){
@@ -231,6 +287,31 @@
   }
 
   searchShop();
+
+  var a_icon_id;
+  $(document).ready(function(){
+    $('input:file').localResizeIMG({
+      width: 300,
+      height:300,
+      quality: 1,
+      success: function (result) {
+        $.ajax({
+          url: '/upload/uploadImg',
+          type: 'post',
+          data: {image: result.clearBase64},
+          dataType: 'json',
+          success: function (data) {
+            if(data.success){
+              $("#" + a_icon_id).find("img").attr('src', data.data);
+              $("#" + a_icon_id).find("input[name='a_icon']").val(data.data);
+            } else {
+              alert("上传图片出错");
+            }
+          }
+        });
+      }
+    });
+  });
 </script>
 
 <body>
