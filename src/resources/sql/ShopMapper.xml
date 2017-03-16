@@ -229,7 +229,8 @@
                 and a.f_key = #{shopTypeKey}
             </if>
             <if test="name != null and name != ''">
-                and t.f_name like CONCAT("%",#{name},"%")
+                and (t.f_name like CONCAT("%",#{name},"%") or t.f_id in (select f_shop_id from t_product where
+                f_title like CONCAT("%",#{name},"%") and f_self='1' ))
             </if>
             <if test="type!=null and type!=''">
                 and (t.f_shop_type_id = #{type} or t.f_shop_type_id in (select
@@ -248,7 +249,7 @@
                         convert(t.f_per_price,decimal) asc,
                     </when>
                     <when test='sortType == "sale"'>
-                        o.c asc,
+                        o.c desc,
                     </when>
                 </choose>
             </if>
@@ -272,7 +273,8 @@
                 and (t.f_district_id = #{code} or t.f_city_id=#{code})
             </if>
             <if test="name != null and name != ''">
-                and t.f_name like CONCAT("%",#{name},"%")
+                and (t.f_name like CONCAT("%",#{name},"%") or t.f_id in (select f_shop_id from t_product where
+                f_title like CONCAT("%",#{name},"%") and f_self='1' ))
             </if>
             <if test="type!=null and type!=''">
                 and (t.f_shop_type_id = #{type} or t.f_shop_type_id in (select
@@ -296,7 +298,8 @@
                  and (t.f_district_id = #{districtId} or t.f_city_id=#{districtId})
             </if>
             <if test="name != null and name != ''">
-                and t.f_name like CONCAT("%",#{name},"%")
+                and (t.f_name like CONCAT("%",#{name},"%") or t.f_id in (select f_shop_id from t_product where
+                f_title like CONCAT("%",#{name},"%") and f_self='1' ))
             </if>
             <if test="type!=null and type!=''">
                 and (t.f_shop_type_id = #{type} or t.f_shop_type_id in (select
