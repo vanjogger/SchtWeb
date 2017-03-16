@@ -78,9 +78,8 @@ public class RestShopControlller extends BaseFrontController{
 
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object list(@RequestParam(value="shopTypeKey",required = false) String shopTypeKey,@RequestParam(value="sortType",required = false)String sortType,
-                       @RequestParam(value = "name", required = false) String name,
-                       @RequestParam(value="type",required = false)String type, @RequestParam(value="code",required = false)String code,@RequestParam("pageNo") int pageNo,
+    public Object list(String shopTypeKey,String sortType,
+                       String name,String type, String code,@RequestParam(value = "pageNo",defaultValue = "1") int pageNo,
                        @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
         RetResult result = this.shopService.list(name, shopTypeKey, sortType, type, code, pageNo, pageSize);
         return JSON.toJSON(result);

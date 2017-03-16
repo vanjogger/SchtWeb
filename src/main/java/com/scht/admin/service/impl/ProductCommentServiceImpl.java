@@ -26,6 +26,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     BaseMyBatisDao baseMyBatisDao;
     @Autowired
     MemberDao memberDao;
+    @Autowired
+    ProductDao productDao;
 
     @Override
     public RetResult list(String shopId,String memberId,String productId, int pageNo, int pageSize) {
@@ -90,6 +92,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
             result = new RetResult(RetResult.RetCode.OK);
             order.setMemberAssess("1");
             this.baseMyBatisDao.update(OrderDao.class, order);
+            productDao.updateCommentCount(productId,1);//评论数量
         }catch (Exception e){
             e.printStackTrace();
             result = new RetResult(RetResult.RetCode.Execute_Error);

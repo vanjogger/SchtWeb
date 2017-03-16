@@ -23,11 +23,20 @@ public class RestShop {
     private String remark;
     private String perPrice;
 
-    private int saleCount;
+    private int saleCount; //销量
+    private int commentCount; //评论数，商品评论数
 
     private String juli; //距离， 单位
 
     private List<Product> products; //推广商品列表
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
 
     public List<Product> getProducts() {
         return products;

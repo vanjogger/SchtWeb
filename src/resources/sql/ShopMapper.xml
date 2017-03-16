@@ -46,6 +46,8 @@
         <result column="f_code" property="code"/>
         <result column="f_per_price" property="perPrice"/>
         <result column="juli" property="juli"/>
+        <result column="commentCount" property="commentCount"/>
+        <result column="saleCount" property="saleCount"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.scht.admin.entity.Shop">
@@ -218,10 +220,11 @@
 
     <select id="list" parameterType="HashMap" resultMap="rest_shop">
         select t.f_id,t.f_name,t.f_shop_type_id,t.f_type,t.f_icon,t.f_link_name,t.f_link_mobile,t.f_link_address,
-        a.f_name,t.f_remark,t.f_lng,t.f_lat,t.f_code,t.f_per_price
-        from t_shop t,t_shop_type a
+        a.f_name,t.f_remark,t.f_lng,t.f_lat,t.f_code,t.f_per_price,o.comment as commentCount,o.c as saleCount
+        from t_shop t left join t_shop_type a on  t.f_shop_type_id = a.f_id left join
+        (select sum(f_sale_count + f_virtual_count) as c,sum(f_comment_count) as comment,f_shop_id from t_product group by f_shop_id) as o on o.f_shop_id=t.f_id
         <where>
-            t.f_shop_type_id = a.f_id and t.f_status = 'NORMAL'
+             t.f_status = 'NORMAL'
             <if test="shopTypeKey!=null and shopTypeKey!=''">
                 and a.f_key = #{shopTypeKey}
             </if>
@@ -235,6 +238,21 @@
             <if test="code!=null and code!=''">
                 and t.f_code = #{code}
             </if>
+            order by
+            <if test="sortType != null and sortType != ''">
+                <choose>
+                    <when test='sortType == "comment"'>
+                        o.comment desc,
+                    </when>
+                    <when test='sortType == "perPrice"'>
+                        convert(t.f_per_price,decimal) asc,
+                    </when>
+                    <when test='sortType == "sale"'>
+                        o.c asc,
+                    </when>
+                </choose>
+            </if>
+            t.f_id asc
             limit #{start},#{size}
         </where>
     </select>
@@ -242,10 +260,11 @@
         select t.f_id,t.f_name,t.f_shop_type_id,t.f_type,t.f_icon,t.f_link_name,t.f_link_mobile,t.f_link_address,
         a.f_name,t.f_remark,t.f_lng,t.f_lat,t.f_code,t.f_per_price,
         round(6378.138*2*asin(sqrt(pow(sin( (t.f_lat*pi()/180-#{lat}*pi()/180)/2),2)+cos(t.f_lat*pi()/180)*cos(#{lat}*pi()/180)*
-        pow(sin( (t.f_lng*pi()/180-#{lng}*pi()/180)/2),2)))*1000) as juli
-        from t_shop t,t_shop_type a
+        pow(sin( (t.f_lng*pi()/180-#{lng}*pi()/180)/2),2)))*1000) as juli,o.comment as commentCount,o.c as saleCount
+        from t_shop t left join t_shop_type a on  t.f_shop_type_id = a.f_id left join
+        (select sum(f_sale_count + f_virtual_count) as c,sum(f_comment_count) as comment,f_shop_id from t_product group by f_shop_id) as o on o.f_shop_id=t.f_id
         <where>
-            t.f_shop_type_id = a.f_id and t.f_status = 'NORMAL'
+             t.f_status = 'NORMAL'
             <if test="shopTypeKey!=null and shopTypeKey!=''">
                 and a.f_key = #{shopTypeKey}
             </if>
