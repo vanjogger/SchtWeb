@@ -25,10 +25,19 @@ public class ProductComment {
 
     //不关联数据库
     private String memberName;
+    private String memberNick;
     private String memberImg;
     private String replayName;
     private String dateStr;
     private String replayDateStr;
+
+    public String getMemberNick() {
+        return memberNick;
+    }
+
+    public void setMemberNick(String memberNick) {
+        this.memberNick = memberNick;
+    }
 
     public String getMemberImg() {
         return memberImg;

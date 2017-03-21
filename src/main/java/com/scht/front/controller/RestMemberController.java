@@ -1,5 +1,6 @@
 package com.scht.front.controller;
 
+import ch.qos.logback.core.util.StringCollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.Status;
 import com.scht.admin.dao.MemberDao;
@@ -15,6 +16,7 @@ import com.scht.common.BaseController;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
 import com.scht.util.MD5Util;
+import com.scht.util.StringUtil;
 import com.scht.util.UUIDFactory;
 import org.apache.shiro.crypto.hash.Hash;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,9 @@ public class RestMemberController  extends BaseController{
         member.setPassword(MD5Util.getMD5ofStr(password));
         member.setCreateTime(System.currentTimeMillis());
         member.setStatus(Status.NORMAL.name());
+        if(StringUtil.isNullOrEmpty(member.getNick())) {
+            member.setNick(StringUtil.randomNick());
+        }
         this.baseService.insert(MemberDao.class, member);
         //会员资金
         MemberMoney money = new MemberMoney(member.getId());

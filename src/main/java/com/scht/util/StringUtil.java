@@ -841,10 +841,10 @@ public class StringUtil {
         return val;
     }
 
-    public static void main(String[] args) {
-        System.out.println("*************  "+StringNumber.pow(2,10));
-
-    }
+//    public static void main(String[] args) {
+//        System.out.println("*************  "+StringNumber.pow(2,10));
+//
+//    }
 
 
 
@@ -1022,5 +1022,24 @@ public class StringUtil {
             result = getRandomNum(length);
 
         return result;
+    }
+
+    //随机生成8位数字或者字母的昵称
+    public static String randomNick(){
+        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuffer buffer = new StringBuffer();
+        for(int i=0 ; i < 8; i++){
+            buffer.append(chars.charAt((int)(Math.random() * 36)));
+        }
+        return buffer.toString();
+    }
+
+    public static void main(String[] args){
+        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuffer buffer = new StringBuffer();
+        for(int i=0 ; i < 8; i++){
+            buffer.append(chars.charAt((int)(Math.random() * 36)));
+        }
+        System.out.println(buffer.toString());
     }
 }

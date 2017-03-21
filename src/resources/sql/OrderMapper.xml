@@ -37,7 +37,7 @@
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.Order">
         insert into t_order(f_balance,f_real_money,f_id,f_no,f_order_type,f_member_id,f_member_account,f_shop_id,f_agent_id,f_create_time,f_pay_time,f_dispatch_time,f_success_time,f_over_time,f_limit_time,f_status,f_total_money,f_remark,f_express,f_code,f_user_name,f_address,f_telephone,f_pay_type,f_express_name,f_express_no,f_member_assess,f_shop_assess)
-        values(#{f_balance},#{realMoney},#{id},#{no},#{orderType},#{memberId},#{memberAccount},#{shopId},#{agentId},#{createTime},#{payTime},#{dispatchTime},#{successTime},#{overTime},#{limitTime},#{status},#{totalMoney},#{remark},#{express},#{code},#{userName},#{address},#{telephone},#{payType},#{expressName},#{expressNo},#{memberAssess},#{shopAssess})
+        values(#{balance},#{realMoney},#{id},#{no},#{orderType},#{memberId},#{memberAccount},#{shopId},#{agentId},#{createTime},#{payTime},#{dispatchTime},#{successTime},#{overTime},#{limitTime},#{status},#{totalMoney},#{remark},#{express},#{code},#{userName},#{address},#{telephone},#{payType},#{expressName},#{expressNo},#{memberAssess},#{shopAssess})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Order">
         update t_order
