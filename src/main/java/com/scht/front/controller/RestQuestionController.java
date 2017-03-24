@@ -1,5 +1,6 @@
 package com.scht.front.controller;
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.scht.admin.dao.QuestRecordDao;
 import com.scht.admin.dao.QuestSetDao;
@@ -69,8 +70,24 @@ public class RestQuestionController extends BaseController {
     //查询回答详情
     @RequestMapping(value = "find", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object find(String id ){
+    public Object find(String id , HttpServletRequest request){
         QuestRecord record = this.baseService.findById(QuestRecordDao.class, id );
+        if(StringUtil.isNotNull(record.getQuestJson())) {
+
+            Question question =  JSON.parseObject(record.getQuestJson(), Question.class);
+            if(!StringUtil.isNullOrEmpty(question.getContent())) { //内容里面的图片路径改为绝对路径
+                Pattern pattern = Pattern.compile("<img[^>]*src=\"([^\"]*)\"[^>]*[^>]*>");
+                Matcher matcher = pattern.matcher(question.getContent());
+                String url = "http://" + request.getServerName();
+                while (matcher.find()) {
+                    String temp = matcher.group(1);
+                    if (!temp.substring(0, 7).equals("http://")) {
+                        question.setContent(question.getContent().replaceAll(temp, url + temp));
+                    }
+                }
+            }
+            record.setQuestion(question);
+        }
         RetResult result = new RetResult(RetResult.RetCode.OK);
         RetData data = new RetData(record);
         result.setData(data);

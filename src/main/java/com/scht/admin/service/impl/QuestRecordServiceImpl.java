@@ -1,5 +1,7 @@
 package com.scht.admin.service.impl;
 
+import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.MemberFlowType;
 import com.scht.admin.dao.*;
 import com.scht.admin.entity.*;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -56,10 +59,12 @@ public class QuestRecordServiceImpl implements QuestRecordService {
         List<String> sucIds = new ArrayList<>();
         List<String> errIds = new ArrayList<>();
         String sucStr = "", myStr = "";
+        String successIds = "";
         for(QuestAnswer answer : sucList) {
             if(answer.isAnswer()) {
                 sucStr += answer.getContent()+";";
                 sucIds.add(answer.getId());
+                successIds += answer.getId()+",";
             }else {
                 errIds.add(answer.getId());
             }
@@ -94,6 +99,9 @@ public class QuestRecordServiceImpl implements QuestRecordService {
         record.setCreateTime(System.currentTimeMillis());
         record.setSucAnswer(sucStr);
         record.setAnswer(myStr);
+        record.setSucIds(successIds);
+        record.setMyIds(answerIds);
+        record.setQuestJson(JSON.toJSONString(question));
         record.setMoney(money);
         this.baseMyBatisDao.insert(QuestRecordDao.class, record);
         return result;

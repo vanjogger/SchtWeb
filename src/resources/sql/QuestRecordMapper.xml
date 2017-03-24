@@ -14,10 +14,13 @@
         <result column="f_suc_answer" property="sucAnswer"/>
         <result column="f_answer" property="answer"/>
         <result column="f_money" property="money"/>
+        <result column="f_suc_ids" property="sucIds"/>
+        <result column="f_my_ids" property="myIds"/>
+        <result column="f_quest_json" property="questJson"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.QuestRecord">
-        insert into t_quest_record(f_id,f_member_id,f_quest_id,f_quest_title,f_suc,f_create_time,f_suc_answer,f_answer,f_money)
-        values(#{id},#{memberId},#{questId},#{questTitle},#{suc},#{createTime},#{sucAnswer},#{answer},#{money})
+        insert into t_quest_record(f_suc_ids,f_my_ids,f_quest_json,f_id,f_member_id,f_quest_id,f_quest_title,f_suc,f_create_time,f_suc_answer,f_answer,f_money)
+        values(#{sucIds},#{myIds},#{questJson},#{id},#{memberId},#{questId},#{questTitle},#{suc},#{createTime},#{sucAnswer},#{answer},#{money})
     </insert>
 
     <select id="findById" resultMap="my_quest_record">

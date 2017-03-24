@@ -4260,3 +4260,7 @@ alter table t_order_pay_record add f_balance varchar(100) DEFAULT '';
 alter table t_question add f_icon varchar(512) default '';
 alter table t_question add f_content longtext;
 alter table t_quest_answer add f_icon varchar(512) DEFAULT '';
+
+alter table t_quest_record add f_suc_ids varchar(1000) DEFAULT '';
+alter table t_quest_record add f_my_ids varchar(1000) default '';
+alter table t_quest_record add f_quest_json longtext;

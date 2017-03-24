@@ -19,10 +19,46 @@ public class QuestRecord {
     private long createTime; //答题时间
     private String sucAnswer; //正确答案
     private String answer; //我的答案
+    private String sucIds; //正确答案 ids，多个用，分割
+    private String myIds; //我的答案ids，多个用，分割
+    private String questJson; //问题元数据 json格式
 
     //会员账号
     private String memberAccount;
     private String dateStr;
+    private Question question;
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
+    public String getSucIds() {
+        return sucIds;
+    }
+
+    public void setSucIds(String sucIds) {
+        this.sucIds = sucIds;
+    }
+
+    public String getMyIds() {
+        return myIds;
+    }
+
+    public void setMyIds(String myIds) {
+        this.myIds = myIds;
+    }
+
+    public String getQuestJson() {
+        return questJson;
+    }
+
+    public void setQuestJson(String questJson) {
+        this.questJson = questJson;
+    }
 
     public String getDateStr() {
         return dateStr;
