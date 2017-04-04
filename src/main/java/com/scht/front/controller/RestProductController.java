@@ -40,12 +40,16 @@ public class RestProductController  extends BaseController{
                        @RequestParam(value = "order", required = false)String order,
                        @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
                        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                       @RequestParam(value = "typeId", required = false)String typeId,
                        @RequestParam(value = "type", required = false)String type){
         Map<String,Object> map = new HashMap<>();
         map.put("front","true");
         map.put("status", Status.NORMAL.name());
         map.put("start", (pageNo-1)*pageSize);
         map.put("limit", pageSize);
+        if(!StringUtil.isNullOrEmpty(typeId)) {
+            map.put("typeId", typeId);
+        }
         if(!StringUtil.isNullOrEmpty(type)){
             map.put("type", type);
         }

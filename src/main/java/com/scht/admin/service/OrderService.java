@@ -32,7 +32,7 @@ public interface OrderService {
      * @return
      */
     RetResult createOrder(String memberId, String productId, int amount, String remark, String userName, String telephone, String address, String express);
-
+    RetResult createOrder(Order order);
     /**
      * 关闭订单
      * @param id

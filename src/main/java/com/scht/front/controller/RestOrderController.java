@@ -19,6 +19,7 @@ import com.scht.util.StringUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -98,6 +99,17 @@ public class RestOrderController extends BaseController {
         return result;
     }
 
+    @RequestMapping(value = "createSaleOrder", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object createSaleOrder(Order order){
+        try {
+            RetResult result = this.orderService.createOrder(order);
+            return JSON.toJSON(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JSON.toJSON(new RetResult(RetResult.RetCode.System_Error));
+        }
+    }
     /**
      * 创建订单
      * @param memberId

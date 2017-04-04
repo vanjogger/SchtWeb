@@ -108,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
             if(orderIds.size() > 0) {
-                updateProductStock(orderIds.toArray(new String[0]));
+                updateProductStock(orderIds.toArray(new String[0]),true);
             }
         }
 
@@ -209,7 +209,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     //订单关闭，库存返回
-    private void updateProductStock(String[] orderIds){
+    private void updateProductStock(String[] orderIds, boolean flag){
         List<OrderProduct> list = orderProductDao.listByOrderIds(orderIds);
         if(list != null && list.size() > 0) {
             Map<String,Integer> map = new HashMap<>();
@@ -231,8 +231,12 @@ public class OrderServiceImpl implements OrderService {
                 for(Product product : products) {
                     if(map.get(product.getId()) != null) {
                         if(!ProductTypeEnum.EXTEND.name().equals(product.getProductType())) {
-                            //更改商品库存
-                            productDao.updateStock(product.getId(), map.get(product.getId()));
+                            if(flag) {
+                                //更改商品库存
+                                productDao.updateStock(product.getId(), map.get(product.getId()));
+                            }else{
+                                productDao.updateStock(product.getId(), 0- map.get(product.getId()));
+                            }
                         }
                     }
                 }
@@ -270,8 +274,80 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+
+
     /************  以下为ＡＰＰ接口  ******************/
 
+    //外卖
+    @Override
+    public RetResult createOrder(Order order) {
+        RetResult result = null;
+        Member member = this.baseMyBatisDao.findById(MemberDao.class,order.getMemberId());
+        if(member == null || !Status.NORMAL.name().equals(member.getStatus())) {
+            result = new RetResult(RetResult.RetCode.User_Frozen);
+            return result;
+        }
+        List<OrderProduct> list = order.getList();
+        if(list == null || list.size() == 0) {
+            result = new RetResult(RetResult.RetCode.BadRequest);
+            return result;
+        }
+        order.setId(UUIDFactory.random());
+        List<String> productIds = new ArrayList<>();
+        //查询商品
+        for(OrderProduct product : list) {
+            productIds.add(product.getProductId());
+        }
+        List<Product> products = productDao.listByIds(productIds.toArray(new String[0]));
+        Map<String,Product> map = new HashMap<>();
+        for(Product product : products) {
+            map.put(product.getId(), product);
+        }
+        //组装
+        Product temp = null;
+        String shopId = null;String agentId = null;
+        String totalMoney = "0";
+        for(int i=0; i < list.size(); i++) {
+            OrderProduct product = list.get(i);
+            temp = map.get(product.getProductId());
+            if(i==0) {
+                shopId = temp.getShopId();
+                agentId = temp.getAgentId();
+            }
+            product.setId(UUIDFactory.random());
+            product.setOrderId(order.getId());
+            product.setProductName(temp.getTitle());
+            product.setProductImage(temp.getIcon());
+            product.setPrice(temp.getPrice());
+            product.setMoney(StringNumber.mul(product.getPrice(), (product.getAmount() == 0 ? 1 : product.getAmount()) + ""));
+          totalMoney = StringNumber.add(totalMoney, product.getMoney());
+        }
+        order.setShopId(shopId);
+        order.setAgentId(agentId);
+         order.setTotalMoney(totalMoney);
+        order.setBalance("0");
+        order.setRealMoney(totalMoney);
+        order.setNo(OrderUtil.createNo());
+        order.setOrderType(ProductTypeEnum.NORMAL.name());
+        order.setMemberId(member.getId());
+        order.setMemberAccount(member.getAccount());
+        order.setCreateTime(System.currentTimeMillis());
+        OrderLimitSet set = this.baseMyBatisDao.findById(OrderLimitSetDao.class,"");
+        if(set != null && set.getPayLimit() > 0) {
+            order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getPayLimit()));
+        }
+        order.setStatus(OrderStatus.CREATE.name());
+        order.setExpress("1"); //外卖，发货
+        order.setMemberAssess("0");
+        order.setShopAssess("0");
+        //保存
+        this.baseMyBatisDao.saveBatch(OrderProductDao.class, list);
+        this.baseMyBatisDao.insert(OrderDao.class, order);
+        result = new RetResult(RetResult.RetCode.OK);
+        RetData data = new RetData(order);
+        result.setData(data);
+        return result;
+    }
     @Override
     public RetResult createOrder(String memberId, String productId, int amount, String remark,
                                  String userName, String telephone, String address, String express) {
@@ -390,7 +466,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOverTime(System.currentTimeMillis());
         order.setLimitTime(0l);
         if(!ProductTypeEnum.EXTEND.name().equals(order.getOrderType())) {
-            updateProductStock(new String[]{order.getId()});
+            updateProductStock(new String[]{order.getId()}, true);
         }
         this.baseMyBatisDao.update(OrderDao.class, order);
         return new RetResult(RetResult.RetCode.OK);
@@ -531,10 +607,12 @@ public class OrderServiceImpl implements OrderService {
         if("0".equals(order.getExpress())){
             order.setCode(OrderUtil.getUniqueCode());
         }
+        List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
+        //减库存 todo：
+        updateProductStock(new String[]{order.getId()},false);
         //订单支付完成
         this.baseMyBatisDao.update(OrderDao.class, order);
         if(!StringUtil.isNullOrEmpty(order.getShopId())) {//给商家推送消息
-            List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
             PushRecord record = PushRecord.createShopOrder(order.getShopId(), "新订单提醒",
                     "您好，您有一个新订单，商品“" + product.get(0).getProductName() + "”,会员账号“" + order.getMemberAccount() + "”", order.getId());
             this.baseMyBatisDao.insert(PushRecordDao.class,record);

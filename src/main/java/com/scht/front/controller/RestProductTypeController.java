@@ -1,0 +1,50 @@
+package com.scht.front.controller;
+
+import com.alibaba.fastjson.JSON;
+import com.scht.admin.bean.Status;
+import com.scht.admin.dao.ProductTypeDao;
+import com.scht.admin.service.BaseService;
+import com.scht.admin.service.ProductTypeService;
+import com.scht.common.BaseController;
+import com.scht.front.bean.RetData;
+import com.scht.front.bean.RetResult;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Created by wxh on 2017/4/4.
+ */
+@Controller
+@RequestMapping("/rest/productType/")
+public class RestProductTypeController extends BaseController {
+
+    //查询商品分类
+    @Autowired
+    ProductTypeService productTypeService;
+    @Autowired
+    BaseService baseService;
+
+    //查询分类列表
+    @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object list(@RequestParam(value = "pageNo", defaultValue = "1")int pageNo,
+                       @RequestParam(value = "pageSize", defaultValue = "10")int pageSize){
+        Map<String,Object> map = new HashMap<>();
+        map.put("start", (pageNo-1)*pageSize);
+        map.put("limit", pageSize);
+        map.put("status", Status.NORMAL.name());
+       List list = this.baseService.searchByPage(ProductTypeDao.class,map);
+        RetResult result = new RetResult(RetResult.RetCode.OK);
+        RetData data = new RetData(list);
+        result.setData(data);
+        return JSON.toJSON(result);
+    }
+}
