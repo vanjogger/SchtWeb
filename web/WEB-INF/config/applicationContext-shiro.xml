@@ -62,6 +62,7 @@
                 /admin = anon
                 /validateCode = anon
                 /upload/** = anon
+                /diudiuke/** = anon
                 /admin/login = anon
                 /logout = anon
                 <!-- 所有的请求（除去配置的静态资源请求或请求地址为anon）都要通过登录验证，若未登录则跳转至/login-->

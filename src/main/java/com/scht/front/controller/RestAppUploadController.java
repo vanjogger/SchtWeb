@@ -2,7 +2,9 @@ package com.scht.front.controller;
 
 import java.awt.Image;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
+import sun.misc.BASE64Decoder;
 
 @Controller
 @RequestMapping("/rest/app")
@@ -45,7 +48,40 @@ public class RestAppUploadController extends BaseFrontController {
 
 	private static Logger logger = LoggerFactory.getLogger(RestAppUploadController.class);
 
-
+	@RequestMapping(value = "/uploadImg")
+	@ResponseBody
+	public Object uploadImg(String image, HttpServletRequest request) {
+		RetResult result = null;
+		if (null != image) {
+			BASE64Decoder decoder = new BASE64Decoder();
+			try {
+				//Base64解码
+				byte[] b = decoder.decodeBuffer(image);
+				//生成图片
+				String fileName = System.currentTimeMillis() + ".jpeg";
+				String path = ConfigHelper.GetInstance().GetConfig("Upload_Path")+"/" +DateUtil.getFormatDate(new Date(),"yyyyMMdd");
+				String targetPath = request.getSession().getServletContext().getRealPath(path);
+				if(!new File(targetPath).exists()) {
+					new File(targetPath).mkdirs();
+				}
+				String imgFilePath = targetPath + File.separator + fileName;//新生成的图片
+				OutputStream out = new FileOutputStream(imgFilePath);
+				out.write(b);
+				out.flush();
+				out.close();
+				path = path+File.separator + fileName;
+				path = path.replaceAll("\\\\","/");
+				result = new RetResult(RetResult.RetCode.OK);
+				RetData data = new RetData(path);
+				//tip.setData(uri + fileName);
+				 result.setData(data);
+			} catch (Exception e) {
+				e.printStackTrace();
+				result = new RetResult(RetResult.RetCode.System_Error);
+			}
+		}
+		return JSON.toJSON(result);
+	}
 	@RequestMapping(value = "/upload")
 	@ResponseBody
 	public Object patrolInspectionUpload(HttpServletRequest request, @RequestParam(value = "multipartFile") MultipartFile multipartFile) {
