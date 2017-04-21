@@ -7,6 +7,7 @@ public enum  OrderStatus {
 
     CREATE("订单创建，待支付"),
     PAY("支付完成"),
+    RECEIVE("确认接单"), //外卖订单确认接单
     DISPATCH("已发货，待收货"),
     SUCCESS("订单完成"),
     CLOSE("订单关闭");

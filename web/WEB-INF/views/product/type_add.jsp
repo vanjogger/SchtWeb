@@ -17,7 +17,8 @@
       <div class="control-group span20">
         <label class="control-label"><s>*</s>分类名称：</label>
         <div class="controls">
-          <input name="name" type="text" data-rules="{required:true,maxlength:20}" value="" class="input-large control-text">
+          <input name="name" type="text" data-rules="{required:true,maxlength:20}" value=""
+                 class="input-large control-text">
         </div>
       </div>
     </div>

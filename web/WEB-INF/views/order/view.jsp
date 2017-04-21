@@ -30,6 +30,7 @@
             <c:choose>
               <c:when test="${data.status == 'CREATE'}">待支付</c:when>
               <c:when test="${data.status == 'PAY'}">${data.orderType == 'EXTEND'?'待消费':'已支付'}</c:when>
+              <c:when test="${data.status == 'RECEIVE'}">商家已接单</c:when>
               <c:when test="${data.status == 'DISPATCH'}">已发货</c:when>
               <c:when test="${data.status == 'SUCCESS'}">已完成</c:when>
               <c:when test="${data.status == 'CLOSE'}">已关闭</c:when>
@@ -53,6 +54,17 @@
             <div class="span10">收件人：${data.userName}</div>
             <div class="span10">联系电话：${data.telephone}</div>
           </div>
+          <c:if test="${!empty data.expressName}">
+            <div class="row">
+              <div class="span10">快递公司：${data.expressName}</div>
+              <div class="span10">快递单号：${data.expressNo}</div>
+            </div>
+          </c:if>
+          <c:if test="${!empty data.wbTelephone}">
+            <div class="row">
+              <div class="span10">快递电话：${data.wbTelephone}</div>
+            </div>
+          </c:if>
           <div class="row">
             <div class="span10">联系地址：${data.address} </div>
           </div>
@@ -138,6 +150,8 @@
       backId = 'wzorder_list';
     }else if('${data.orderType}' == 'EXTEND'){
       backId = 'tgorder_list';
+    }else if('${data.wb}' == 'true') {
+      backId = 'wb_order_list'
     }
     top.topManager.openPage({
       id : backId,

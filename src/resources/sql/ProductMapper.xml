@@ -24,6 +24,7 @@
         <result column="f_sort" property="sort"/>
         <result column="f_self" property="self"/>
         <result column="f_shop_id" property="shopId"/>
+        <result column="f_wb" property="wb"/>
     </resultMap>
 
     <resultMap id="rest_product" type="com.scht.front.bean.RestProduct">
@@ -43,8 +44,8 @@
 
 
     <insert id="insert" parameterType="com.scht.admin.entity.Product">
-        insert into t_product(f_id,f_title,f_product_type,f_type_id,f_description,f_price,f_market_price,f_agent_id,f_images,f_stock,f_sale_count,f_virtual_count,f_comment_count,f_content,f_status,f_create_time,f_sort,f_self,f_shop_id)
-        values(#{id},#{title},#{productType},#{typeId},#{description},#{price},#{marketPrice},#{agentId},#{images},#{stock},#{saleCount},#{virtualCount},#{commentCount},#{content},#{status},#{createTime},#{sort},#{self},#{shopId})
+        insert into t_product(f_wb,f_id,f_title,f_product_type,f_type_id,f_description,f_price,f_market_price,f_agent_id,f_images,f_stock,f_sale_count,f_virtual_count,f_comment_count,f_content,f_status,f_create_time,f_sort,f_self,f_shop_id)
+        values(#{wb},#{id},#{title},#{productType},#{typeId},#{description},#{price},#{marketPrice},#{agentId},#{images},#{stock},#{saleCount},#{virtualCount},#{commentCount},#{content},#{status},#{createTime},#{sort},#{self},#{shopId})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Product">
         update t_product
@@ -103,6 +104,14 @@
     <select id="searchByPage" resultMap="my_product" parameterType="HashMap">
         SELECT  * from t_product
         <where>
+            <choose>
+                <when test='"1" == wb'>
+                    and f_wb='1'
+                </when>
+                <otherwise>
+                    and f_wb!='1'
+                </otherwise>
+            </choose>
             <if test="title != null and title != ''">
                 and f_title like "%"#{title}"%"
             </if>
@@ -159,6 +168,14 @@
     <select id="count4Page" resultType="int" parameterType="HashMap">
         SELECT  count(f_id) from t_product
         <where>
+            <choose>
+                <when test='"1" == wb'>
+                    and f_wb='1'
+                </when>
+                <otherwise>
+                    and f_wb='0'
+                </otherwise>
+            </choose>
             <if test="title != null and title != ''">
                 and f_title like "%"#{title}"%"
             </if>
@@ -219,9 +236,9 @@
 
     <select id="list" parameterType="HashMap" resultMap="rest_product">
       SELECT t.f_id,t.f_title,p.f_name as f_type_name,t.f_type_id,t.f_description,t.f_price,t.f_market_price,t.f_images,t.f_stock,t.f_sale_count,t.f_virtual_count,t.f_comment_count
-      FROM t_product t,t_product_type p
+      FROM t_product t left join t_product_type p on t.f_type_id = p.f_id
       <where>
-          t.f_type_id = p.f_id
+
           <if test="shopId!=null and shopId!=''">
               and t.f_shop_id = #{shopId}
           </if>
@@ -235,9 +252,9 @@
 
     <select id="count" parameterType="HashMap" resultType="Integer">
         SELECT count(t.f_id)
-        FROM t_product t,t_product_type p
+        FROM t_product t left join t_product_type p on  t.f_type_id = p.f_id
         <where>
-            t.f_type_id = p.f_id
+
             <if test="shopId!=null and shopId!=''">
                 and t.f_shop_id = #{shopId}
             </if>

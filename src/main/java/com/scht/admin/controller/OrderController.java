@@ -47,19 +47,23 @@ public class OrderController extends BaseController {
     OrderService orderService;
 
     @RequestMapping("list")
-    public String list(ModelMap map, String orderType){
+    public String list(ModelMap map, String orderType, String wb){
         map.put("orderType", orderType);
+        map.put("wb", wb);
         return "/order/list";
     }
 
     @RequestMapping("listData")
     @ResponseBody
-    public JSONObject listData(HttpServletRequest request, PageInfo pageInfo,String orderType,
+    public JSONObject listData(HttpServletRequest request, PageInfo pageInfo,String orderType,String wb,
                                String startTime, String endTime, String status, String no, String memberAccount){
         Map<String,Object> map = new HashMap<>();
         Admin admin = (Admin) getCurrentUser(request);
         if("1".equals(admin.getType())){
             map.put("agentId", admin.getId());
+        }
+        if(!StringUtil.isNullOrEmpty(wb)) {
+            map.put("wb", wb);
         }
         if(!StringUtil.isNullOrEmpty(orderType)) {
             map.put("orderType", orderType);
@@ -102,11 +106,19 @@ public class OrderController extends BaseController {
     @ResponseBody
     public JSONObject dispatch(String id, String expressName, String expressNo,HttpServletRequest request){
         Order order = this.baseService.findById(OrderDao.class, id);
-        if(order == null || !"1".equals(order.getExpress()) || !OrderStatus.PAY.name().equals(order.getStatus())){
-            return this.FmtResult(false,"该订单不需要发货",null);
+        if(order == null) {
+            return this.FmtResult(false,"订单不存在",null);
         }
-        order.setExpressName(expressName);
-        order.setExpressNo(expressNo);
+        if(order.isWb()) {
+            //外卖
+           order.setWbTelephone(expressName);
+        }else {
+            if (order == null || !"1".equals(order.getExpress()) || !OrderStatus.PAY.name().equals(order.getStatus())) {
+                return this.FmtResult(false, "该订单不需要发货", null);
+            }
+            order.setExpressName(expressName);
+            order.setExpressNo(expressNo);
+        }
         order.setStatus(OrderStatus.DISPATCH.name());
         order.setDispatchTime(System.currentTimeMillis());
         //确认收货时限设置
@@ -119,7 +131,21 @@ public class OrderController extends BaseController {
         this.baseService.update(OrderDao.class, order);
         this.saveLog("订单:" + order.getNo() + "进行发货操作", request);
         orderService.pushDispatchMessage(order);
-        return this.FmtResult(true,"发货操作成功",null);
+        return this.FmtResult(true, "发货操作成功", null);
+    }
+
+    @RequestMapping("receive")
+    @ResponseBody
+    public JSONObject receive(String id, HttpServletRequest request){
+        Order order = this.baseService.findById(OrderDao.class, id);
+        if(!order.isWb() || !OrderStatus.PAY.name().equals(order.getStatus())) {
+            return this.FmtResult(false,"订单不是外卖订单或不是付款状态",null);
+        }
+        order.setStatus(OrderStatus.RECEIVE.name());
+        this.baseService.update(OrderDao.class, order);
+        this.saveLog("订单:" + order.getNo() + "进行接单操作", request);
+//        orderService.pushDispatchMessage(order);
+        return this.FmtResult(true,"商家接收订单",null);
     }
 
     //关闭的订单删除

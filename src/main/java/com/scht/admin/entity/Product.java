@@ -36,12 +36,22 @@ public class Product {
     private String self; //0 自营商品 1 商家商品
     private String shopId; //商家id
 
+    private boolean wb; //是否外卖商品  true 是 false 不是
+
 
     //以下不存数据库
     private String date; //时间
     private String typeName; //分类名称
     private String icon; //多图的第一个
     private String shopName; //商家名称
+
+    public boolean isWb() {
+        return wb;
+    }
+
+    public void setWb(boolean wb) {
+        this.wb = wb;
+    }
 
     public String getSelf() {
         return self;

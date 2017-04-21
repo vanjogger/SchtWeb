@@ -16,7 +16,7 @@
 
 <div class="container">
   <form id="J_Form" class="form-horizontal" method="post" action="/product/save">
-    <input type="hidden" name="productType" value="${type}"/>
+    <input type="hidden" name="wb" value="1"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>商品名称：</label>
@@ -26,38 +26,39 @@
         </div>
       </div>
     </div>
+    <div class="row">
+    <div class="control-group span20">
+    <label class="control-label"><s>*</s>商品分类：</label>
+    <div class="controls">
+    <select name="typeId" data-rules="{required:true}">
+    <option value="">请选择</option>
+    <c:forEach items="${typeList}" var="e">
+    <option value="${e.id}">${e.name}</option>
+    </c:forEach>
+    </select>
+    </div>
+    </div>
+    </div>
+    <input type="hidden" name="self" value="1"/>
     <%--<div class="row">--%>
-    <%--<div class="control-group span20">--%>
-      <%--<label class="control-label"><s>*</s>商品分类：</label>--%>
-      <%--<div class="controls">--%>
-        <%--<select name="typeId">--%>
-          <%--<option value="">请选择</option>--%>
-          <%--<c:forEach items="${typeList}" var="e">--%>
-            <%--<option value="${e.id}">${e.name}</option>--%>
-          <%--</c:forEach>--%>
-        <%--</select>--%>
+      <%--<div class="control-group span20">--%>
+        <%--<label class="control-label">是否自营：</label>--%>
+        <%--<div class="controls">--%>
+          <%--<label class="radio" for="self1">--%>
+            <%--<input ID="self1" type="radio" onclick="shShop(this)" name="self" value="0" ${type=='NORMAL'?'checked':''}>自营商品</label>&nbsp;&nbsp;&nbsp;--%>
+          <%--<label class="radio" for="self2">--%>
+            <%--<input id="self2" type="radio" onclick="shShop(this)" name="self" value="1"--%>
+            <%--${type!='NORMAL'?'checked':''}--%>
+            <%--${type=='NORMAL'?'DISABLED':''}>商家销售</label>--%>
+        <%--</div>--%>
       <%--</div>--%>
     <%--</div>--%>
-  <%--</div>--%>
-    <div class="row">
-      <div class="control-group span20">
-        <label class="control-label">是否自营：</label>
-        <div class="controls">
-          <label class="radio" for="self1">
-            <input ID="self1" type="radio" onclick="shShop(this)" name="self" value="0" ${type=='NORMAL'?'checked':''}>自营商品</label>&nbsp;&nbsp;&nbsp;
-          <label class="radio" for="self2">
-            <input id="self2" type="radio" onclick="shShop(this)" name="self" value="1"
-            ${type!='NORMAL'?'checked':''}
-             ${type=='NORMAL'?'DISABLED':''}>商家销售</label>
-        </div>
-      </div>
-    </div>
-    <div class="row" id="shops_div" style="display: ${type=='NORMAL'?'none':''};">
+    <div class="row" id="shops_div"  >
       <div class="control-group span20">
         <label class="control-label">所属商家：</label>
         <div class="controls control-row4" style="height:150px;">
           <input type="hidden" name="shopId" id="shopId"/>
-           <input type="text" class="input-normal control-text" id="shopName">
+          <input type="text" class="input-normal control-text" id="shopName">
           <input type="button" class="button" onclick="searchShop()" value="检索"/>
           <br/>
           <select id="shops" class="input-large" onchange="selShop(this)" size="6" style="height:115px;">
@@ -85,17 +86,17 @@
         </div>
       </div>
     </div>
-    <c:if test="${type != 'EXTEND'}">
-      <div class="row">
-        <div class="control-group span20">
-          <label class="control-label"><s>*</s>商品库存：</label>
-          <div class="controls">
-            <input type="text" name="stock" class="control-text input-small" data-rules="{required:true,regexp:/^\d+$/}"
-                   data-messages="{regexp:'请填写整数'}"/>
-          </div>
-        </div>
-      </div>
-    </c:if>
+    <%--<c:if test="${type != 'EXTEND'}">--%>
+      <%--<div class="row">--%>
+        <%--<div class="control-group span20">--%>
+          <%--<label class="control-label"><s>*</s>商品库存：</label>--%>
+          <%--<div class="controls">--%>
+            <%--<input type="text" name="stock" class="control-text input-small" data-rules="{required:true,regexp:/^\d+$/}"--%>
+                   <%--data-messages="{regexp:'请填写整数'}"/>--%>
+          <%--</div>--%>
+        <%--</div>--%>
+      <%--</div>--%>
+    <%--</c:if>--%>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label">商品虚拟销量：</label>
@@ -108,16 +109,16 @@
     <div class="row">
       <div class="control-group span20">
         <label class="control-label">商品图片：</label>
-          <div id="J_Uploader">
+        <div id="J_Uploader">
 
-          </div>
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label">商品简介：</label>
         <div class="controls control-row4">
-         <textarea class="control-row4 control-text input-large" name="description"></textarea>
+          <textarea class="control-row4 control-text input-large" name="description"></textarea>
         </div>
       </div>
     </div>
@@ -192,7 +193,7 @@
   }
 
   function selShop(_t){
-      $("#shopId").val($(_t).val());
+    $("#shopId").val($(_t).val());
     $("#shopName").val($(_t).find("option:selected").text());
   }
   var editor;
@@ -257,12 +258,7 @@
   });
 
   function back(){
-    var backId = 'product_list';
-    if('${type}' == 'DISCOUNT'){
-      backId = 'wz_product_list';
-    }else if('${type}' == 'EXTEND'){
-      backId = 'tg_product_list';
-    }
+    var backId = 'wb_product_list';
     top.topManager.openPage({
       id : backId,
       isClose : true

@@ -26,19 +26,19 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="control-group span20">
-        <label class="control-label"><s>*</s>商品分类：</label>
-        <div class="controls">
-          <select name="typeId">
-            <option value="">请选择</option>
-            <c:forEach items="${typeList}" var="e">
-              <option value="${e.id}" ${data.typeId == e.id ? "selected":''}>${e.name}</option>
-            </c:forEach>
-          </select>
-        </div>
-      </div>
-    </div>
+    <%--<div class="row">--%>
+      <%--<div class="control-group span20">--%>
+        <%--<label class="control-label"><s>*</s>商品分类：</label>--%>
+        <%--<div class="controls">--%>
+          <%--<select name="typeId">--%>
+            <%--<option value="">请选择</option>--%>
+            <%--<c:forEach items="${typeList}" var="e">--%>
+              <%--<option value="${e.id}" ${data.typeId == e.id ? "selected":''}>${e.name}</option>--%>
+            <%--</c:forEach>--%>
+          <%--</select>--%>
+        <%--</div>--%>
+      <%--</div>--%>
+    <%--</div>--%>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label">是否自营：</label>

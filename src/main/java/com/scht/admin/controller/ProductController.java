@@ -39,21 +39,31 @@ public class ProductController extends BaseController {
 
     @Autowired
     ShopService shopService;
+    @RequestMapping("wbList")
+    public String wbList(String type, ModelMap map){
+        map.put("type", type);
+        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
+        return "/product/wb_list";
+    }
 
     @RequestMapping("list")
     public String list(String type, ModelMap map){
         map.put("type", type);
-        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
+//        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
         return "/product/list";
     }
 
     @RequestMapping("listData")
     @ResponseBody
-    public JSONObject listData(HttpServletRequest request, PageInfo pageInfo, String type, String title, String status){
+    public JSONObject listData(HttpServletRequest request, PageInfo pageInfo, String type, String title, String status,
+                               String wb){
         Map<String,Object> map = new HashMap<>();
         Admin admin = (Admin) getCurrentUser(request);
         if("1".equals(admin.getType())){
             map.put("agentId", admin.getId());
+        }
+        if(!StringUtil.isNullOrEmpty(wb)) {
+            map.put("wb", wb);
         }
         if(!StringUtil.isNullOrEmpty(type)){
             map.put("type", type);
@@ -77,6 +87,12 @@ public class ProductController extends BaseController {
         return "/product/add";
     }
 
+    @RequestMapping("wbadd")
+    public String wbadd(ModelMap map, String type){
+        map.put("type", type);
+        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
+        return "/product/wbadd";
+    }
     @RequestMapping("save")
     @ResponseBody
     public JSONObject save(Product product, HttpServletRequest request){
@@ -110,7 +126,10 @@ public class ProductController extends BaseController {
             data.setShopName(shop.getName());
         }
         map.put("data", data);
-        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
+        if(data.isWb()) {
+            map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
+            return "/product/wbedit";
+        }
         return "/product/edit";
     }
 

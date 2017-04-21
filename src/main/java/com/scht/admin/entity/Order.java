@@ -45,6 +45,9 @@ public class Order {
     private String memberAssess; //会员是否评价， 0 未评价、 1 已评价
     private String shopAssess; //是否回评， 0 未回评 1 已回评
 
+    private boolean wb; //是否外卖订单   true 是 false 不是
+    private String wbTelephone; //外卖快递员电话
+
 
     //一下不存数据库
     private String shopName; //商家名称
@@ -55,6 +58,22 @@ public class Order {
     private String dispatchDate;
     private String successDate;
     private String overDate;
+
+    public boolean isWb() {
+        return wb;
+    }
+
+    public void setWb(boolean wb) {
+        this.wb = wb;
+    }
+
+    public String getWbTelephone() {
+        return wbTelephone;
+    }
+
+    public void setWbTelephone(String wbTelephone) {
+        this.wbTelephone = wbTelephone;
+    }
 
     public String getBalance() {
         return balance;

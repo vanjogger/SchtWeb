@@ -4264,3 +4264,7 @@ alter table t_quest_answer add f_icon varchar(512) DEFAULT '';
 alter table t_quest_record add f_suc_ids varchar(1000) DEFAULT '';
 alter table t_quest_record add f_my_ids varchar(1000) default '';
 alter table t_quest_record add f_quest_json longtext;
+
+alter table t_product add f_wb char(1) default '0';
+alter table t_order add f_wb char(1) DEFAULT '0';
+alter table t_order add t_wb_telephone varchar(32) DEFAULT '';

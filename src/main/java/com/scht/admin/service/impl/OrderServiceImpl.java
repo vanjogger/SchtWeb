@@ -123,13 +123,17 @@ public class OrderServiceImpl implements OrderService {
     public void pushDispatchMessage(Order order) {
         List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
         String message = "您好，您购买的商品“" + product.get(0).getProductName() + "”";
-        if(!StringUtil.isNullOrEmpty(order.getExpressName())){
-            message += "已由快递公司" + order.getExpressName() + "承接配送。";
-            if(!StringUtil.isNullOrEmpty(order.getExpressNo())) {
-                message += "快递单号：" +order.getExpressNo() +"。请注意查收";
+        if(order.isWb()) {
+            message += "由快递员配送，联系电话：" + order.getWbTelephone() +",请注意查收！";
+        }else {
+            if (!StringUtil.isNullOrEmpty(order.getExpressName())) {
+                message += "已由快递公司" + order.getExpressName() + "承接配送。";
+                if (!StringUtil.isNullOrEmpty(order.getExpressNo())) {
+                    message += "快递单号：" + order.getExpressNo() + "。请注意查收";
+                }
+            } else {
+                message += "已发货，请注意查收！";
             }
-        }else{
-            message += "已发货，请注意查收！";
         }
         PushRecord record = PushRecord.createMemberOrder(order.getMemberId(), "订单发货提醒",message, order.getId());
         this.baseMyBatisDao.insert(PushRecordDao.class, record);

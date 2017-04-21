@@ -28,6 +28,7 @@
       <li class="nav-item"><div class="nav-item-inner nav-order">交易管理</div></li>
       <li class="nav-item"><div class="nav-item-inner nav-storage">配置管理</div></li>
       <li class="nav-item"><div class="nav-item-inner nav-certification">系统设置</div></li>
+      <li class="nav-item"><div class="nav-item-inner nav-product">外卖管理</div></li>
     </ul>
   </div>
   <ul id="J_NavContent" class="dl-tab-conten">
@@ -104,13 +105,10 @@
         ]
       },{
       id:'product_manage',
-      homePage:"product_category_list",
+      homePage:"product_list",
       menu:[{
         text:'商品管理',
         items:[
-          <shiro:hasPermission name="product:typelist">
-          {id:'product_category_list',text:'商品分类管理',href:'/productType/list',closeable:true},
-          </shiro:hasPermission>
           <shiro:hasPermission name="product:list">
           {id:'product_list',text:'普通商品管理',href:'/product/list?type=NORMAL',closeable:true},
           </shiro:hasPermission>
@@ -238,7 +236,25 @@
           </shiro:hasPermission>
         ]
       }]
-    }];
+    },{
+      id:'wb',
+      homePage:"product_category_list",
+      menu:[{
+        text:'外卖管理',
+        items:[
+          <shiro:hasPermission name="product:typelist">
+          {id:'product_category_list',text:'商品分类管理',href:'/productType/list',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="product:wblist">
+          {id:'wb_product_list',text:'外卖商品',href:'/product/wbList',closeable:true},
+          </shiro:hasPermission>
+          <shiro:hasPermission name="order:wblist">
+          {id:'wb_order_list',text:'外卖订单',href:'/order/list?wb=1',closeable:true},
+          </shiro:hasPermission>
+        ]
+      }]
+    }
+    ];
     new PageUtil.MainPage({
       modulesConfig : config
     });

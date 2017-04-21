@@ -3,10 +3,12 @@ package com.scht.front.controller;
 import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.OrderStatus;
 import com.scht.admin.dao.OrderDao;
+import com.scht.admin.dao.OrderLimitSetDao;
 import com.scht.admin.dao.OrderProductDao;
 import com.scht.admin.dao.ShopDao;
 import com.scht.admin.entity.Member;
 import com.scht.admin.entity.Order;
+import com.scht.admin.entity.OrderLimitSet;
 import com.scht.admin.entity.Shop;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.OrderProductService;
@@ -15,7 +17,9 @@ import com.scht.admin.service.ShopService;
 import com.scht.common.BaseController;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
+import com.scht.util.DateUtil;
 import com.scht.util.StringUtil;
+import net.sf.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,7 +57,7 @@ public class RestOrderController extends BaseController {
     @ResponseBody
     public Object list(@RequestParam(value = "pageNo",defaultValue = "1")int pageNo,
                        @RequestParam(value = "pageSize",defaultValue = "10")int pageSize,String memberId,
-                       String shopId, String status){
+                       String shopId, String status, String wb){
         if(StringUtil.isNullOrEmpty(memberId) && StringUtil.isNullOrEmpty(shopId)) {
             return JSON.toJSON(new RetResult(RetResult.RetCode.Illegal_Request));
         }
@@ -62,6 +66,9 @@ public class RestOrderController extends BaseController {
         map.put("limit", pageSize);
         if(!StringUtil.isNullOrEmpty(memberId)) {
             map.put("memberId", memberId);
+        }
+        if(!StringUtil.isNullOrEmpty(wb)) {
+            map.put("wb", wb);
         }
         if(!StringUtil.isNullOrEmpty(shopId)) {
             map.put("shopId", shopId);
@@ -96,13 +103,69 @@ public class RestOrderController extends BaseController {
         }catch (Exception e){
             result = new RetResult(RetResult.RetCode.System_Error);
         }
-        return result;
+        return JSON.toJSON(result);
+    }
+
+    //接受订单
+    @RequestMapping(value = "receive",produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object receive(String id, HttpServletRequest request){
+        RetResult result = null;
+        Order order = this.baseService.findById(OrderDao.class, id);
+        if(!order.isWb() || !OrderStatus.PAY.name().equals(order.getStatus())) {
+            result = new RetResult(RetResult.RetCode.Illegal_Request);
+            result.setResMsg("订单不是外卖订单或不是付款状态");
+            return JSON.toJSON(result);
+        }
+        order.setStatus(OrderStatus.RECEIVE.name());
+        this.baseService.update(OrderDao.class, order);
+        result = new RetResult(RetResult.RetCode.OK);
+        return JSON.toJSON(result);
+    }
+    //发货
+//发货操作
+    @RequestMapping(value = "dispatch", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object dispatch(String id, String expressName, String expressNo,HttpServletRequest request){
+        Order order = this.baseService.findById(OrderDao.class, id);
+        RetResult result = null;
+        if(order == null) {
+            result = new RetResult(RetResult.RetCode.Illegal_Request);
+            result.setResMsg("订单不存在");
+            return JSON.toJSON(result);
+        }
+        if(order.isWb()) {
+            //外卖
+            order.setWbTelephone(expressName);
+        }else {
+            if (order == null || !"1".equals(order.getExpress()) || !OrderStatus.PAY.name().equals(order.getStatus())) {
+                result = new RetResult(RetResult.RetCode.Illegal_Request);
+                result.setResMsg("该订单不需要发货");
+                return JSON.toJSON(result);
+            }
+            order.setExpressName(expressName);
+            order.setExpressNo(expressNo);
+        }
+        order.setStatus(OrderStatus.DISPATCH.name());
+        order.setDispatchTime(System.currentTimeMillis());
+        //确认收货时限设置
+        OrderLimitSet set = this.baseService.findById(OrderLimitSetDao.class,"");
+        if(set != null && set.getSuccessLimit() > 0) {
+            order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getSuccessLimit()));
+        }else{
+            order.setLimitTime(0l);
+        }
+        this.baseService.update(OrderDao.class, order);
+        orderService.pushDispatchMessage(order);
+        result = new RetResult(RetResult.RetCode.OK);
+        return JSON.toJSON(result);
     }
 
     @RequestMapping(value = "createSaleOrder", produces = "application/json;charset=utf-8")
     @ResponseBody
     public Object createSaleOrder(Order order){
         try {
+            order.setWb(true);
             RetResult result = this.orderService.createOrder(order);
             return JSON.toJSON(result);
         }catch (Exception e){

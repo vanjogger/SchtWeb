@@ -1,5 +1,7 @@
 package com.scht.admin.entity;
 
+import java.util.List;
+
 /**
  * 商品分类
  * Created by Administrator on 2016/11/27.
@@ -12,6 +14,17 @@ public class ProductType {
     private int sort; //排序
     private String icon; //图标
     private String status;//NORMAL 正常  Frozen删除
+
+    //改分分类下商品列表
+    private List<Product> productList;
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
 
     public String getId() {
         return id;

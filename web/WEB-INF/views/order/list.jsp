@@ -15,6 +15,7 @@
 
   <form id="searchForm" class="form-horizontal">
     <input type="hidden" name="orderType" value="${orderType}"/>
+    <input type="hidden" name="wb" value="${wb}"/>
     <div class="row">
       <div class="control-group span8">
         <label class="control-label">订单编号：</label>
@@ -40,6 +41,9 @@
             </c:if>
             <c:if test="${orderType == 'EXTEND'}">
               <option value="PAY">待消费</option>
+            </c:if>
+            <c:if test="${wb== '1'}">
+              <option value="RECEIVE">商家已接单</option>
             </c:if>
             <option value="SUCCESS">已完成</option>
 
@@ -72,13 +76,13 @@
     <input type="hidden" id="orderId" name="id"/>
     <div class="row">
       <div class="control-group span8">
-        <label class="control-label">快递公司名称：</label>
+        <label class="control-label" id="expressName">快递公司名称：</label>
         <div class="controls">
           <input type="text" class="input-normal control-text" name="expressName">
         </div>
       </div>
      </div>
-    <div class="row">
+    <div class="row" id="expressNo">
       <div class="control-group span8">
         <label class="control-label">快递单号：</label>
         <div class="controls">
@@ -108,6 +112,7 @@
       {title:'订单状态',dataIndex:'a',width:150,renderer:function(v,o){
         if(o.status == 'CREATE') return '待支付';
         if(o.status == 'PAY') return o.orderType == 'EXTEND'?'待消费':'已支付';
+        if(o.status == 'RECEIVE') return "商家已接单";
         if(o.status == 'DISPATCH')return '已发货';
         if(o.status == 'SUCCESS') return '已完成';
         if(o.status == 'CLOSE') return '已关闭';
@@ -119,8 +124,14 @@
           delStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"del('"+obj.id+"')\">删除</a>&nbsp;&nbsp;";
         }
         var dispatchStr = "";
-        if(obj.status == 'PAY' && obj.express == '1'){
-          dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"dispatch('"+obj.id+"')\"> 发货 </a>&nbsp;&nbsp;"
+
+        if(!obj.wb && obj.status == 'PAY' && obj.express == '1'){
+            dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"dispatch('"+obj.id+"')\"> 发货 </a>&nbsp;&nbsp;"
+        }
+        if(obj.wb && obj.status == 'PAY') {
+          dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"recive('"+obj.id+"')\"> 接单 </a>&nbsp;&nbsp;"
+        }else if(obj.status == 'RECEIVE') {
+          dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"dispatch('"+obj.id+"','1')\"> 发货 </a>&nbsp;&nbsp;"
         }
 
         var viewStr = Search.createLink({ //链接使用 此方式
@@ -146,6 +157,21 @@
 
   });
 
+  function recive(_id){
+    BUI.Message.Confirm("确定接收该外卖订单？",function(){
+      $.ajax({
+        url :"/order/receive?r="+Math.random(),
+        type : 'post',
+        data : {id:_id},
+        success : function(data){
+          BUI.Message.Alert(data.msg);
+          if(data.success){ //删除成功
+            top.topManager.reloadPage();
+          }
+        }
+      });
+    },'question');
+  }
 
   function del(id){
     BUI.Message.Confirm("确定删除吗？",function(){
@@ -193,8 +219,13 @@
 
   });
 
-  function dispatch(_id){
+  function dispatch(_id,_f){
     $("#content #orderId").val(_id);
+    if(_f == '1') {
+      //外卖
+      $("#content #expressName").html("外卖人员电话：");
+      $("#content #expressNo").hide();
+    }
     dialog.show();
   }
 </script>

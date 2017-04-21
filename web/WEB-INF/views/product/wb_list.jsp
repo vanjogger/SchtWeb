@@ -14,7 +14,7 @@
 <div class="container">
 
   <form id="searchForm" class="form-horizontal">
-    <input type="hidden" name="type" value="${type}"/>
+    <input type="hidden" name="wb" value="1"/>
     <div class="row">
       <div class="control-group span8">
         <label class="control-label">商品名称：</label>
@@ -22,17 +22,17 @@
           <input type="text" class="control-text" name="title">
         </div>
       </div>
-      <%--<div class="control-group span8">--%>
-        <%--<label class="control-label">商品分类：</label>--%>
-        <%--<div class="controls">--%>
-          <%--<select name="typeId">--%>
-            <%--<option value="">所有商品</option>--%>
-            <%--<c:forEach items="${typeList}" var="e">--%>
-              <%--<option value="${e.id}">${e.name}</option>--%>
-            <%--</c:forEach>--%>
-          <%--</select>--%>
-        <%--</div>--%>
-      <%--</div>--%>
+      <div class="control-group span8">
+      <label class="control-label">商品分类：</label>
+      <div class="controls">
+      <select name="typeId">
+      <option value="">所有商品</option>
+      <c:forEach items="${typeList}" var="e">
+      <option value="${e.id}">${e.name}</option>
+      </c:forEach>
+      </select>
+      </div>
+      </div>
       <div class="control-group span8">
         <label class="control-label">状态：</label>
         <div class="controls" >
@@ -71,17 +71,9 @@
         }
       }},
       {title:'商品名称',dataIndex:'title',width:150},
-//      {title:'分类名称',dataIndex:'typeName',width:100},
+      {title:'分类名称',dataIndex:'typeName',width:100},
       {title:'商品价格',dataIndex:'price',width:80},
-        <c:if test="${type != 'NORMAL'}">
-      {title:'所属商家',dataIndex:'a',width:150,id:"shop_id",renderer:function(v,o){
-        if(o.self == '1'){
-          return o.shopName;
-        }else{
-          return "自营商品";
-        }
-      }},
-      </c:if>
+
       {title:'实际销量',dataIndex:'saleCount',width:80},
       {title:'状态',dataIndex:'sort',width:120,renderer:function(v,o){
         return o.status == 'NORMAL'?'上架':'下架';
@@ -108,7 +100,7 @@
       tbar : {
         items : [
           {text : '<i class="icon-plus"></i>新建',btnCls : 'button button-small',handler:function(){
-            top.topManager.openPage({id:"product_type_add",href:"/product/add?type=${type}",title:"新增"});
+            top.topManager.openPage({id:"product_wb_add",href:"/product/wbadd",title:"新增"});
           }}
         ]
       },
