@@ -341,7 +341,9 @@ public class OrderServiceImpl implements OrderService {
             order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getPayLimit()));
         }
         order.setStatus(OrderStatus.CREATE.name());
-        order.setExpress("1"); //外卖，发货
+        if(StringUtil.isNullOrEmpty(order.getExpress())) {
+            order.setExpress("1"); //外卖，发货
+        }
         order.setMemberAssess("0");
         order.setShopAssess("0");
         //保存
@@ -523,6 +525,95 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public RetResult pay(String orderId, String memberId, String payType, String couponId, HttpServletRequest request, String ip) throws IOException, DocumentException {
+        RetResult result = null;
+        Member member = this.baseMyBatisDao.findById(MemberDao.class, memberId);
+        if(member == null) {
+            result = new RetResult(RetResult.RetCode.User_Not_Exist);
+        }else if( Status.FROZEN.name().equals(member.getStatus())) {
+            result = new RetResult(RetResult.RetCode.User_Frozen);
+        }
+        if(result != null) return result;
+        Order order = this.baseMyBatisDao.findById(OrderDao.class, orderId);
+        if(order == null) {
+            result = new RetResult(RetResult.RetCode.Order_Not_exist);
+        }else if(!OrderStatus.CREATE.name().equals(order.getStatus())) {
+            result = new RetResult(RetResult.RetCode.Order_Status_Error);
+        }
+        if(result != null) {
+            return result;
+        }
+        String payMoney = order.getRealMoney();
+        String useBalance = "0";
+         if(StringUtil.isNotNull(couponId)) {
+             CouponRecord couponRecord = this.baseMyBatisDao.findById(CouponRecordDao.class, couponId);
+             if(couponRecord == null || !couponRecord.getMemberId().equals(memberId)) {
+                 result = new RetResult(RetResult.RetCode.Illegal_Request);
+                 result.setResMsg("优惠券不存在");
+             }else if(couponRecord.isStatus()) {
+                 result = new RetResult(RetResult.RetCode.Illegal_Request);
+                 result.setResMsg("优惠券已使用");
+             }
+             order.setCouponId(couponId);
+             if(StringNumber.compareTo(payMoney, couponRecord.getCouponMoney()) > 0) {
+                payMoney = StringNumber.sub(payMoney, couponRecord.getCouponMoney());
+             }else{
+                 payMoney = "0";
+             }
+         }
+        order.setRealMoney(payMoney);
+        if(StringNumber.compareTo(payMoney, "0") > 0) {
+            if(StringUtil.isNullOrEmpty(payType) || PayType.valueOf(payType) == null){
+                result = new RetResult(RetResult.RetCode.Illegal_Request);
+                return result;
+            }
+        }else{
+            //优惠券支付完成
+            payType = PayType.COUPON.name();
+            order.setPayType(payType);
+            order.setPayTime(System.currentTimeMillis());
+            //完成订单
+//            order.setBalance(useBalance);
+            payOver(order);
+            result = new RetResult(RetResult.RetCode.OK);
+            return result;
+        }
+
+        OrderPayRecord payRecord = new OrderPayRecord();
+        payRecord.setId(UUIDFactory.random());
+        payRecord.setNo(OrderUtil.createNo());
+        payRecord.setOrderId(order.getId());
+        payRecord.setOrderNo(order.getNo());
+        payRecord.setMemberId(memberId);
+        payRecord.setTotalMoney(order.getTotalMoney());
+        payRecord.setBalance("0");
+        payRecord.setMoney(payMoney);
+        payRecord.setCouponId(couponId);
+        payRecord.setPayType(payType);
+        payRecord.setStatus(PayStatus.WAIT.name());
+        payRecord.setCreateTime(System.currentTimeMillis());
+        this.baseMyBatisDao.insert(OrderPayRecordDao.class, payRecord);
+        RetData data = null;
+        String domain = "http://" + request.getServerName() + ":" + request.getServerPort();
+        if(PayType.ALIPAY.name().equals(payType)) {
+            AliPaySet aliPaySet = this.baseMyBatisDao.findById(AliPaySetDao.class,"");
+            Map<String,String> map = AliPayUtil.createAppMap(payRecord, aliPaySet, domain + AliPayUtil.NOTICE_URL);
+            data = new RetData(map);
+        }else if(PayType.WEIXIN.name().equals(payType)) {
+            WeixinPaySet weixinPaySet = this.baseMyBatisDao.findById(WeixinPaySetDao.class,"");
+            Map<String,String> map = WeixinPayUtil.submitJsonForApp(request, ip, domain + WeixinPayUtil.NOTICE_URL,payRecord,weixinPaySet);
+            data = new RetData(map);
+        }
+        if(data != null){
+            result = new RetResult(RetResult.RetCode.OK);
+            result.setData(data);
+        }else{
+            result = new RetResult(RetResult.RetCode.System_Error);
+        }
+        return result;
+    }
+
+    @Override
     public RetResult pay(String orderId, String memberId, String payType, boolean balance, HttpServletRequest request, String ip) throws IOException, DocumentException {
         RetResult result = null;
         Member member = this.baseMyBatisDao.findById(MemberDao.class, memberId);
@@ -612,8 +703,10 @@ public class OrderServiceImpl implements OrderService {
             order.setCode(OrderUtil.getUniqueCode());
         }
         List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
-        //减库存 todo：
-        updateProductStock(new String[]{order.getId()},false);
+        if(!order.isWb()) {
+            //减库存 todo：
+            updateProductStock(new String[]{order.getId()}, false);
+        }
         //订单支付完成
         this.baseMyBatisDao.update(OrderDao.class, order);
         if(!StringUtil.isNullOrEmpty(order.getShopId())) {//给商家推送消息
@@ -622,6 +715,13 @@ public class OrderServiceImpl implements OrderService {
             this.baseMyBatisDao.insert(PushRecordDao.class,record);
             PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
             executor.execute(thread);
+        }
+        if(StringUtil.isNotNull(order.getCouponId())) {
+            //使用了优惠券
+            CouponRecord record = this.baseMyBatisDao.findById(CouponRecordDao.class, order.getCouponId());
+            record.setUseTime(System.currentTimeMillis());
+            record.setStatus(true);
+            this.baseMyBatisDao.update(CouponRecordDao.class, record);
         }
         //如果使用了余额
         if(StringNumber.compareTo(order.getBalance(),"0") > 0) {

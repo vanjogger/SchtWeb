@@ -43,6 +43,7 @@ public interface OrderService {
     RetResult list(String shopId,String status, int pageNo, int pageSize);
 
     RetResult pay(String orderId, String memberId, String payType, boolean balance, HttpServletRequest request, String ip) throws IOException, DocumentException;
+    RetResult pay(String orderId, String memberId, String payType, String couponId, HttpServletRequest request, String ip) throws IOException, DocumentException;
 
     //支付返回
     void payBack(OrderPayRecord record);

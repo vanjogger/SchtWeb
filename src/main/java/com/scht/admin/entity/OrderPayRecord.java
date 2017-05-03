@@ -27,6 +27,15 @@ public class OrderPayRecord {
 
     private String tradeNo; //第三方支付平台的交易号码，支付成功后返回
     private String buyer; //买家账号或openId， 支付成功后返回
+    private String couponId; //使用优惠券
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
+    }
 
     public String getBalance() {
         return balance;

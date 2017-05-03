@@ -71,7 +71,7 @@ public class RestQuestionController extends BaseController {
     @RequestMapping(value = "find", produces = "application/json;charset=utf-8")
     @ResponseBody
     public Object find(String id , HttpServletRequest request){
-        QuestRecord record = this.baseService.findById(QuestRecordDao.class, id );
+        QuestRecord record = this.baseService.findById(QuestRecordDao.class, id);
         if(StringUtil.isNotNull(record.getQuestJson())) {
 
             Question question =  JSON.parseObject(record.getQuestJson(), Question.class);
@@ -147,6 +147,14 @@ public class RestQuestionController extends BaseController {
             return JSON.toJSON(result);
         }
           result = questRecordService.save(memberId, questId, answerIds);
+        return JSON.toJSON(result);
+    }
+
+    //回答正确，发送红包
+    @RequestMapping(value = "sendHb",produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object sendHb(String recordId, HttpServletRequest request) {
+        RetResult result = questRecordService.sendHb(recordId, getRequestIp(request),request.getServletContext().getRealPath("/"));
         return JSON.toJSON(result);
     }
 }

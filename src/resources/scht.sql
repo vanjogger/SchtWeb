@@ -4267,4 +4267,38 @@ alter table t_quest_record add f_quest_json longtext;
 
 alter table t_product add f_wb char(1) default '0';
 alter table t_order add f_wb char(1) DEFAULT '0';
-alter table t_order add t_wb_telephone varchar(32) DEFAULT '';
+alter table t_order add f_wb_telephone varchar(32) DEFAULT '';
+
+------------
+CREATE TABLE t_coupon(
+f_id varchar(32) primary key,
+f_name varchar(512) not null,
+f_coupon_money varchar(100) default '0',
+f_count int default 0,
+f_push_count int default 0,
+f_create_time bigint default 0
+);
+
+CREATE TABLE t_coupon_record(
+f_id varchar(32) primary key,
+f_coupon_id varchar(32) default '',
+f_coupon_name varchar(512) default '',
+f_coupon_money varchar(100) default '0',
+f_member_id varchar(32) default '',
+f_member_account varchar(100) default '',
+f_create_time bigint default 0,
+f_status char(1) not null,
+f_use_time bigint default 0
+);
+
+alter table t_question add f_coupon_id varchar(32) default '';
+alter table t_quest_record add f_coupon_id VARCHAR (32) DEFAULT  '';
+alter table t_quest_record add f_coupon_record_id VARCHAR (32) DEFAULT  '';
+alter table t_quest_record add f_push_money char(1) DEFAULT '0';
+alter table t_quest_record add f_need_push char(1) default '0';
+alter table t_order add f_coupon_id varchar(32) default '';
+alter table t_order_pay_record add f_coupon_id varchar(32) DEFAULT  '';
+alter table base_weixin_pay_set add f_cer_path varchar(512) default '';
+alter table t_quest_record add f_hb_no varchar(32) default '';
+
+-------------------------------------

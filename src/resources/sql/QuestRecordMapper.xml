@@ -17,10 +17,16 @@
         <result column="f_suc_ids" property="sucIds"/>
         <result column="f_my_ids" property="myIds"/>
         <result column="f_quest_json" property="questJson"/>
+        <result column="f_coupon_id" property="couponId"/>
+        <result column="f_coupon_record_id" property="couponRecordId"/>
+        <result column="f_push_money" property="pushMoney"/>
+        <result column="f_need_push" property="needPush"/>
+        <result column="f_hb_no" property="hbNo"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.QuestRecord">
-        insert into t_quest_record(f_suc_ids,f_my_ids,f_quest_json,f_id,f_member_id,f_quest_id,f_quest_title,f_suc,f_create_time,f_suc_answer,f_answer,f_money)
-        values(#{sucIds},#{myIds},#{questJson},#{id},#{memberId},#{questId},#{questTitle},#{suc},#{createTime},#{sucAnswer},#{answer},#{money})
+        insert into t_quest_record(f_coupon_id,f_coupon_record_id,
+        f_push_money,f_need_push,f_suc_ids,f_my_ids,f_quest_json,f_id,f_member_id,f_quest_id,f_quest_title,f_suc,f_create_time,f_suc_answer,f_answer,f_money)
+        values(#{couponId},#{couponRecordId},#{pushMoney},#{needPush},#{sucIds},#{myIds},#{questJson},#{id},#{memberId},#{questId},#{questTitle},#{suc},#{createTime},#{sucAnswer},#{answer},#{money})
     </insert>
 
     <select id="findById" resultMap="my_quest_record">
@@ -66,5 +72,8 @@
         select count(f_id) from t_quest_record where f_member_id=#{memberId}
         and f_quest_id=#{questId}
     </select>
+    <update id="successHb">
+        update t_quest_record set f_hb_no=#{no},f_push_money='1' where f_id=#{id}
+    </update>
 
 </mapper>

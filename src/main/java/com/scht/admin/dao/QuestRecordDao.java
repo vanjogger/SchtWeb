@@ -14,4 +14,7 @@ public interface QuestRecordDao {
     int countForToday(@Param("memberId")String memberId, @Param("time")long today);
 
     long checkMemberForQuest(@Param("memberId")String memberId, @Param("questId")String questId);
+
+    //发生红包
+    void successHb(@Param("no")String no, @Param("id")String id);
 }

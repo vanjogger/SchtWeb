@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.CouponDao">
+
+    <resultMap id="my_coupon" type="com.scht.admin.entity.Coupon">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_coupon_money" property="couponMoney"/>
+        <result column="f_count" property="count"/>
+        <result column="f_push_count" property="pushCount"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.Coupon">
+        insert into t_coupon(f_id,f_name,f_coupon_money,f_count,f_push_count,f_create_time)
+        values(#{id},#{name},#{couponMoney},#{count},#{pushCount},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Coupon">
+        update t_coupon
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="couponMoney!=null and couponMoney!=''">
+                f_coupon_money = #{couponMoney},
+            </if>
+            <if test="count!=null and count!=''">
+                f_count = #{count},
+            </if>
+            <if test="pushCount!=null and pushCount!=''">
+                f_push_count = #{pushCount},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_coupon">
+        select * from t_coupon where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_coupon">
+        select * from t_coupon where 1=1 order by f_create_time desc
+    </select>
+    <select id="searchByPage" resultMap="my_coupon" parameterType="HashMap">
+        SELECT * from t_coupon  order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        select count(f_id) from t_coupon
+    </select>
+    <delete id="delete">
+        delete from t_coupon where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+</mapper>

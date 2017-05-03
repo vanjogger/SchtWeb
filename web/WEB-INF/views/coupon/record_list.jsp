@@ -3,7 +3,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-  <title>子公司列表</title>
+  <title>优惠券发放记录</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link href="/resources/css/dpl-min.css" rel="stylesheet" type="text/css" />
   <link href="/resources/css/bui-min.css" rel="stylesheet" type="text/css" />
@@ -13,13 +13,8 @@
 <div class="container">
 
   <form id="searchForm" class="form-horizontal">
+    <input type="hidden" name="couponId" value="${couponId}"/>
     <div class="row">
-      <div class="control-group span8">
-        <label class="control-label">问题：</label>
-        <div class="controls">
-          <input type="text" class="control-text" name="questTitle">
-        </div>
-      </div>
       <div class="control-group span8">
         <label class="control-label">会员账号：</label>
         <div class="controls">
@@ -27,6 +22,16 @@
         </div>
       </div>
 
+      <div class="control-group span8">
+        <label class="control-label">使用状态：</label>
+        <div class="controls" >
+          <select name="status" id="" >
+            <option value="">--全部--</option>
+            <option value="0">未使用</option>
+            <option value="1">已使用</option>
+          </select>
+        </div>
+      </div>
       <div class="span3 offset2">
         <button  type="button" id="btnSearch" class="button button-primary">搜索</button>
       </div>
@@ -40,34 +45,35 @@
 <script type="text/javascript" src="/resources/js/jquery-1.8.1.min.js"></script>
 <script type="text/javascript" src="/resources/js/bui-min.js"></script>
 <script type="text/javascript" src="/resources/js/config-min.js"></script>
+<script type="text/javascript" src="/WEB-INF/views/js/format.js"></script>
 <script type="text/javascript">
   var store,gridCfg;
   BUI.use(['common/search','common/page','bui/grid','bui/overlay','bui/form'],function (Search,Page,Grid,Overlay,Form) {
     var  columns = [
-      {title:'问题',dataIndex:'questTitle',width:350},
+
       {title:'会员账号',dataIndex:'memberAccount',width:150},
-      {title:'参与时间',dataIndex:'dateStr',width:150},
-      {title:'奖励状态',dataIndex:'needPush',width:150,renderer:function(v,o){
-        return v?'需要奖励':'无需奖励';
-      }},
-      {title:'问题奖励',dataIndex:'money',width:80,renderer:function(v,o){
-        if(o.needPush) {
-          if(o.couponId) return "优惠券奖励";
-          else{
-            return "红包奖励";
-          }
+      {title:'优惠券名称',dataIndex:'couponName',width:150},
+      {title:'优惠券金额',dataIndex:'couponMoney',width:150},
+      {title:'领取时间',dataIndex:'dateStr',width:150},
+      {title:'状态',dataIndex:'status',width:150,renderer:function(value,obj){
+        if(obj.status){
+          return "已使用";
         }else{
-          return "无奖励";
+          return "未使用";
         }
       }},
-      {title:'状态',dataIndex:'a',width:80,renderer:function(v,o){
-        return o.suc?'回答正确':'回答错误';
-      }}
+      {title:'使用时间',dataIndex:'useDate',width:150}
     ];
-    store = Search.createStore('/questRecord/listData1');
-    gridCfg = Search.createGridCfg(columns);
+    store = Search.createStore('/coupon/recordData');
+    gridCfg = Search.createGridCfg(columns,{
+      tbar : {
+
+      },
+      plugins : [BUI.Grid.Plugins.CheckSelection] // 插件形式引入多选表格
+    });
 
   });
+
 
 </script>
 <script type="text/javascript" src="/views/js/list.js"></script>

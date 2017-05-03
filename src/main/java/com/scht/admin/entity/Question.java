@@ -22,11 +22,21 @@ public class Question {
     private String status; //状态 Status
     private String icon; // 图片
     private String content; //内容
+    private String couponId; //奖励优惠券
+
 
     //not save
     private List<QuestAnswer> list; //答案列表
     private String shopName; //商家名称
     private String dateStr; //时间
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
+    }
 
     public String getIcon() {
         return icon;

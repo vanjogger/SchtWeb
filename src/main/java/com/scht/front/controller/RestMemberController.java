@@ -43,6 +43,13 @@ public class RestMemberController  extends BaseController{
     @Autowired
     MessageRecordService messageRecordService;
 
+    @RequestMapping(value = "bind", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object bind(String openId, String id){
+        RetResult result = memberService.bindOpenId(id, openId);
+        return JSON.toJSON(result);
+    }
+
     @RequestMapping(value = "register", produces = "application/json;charset=utf-8")
     @ResponseBody
     public Object register(String mobile, String password, String msgCode){

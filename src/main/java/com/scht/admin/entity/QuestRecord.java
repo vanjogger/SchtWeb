@@ -23,10 +23,57 @@ public class QuestRecord {
     private String myIds; //我的答案ids，多个用，分割
     private String questJson; //问题元数据 json格式
 
+    private String couponId; //奖励优惠券
+    private boolean pushMoney; //是否已经发放奖励，needpush=true有效， true 已发放，false 未发放
+    private boolean needPush; //是否需要发放奖励， 回答正确，并且问题奖励未发放完时为true
+    private String couponRecordId; //发放优惠券ID
+
+    private String hbNo; //红包
+
     //会员账号
     private String memberAccount;
     private String dateStr;
     private Question question;
+
+    public String getHbNo() {
+        return hbNo;
+    }
+
+    public void setHbNo(String hbNo) {
+        this.hbNo = hbNo;
+    }
+
+    public String getCouponRecordId() {
+        return couponRecordId;
+    }
+
+    public void setCouponRecordId(String couponRecordId) {
+        this.couponRecordId = couponRecordId;
+    }
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
+    }
+
+    public boolean isPushMoney() {
+        return pushMoney;
+    }
+
+    public void setPushMoney(boolean pushMoney) {
+        this.pushMoney = pushMoney;
+    }
+
+    public boolean isNeedPush() {
+        return needPush;
+    }
+
+    public void setNeedPush(boolean needPush) {
+        this.needPush = needPush;
+    }
 
     public Question getQuestion() {
         return question;

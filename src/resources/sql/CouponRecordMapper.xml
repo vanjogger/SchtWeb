@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.CouponRecordDao">
+
+    <resultMap id="my_coupon_record" type="com.scht.admin.entity.CouponRecord">
+        <id column="f_id" property="id"/>
+        <result column="f_coupon_id" property="couponId"/>
+        <result column="f_coupon_name" property="couponName"/>
+        <result column="f_coupon_money" property="couponMoney"/>
+        <result column="f_member_id" property="memberId"/>
+        <result column="f_member_account" property="memberAccount"/>
+        <result column="f_create_time" property="createTime"/>
+        <result column="f_status" property="status"/>
+        <result column="f_use_time" property="useTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.CouponRecord">
+        insert into t_coupon_record(f_id,f_coupon_id,f_coupon_name,f_coupon_money,f_member_id,f_member_account,f_create_time,f_status,f_use_time)
+        values(#{id},#{couponId},#{couponName},#{couponMoney},#{memberId},#{memberAccount},#{createTime},#{status},#{useTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.CouponRecord">
+        update t_coupon_record
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="couponId!=null and couponId!=''">
+                f_coupon_id = #{couponId},
+            </if>
+            <if test="couponName!=null and couponName!=''">
+                f_coupon_name = #{couponName},
+            </if>
+            <if test="couponMoney!=null and couponMoney!=''">
+                f_coupon_money = #{couponMoney},
+            </if>
+            <if test="memberId!=null and memberId!=''">
+                f_member_id = #{memberId},
+            </if>
+            <if test="memberAccount!=null and memberAccount!=''">
+                f_member_account = #{memberAccount},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+            <if test="status!=null and status!=''">
+                f_status = #{status},
+            </if>
+            <if test="useTime!=null and useTime!=''">
+                f_use_time = #{useTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_coupon_record">
+        select * from t_coupon_record where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_coupon_record">
+        select * from t_coupon_record where 1=1 order by f_create_time desc
+    </select>
+    <select id="searchByPage" resultMap="my_coupon_record" parameterType="HashMap">
+        SELECT * from t_coupon_record
+        <include refid="querySql"></include>
+        order by f_create_time desc limit #{start},#{limit}
+
+    </select>
+    <select id="count4Page" resultType="int">
+        select count(f_id) from t_coupon_record
+        <include refid="querySql"></include>
+    </select>
+    <sql id="querySql">
+        <where>
+            <if test="memberId != null and memberId != ''">
+                and f_member_id=#{memberId}
+            </if>
+            <if test="memberAccount != null and memberAccount != ''">
+                and f_member_account like concat('%',concat(#{memberAccount},'%'))
+            </if>
+            <if test="couponId != null and couponId != ''">
+                and f_coupon_id=#{couponId}
+            </if>
+            <if test="status != null and status != ''">
+                and f_status=#{status}
+            </if>
+
+        </where>
+    </sql>
+</mapper>

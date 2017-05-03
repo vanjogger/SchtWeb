@@ -15,15 +15,17 @@
         <result column="f_status" property="status"/>
         <result column="f_icon" property="icon"/>
         <result column="f_content" property="content"/>
+        <result column="f_coupon_id" property="couponId"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.Question">
-        insert into t_question(f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status,f_icon,f_content)
-        values(#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status},#{icon},#{content,jdbcType=VARCHAR})
+        insert into t_question(f_coupon_id,f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status,f_icon,f_content)
+        values(#{couponId},#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status},#{icon},#{content,jdbcType=VARCHAR})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Question">
         update t_question
         <set>
             f_icon=#{icon},f_content=#{content},
+            f_coupon_id = #{couponId},
             <if test="shopId!=null and shopId!=''">
                 f_shop_id = #{shopId},
             </if>

@@ -1,9 +1,11 @@
 package com.scht.admin.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.scht.admin.dao.QuestRecordDao;
 import com.scht.admin.dao.QuestionDao;
 import com.scht.admin.entity.Member;
 import com.scht.admin.entity.QuestRecord;
+import com.scht.admin.entity.Question;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.MemberService;
 import com.scht.common.BaseController;
@@ -38,7 +40,7 @@ public class QuestRecordController extends BaseController {
         return "/quest/record_list";
     }
 
-    @RequestMapping("listData")
+    @RequestMapping("listData1")
     @ResponseBody
     public JSONObject listData(PageInfo pageInfo, String questTitle, String memberAccount){
         Map<String,Object> map = new HashMap<>();
@@ -59,6 +61,7 @@ public class QuestRecordController extends BaseController {
         List<String> memberIds = new ArrayList<>();
         for(QuestRecord record : list){
             memberIds.add(record.getMemberId());
+            record.setQuestion(JSON.parseObject(record.getQuestJson(), Question.class));
         }
         List<Member> memberList = memberService.listByIds(memberIds.toArray(new String[0]));
         Map<String,Member> map = new HashMap<>();

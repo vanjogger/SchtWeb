@@ -57,7 +57,10 @@
       {title:'关联商家',dataIndex:'shopName',width:150},
       {title:'问题数量',dataIndex:'sumCount',width:80},
       {title:'已参数数量',dataIndex:'count',width:80},
-      {title:'问题奖励',dataIndex:'money',width:80},
+      {title:'问题奖励',dataIndex:'money',width:80,renderer:function(v,o){
+        if(o.couponId) return "优惠券奖励";
+        else return o.money;
+      }},
       {title:'状态',dataIndex:'a',width:80,renderer:function(v,o){
         return o.status== 'FROZEN'?'下架':'上架';
       }},

@@ -6,6 +6,7 @@ package com.scht.admin.bean;
  */
 public enum  PayType {
 
+    COUPON("优惠券支付"),
     BALANCE("余额支付"),
     ALIPAY("支付宝"),
     WEIXIN("微信支付");

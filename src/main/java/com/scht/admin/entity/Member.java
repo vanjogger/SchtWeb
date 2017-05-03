@@ -22,12 +22,22 @@ public class Member {
     private String status; //状态
     private long createTime; //注册时间
 
+    private String openId; //微信关联
+
     //一下字段不存入数据库
     private String date; //时间字符串，不存数据库
     private String money; //会员余额
 
     private long shopCollects; //收藏的商家数量
     private long productColects; //收藏的商品数量
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
 
     public String getMoney() {
         return money;

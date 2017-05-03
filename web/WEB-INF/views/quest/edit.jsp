@@ -42,10 +42,24 @@
       <div class="control-group span20">
         <label class="control-label"><s>*</s>问题奖励：</label>
         <div class="controls">
-          <input type="text" name="money" class="control-text input-small" value="${data.money}"
-                 data-rules="{required:true,regexp:/^\d+(.\d{1,2})?$/}"
+          <input type="text" name="money" id="money" class="control-text input-small" value="${data.money}"
+                 data-rules="{required:false,regexp:/^\d+(.\d{1,2})?$/}"
                  data-messages="{regexp:'请填写数字，允许保留两位小数'}"/>
           <span class="tip-text">回答正确奖励金额</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label"><s>*</s>优惠券奖励：</label>
+        <div class="controls">
+          <select name="couponId" id="couponId">
+            <option value="">--选择优惠券奖励---</option>
+            <c:forEach items="${coupons}" var="e">
+              <option value="${e.id}" ${e.id == data.couponId?'selected':''}>${e.name}</option>
+            </c:forEach>
+          </select>
+          <span class="tip-text">回答正确奖励优惠券，设置了优惠券后金额奖励失效。</span>
         </div>
       </div>
     </div>
@@ -214,6 +228,12 @@
         beforesubmit:function(){
           $("#icon").val($("#J_Uploader img").attr("src"));
           $("#content").val(editor.html());
+          if($("#money").val() == '' &&$("#couponId").val() == '') {
+            BUI.Message.Alert("请设置奖励金额或奖励优惠券",function(){
+              return false;
+            },'info');
+            return false;
+          }
           var answers = $("#answer tr");
           var html = [], suc = false;
           for(var i=0; i < answers.length; i++){

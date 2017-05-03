@@ -101,7 +101,7 @@ public class UploadController extends BaseController {
         if(json.getBoolean("success")) {
             json.put("url", json.get("data"));
             json.put("name", file.getOriginalFilename());
-            json.put("msg", "上传成功");
+//            json.put("msg", "上传成功");
         }
         return json.toString();
     }

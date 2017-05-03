@@ -233,6 +233,20 @@ public class RestOrderController extends BaseController {
         }
     }
 
+    //外卖订单支付
+    @RequestMapping(value = "saleOrderPay", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object saleOrderPay(String orderId, String memberId, String payType, String couponRecordId, HttpServletRequest request){
+        RetResult result = null;
+        try{
+            result = orderService.pay(orderId, memberId, payType,couponRecordId,request, getRequestIp(request));
+        }catch (Exception e){
+            e.printStackTrace();
+            result = new RetResult(RetResult.RetCode.System_Error);
+        }
+        return JSON.toJSON(result);
+    }
+
     //订单支付
     @RequestMapping(value = "pay", produces = "application/json;charset=utf-8")
     @ResponseBody

@@ -1,5 +1,6 @@
 package com.scht.admin.controller;
 
+import com.scht.admin.dao.CouponDao;
 import com.scht.admin.dao.ProductTypeDao;
 import com.scht.admin.dao.QuestionDao;
 import com.scht.admin.dao.ShopDao;
@@ -64,7 +65,9 @@ public class QuestionController extends BaseController {
     }
     //添加
     @RequestMapping("add")
-    public String add(){
+    public String add(ModelMap map)
+    {
+        map.put("coupons",this.baseService.findAll(CouponDao.class));
         return "/quest/add";
     }
     @RequestMapping(value = "save", produces = "application/json;charset=utf-8")
@@ -98,6 +101,7 @@ public class QuestionController extends BaseController {
             if(shop != null)
                 question.setShopName(shop.getName());
         }
+        map.put("coupons",this.baseService.findAll(CouponDao.class));
         map.put("data", question);
         return "/quest/edit";
     }

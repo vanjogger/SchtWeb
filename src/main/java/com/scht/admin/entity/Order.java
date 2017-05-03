@@ -37,6 +37,7 @@ public class Order {
     private String userName;//收货人
     private String address;//收货地址
     private String telephone; //联系电话
+    private String couponId; //优惠券ID，couponRecord数据表中的ID
 
     private String payType; //支付类型  PayType
     private String expressName; //物流公司
@@ -58,6 +59,14 @@ public class Order {
     private String dispatchDate;
     private String successDate;
     private String overDate;
+
+    public String getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(String couponId) {
+        this.couponId = couponId;
+    }
 
     public boolean isWb() {
         return wb;

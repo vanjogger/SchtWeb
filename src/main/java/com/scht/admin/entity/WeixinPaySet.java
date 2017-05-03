@@ -12,6 +12,15 @@ public class WeixinPaySet {
     private String secret; //微信secret
     private String payKey; //支付密钥
     private String status; //状态
+    private String cerPath; //证书
+
+    public String getCerPath() {
+        return cerPath;
+    }
+
+    public void setCerPath(String cerPath) {
+        this.cerPath = cerPath;
+    }
 
     public String getStatus() {
         return status;

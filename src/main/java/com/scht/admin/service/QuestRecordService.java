@@ -19,4 +19,7 @@ public interface QuestRecordService {
     int countForToday(String memberId);
 
     RetResult save(String memberId, String questId, String answerIds);
+
+    //发送红包
+    RetResult sendHb(String recordId, String ip,String rootPath);
 }

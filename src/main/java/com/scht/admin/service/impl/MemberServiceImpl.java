@@ -91,6 +91,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public RetResult bindOpenId(String id, String openId) {
+        RetResult result = null;
+        try {
+            memberDao.updateOpenId(openId);
+            memberDao.bindOpenId(openId, id);
+            result = new RetResult(RetResult.RetCode.OK);
+        }catch (Exception e){
+            result = new RetResult(RetResult.RetCode.Execute_Error);
+        }
+        return result;
+    }
+
+    @Override
     public RetResult restUpdatePassword(String id, String password, String oldPassword) {
         RetResult result = null;
         Member member = this.baseMyBatisDao.findById(MemberDao.class,id);

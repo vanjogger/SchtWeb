@@ -8,15 +8,12 @@ import com.scht.admin.entity.*;
 import com.scht.admin.service.QuestRecordService;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
-import com.scht.util.DateUtil;
-import com.scht.util.StringNumber;
-import com.scht.util.UUIDFactory;
+import com.scht.util.*;
+import com.scht.util.PayUtil.WeixinHbUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017/3/1.
@@ -52,7 +49,6 @@ public class QuestRecordServiceImpl implements QuestRecordService {
             result = new RetResult(RetResult.RetCode.Quest_Has_Answer);
             return result;
         }
-        RetData data = new RetData(this.baseMyBatisDao.findById(ShopDao.class, question.getShopId()));
 
         //查询正确答案
         List<QuestAnswer> sucList = questAnswerDao.listByQuest(questId);
@@ -74,23 +70,46 @@ public class QuestRecordServiceImpl implements QuestRecordService {
         }
         String[] answer = answerIds.split(",");
         String money = "0";
+        //保存记录，回答正确，错误都保存记录
+        QuestRecord record = new QuestRecord();
         if(answer.length == sucIds.size() && sucStr.equals(myStr)) {
              //回答正确
             //判断问题
             if(question.getCount() < question.getSumCount()) {
                 //会员资金增加
-                money = question.getMoney();
-                saveMemberMoney(question, member);
+//                money = question.getMoney();
+//                saveMemberMoney(question, member);
+                record.setNeedPush(true); //需要奖励
+                if(!StringUtil.isNullOrEmpty(question.getCouponId())) {
+                    //奖励优惠券
+                    record.setCouponId(question.getCouponId());
+                    //发放优惠券
+                    String couponRecordId = sendCouponRecord(question.getCouponId(),memberId, member.getAccount());
+                    if(couponRecordId == null) {
+                        result = new RetResult(RetResult.RetCode.Illegal_Request);
+                        result.setResMsg("优惠券已经发放完毕了，请联系管理员");
+                        return result;
+                    }
+                    record.setCouponRecordId(couponRecordId);
+                    record.setPushMoney(true); //已经发放
+                }else{
+                    record.setMoney(question.getMoney());
+                    record.setPushMoney(false); //未发放
+                }
+
+            }else{
+                //问题奖励发放完毕
+                record.setNeedPush(false); //没有奖励了
             }
             //回答正确，问题 +1
             questionDao.updateCount(questId);
             result = new RetResult(RetResult.RetCode.OK);
         }else{
+            //回答错误
+            record.setNeedPush(false); //回答错误，不奖励
             result = new RetResult(RetResult.RetCode.Quest_Answer_Error);
         }
-        result.setData(data);
-        //保存记录，回答正确，错误都保存记录
-        QuestRecord record = new QuestRecord();
+
         record.setId(UUIDFactory.random());
         record.setMemberId(memberId);
         record.setQuestId(questId);
@@ -104,9 +123,77 @@ public class QuestRecordServiceImpl implements QuestRecordService {
         record.setQuestJson(JSON.toJSONString(question));
         record.setMoney(money);
         this.baseMyBatisDao.insert(QuestRecordDao.class, record);
+
+        Shop shop = this.baseMyBatisDao.findById(ShopDao.class, question.getShopId());
+        Map<String,Object> dataMap = new HashMap<>();
+        dataMap.put("shop", shop);
+        record.setQuestion(question);
+        dataMap.put("record", record);
+        RetData data = new RetData(dataMap);
+        result.setData(data);
         return result;
     }
 
+    @Override
+    public RetResult sendHb(String recordId, String ip,String rootPath) {
+        RetResult result = null;
+        result = new RetResult(RetResult.RetCode.Illegal_Request);
+        QuestRecord record = this.baseMyBatisDao.findById(QuestRecordDao.class, recordId);
+        if(record == null) {
+            result.setResMsg("问题记录不存在");
+            return result;
+        }
+        if(!record.isSuc() || !record.isNeedPush()) {
+            result.setResMsg("问题回答错误或不需要发送红包");
+            return result;
+        }
+        //回答正确并且未奖励
+        if(record.isSuc() && record.isNeedPush() && !record.isPushMoney()) {
+            //todo:调用发送红包接口
+            WeixinPaySet setting = this.baseMyBatisDao.findById(WeixinPaySetDao.class,"");
+            if(setting == null || StringUtil.isNullOrEmpty(setting.getCerPath())) {
+                result.setResMsg("微信红包未设置");
+                return result;
+            }
+            Member member = this.baseMyBatisDao.findById(MemberDao.class, record.getMemberId());
+            if(member == null || StringUtil.isNullOrEmpty(member.getOpenId())) {
+                result.setResMsg("您未绑定微信账号");
+                return result;
+            }
+            String no = OrderUtil.createNo();
+            boolean flag = WeixinHbUtil.sendHb(setting, no,member.getOpenId(),StringNumber.mul(record.getMoney(),"100"),ip,rootPath);
+            if(flag) {
+                record.setHbNo(no);
+                record.setPushMoney(true);
+                questRecordDao.successHb(no, record.getId());
+                result = new RetResult(RetResult.RetCode.OK);
+                return  result;
+            }
+
+        }
+        result.setResMsg("红包发放失败");
+        return result;
+    }
+
+    private String sendCouponRecord(String couponId, String memberId, String memberAccount){
+        Coupon coupon = this.baseMyBatisDao.findById(CouponDao.class, couponId);
+        if(coupon == null || coupon.getCount() <= coupon.getPushCount()) {
+            return null;
+        }
+        CouponRecord couponRecord = new CouponRecord();
+        couponRecord.setId(UUIDFactory.random());
+        couponRecord.setCouponId(couponId);
+        couponRecord.setCouponName(coupon.getName());
+        couponRecord.setCouponMoney(coupon.getCouponMoney());
+        couponRecord.setMemberId(memberId);
+        couponRecord.setMemberAccount(memberAccount);
+        couponRecord.setCreateTime(System.currentTimeMillis());
+        couponRecord.setStatus(false);
+        this.baseMyBatisDao.insert(CouponRecordDao.class, couponRecord);
+        coupon.setPushCount(coupon.getPushCount() + 1);
+        this.baseMyBatisDao.update(CouponDao.class, coupon);
+        return couponRecord.getId();
+    }
     @Override
     public int countForToday(String memberId) {
         long today = DateUtil.getCurrentDayStart();

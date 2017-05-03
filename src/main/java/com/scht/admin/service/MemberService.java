@@ -25,4 +25,6 @@ public interface MemberService {
 
     RetResult restUpdatePassword(String id, String password, String oldPassword);
 
+    RetResult bindOpenId(String id, String openId);
+
 }

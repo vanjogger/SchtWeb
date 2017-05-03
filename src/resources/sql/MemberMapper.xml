@@ -15,8 +15,14 @@
         <result column="f_weixin" property="weixin"/>
         <result column="f_status" property="status"/>
         <result column="f_create_time" property="createTime"/>
+        <result column="f_open_id" property="openId"/>
     </resultMap>
-
+    <update id="updateOpenId">
+        update base_member set f_open_id='' where f_open_id=#{openId}
+    </update>
+    <update id="bindOpenId">
+        update base_member set f_open_id=#{openId} where f_id=#{id}
+    </update>
     <insert id="insert" parameterType="com.scht.admin.entity.Member">
        insert into base_member(f_id,f_account,f_password,f_nick,f_head_icon,f_address,f_telephone,f_qq,f_weixin,f_status,f_create_time)
        values(#{id},#{account},#{password},#{nick},#{headIcon},#{address},#{telephone},#{qq},#{weixin},#{status},#{createTime})
