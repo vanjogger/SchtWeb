@@ -9,10 +9,19 @@ public class WeixinPaySet {
     private String id;
     private String appId; //应用id
     private String mchNo; //商户号
+    private String gzAppId; //公众平台appid
     private String secret; //微信secret
     private String payKey; //支付密钥
     private String status; //状态
     private String cerPath; //证书
+
+    public String getGzAppId() {
+        return gzAppId;
+    }
+
+    public void setGzAppId(String gzAppId) {
+        this.gzAppId = gzAppId;
+    }
 
     public String getCerPath() {
         return cerPath;

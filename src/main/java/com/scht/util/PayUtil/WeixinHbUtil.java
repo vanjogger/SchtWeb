@@ -36,7 +36,7 @@ public class WeixinHbUtil {
 
     private static Map<String,String> createParams(WeixinPaySet set, String no, String openId, String amount, String ip){
         Map<String,String> map = new HashMap<>();
-        map.put("mch_appid", set.getAppId()); //公众号ID wx8888888
+        map.put("mch_appid", set.getGzAppId()); //公众号ID wx8888888
         map.put("mchid", set.getMchNo());  //微信支付商户号
         map.put("nonce_str", UUIDFactory.random());
         map.put("parter_trade_no",no);

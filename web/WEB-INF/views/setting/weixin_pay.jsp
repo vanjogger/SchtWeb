@@ -22,6 +22,15 @@
         </div>
         <div class="row">
             <div class="control-group span20">
+                <label class="control-label">公众平台APPID：</label>
+                <div class="controls">
+                    <input name="gzAppId" type="text" data-tip="{text:'公众平台应用appid'}"
+                           value="${data.gzAppId}" class="input-normal control-text" style="width:200px;">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="control-group span20">
                 <label class="control-label">微信Secret：</label>
                 <div class="controls">
                     <input name="secret" type="text" data-tip="{text:'微信Secret'}"

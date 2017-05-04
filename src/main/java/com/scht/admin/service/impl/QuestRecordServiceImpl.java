@@ -3,6 +3,7 @@ package com.scht.admin.service.impl;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.MemberFlowType;
+import com.scht.admin.bean.WeixinUser;
 import com.scht.admin.dao.*;
 import com.scht.admin.entity.*;
 import com.scht.admin.service.QuestRecordService;
@@ -13,6 +14,7 @@ import com.scht.util.PayUtil.WeixinHbUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -135,7 +137,7 @@ public class QuestRecordServiceImpl implements QuestRecordService {
     }
 
     @Override
-    public RetResult sendHb(String recordId, String ip,String rootPath) {
+    public synchronized RetResult sendHb(String recordId, String ip,String rootPath) {
         RetResult result = null;
         result = new RetResult(RetResult.RetCode.Illegal_Request);
         QuestRecord record = this.baseMyBatisDao.findById(QuestRecordDao.class, recordId);
@@ -160,8 +162,30 @@ public class QuestRecordServiceImpl implements QuestRecordService {
                 result.setResMsg("您未绑定微信账号");
                 return result;
             }
+            WeixinUser user = this.baseMyBatisDao.findById(WeixinUserDao.class, member.getOpenId());
+            if(user == null) {
+                //重新拉去openId
+                user = findUser(setting, member.getOpenId());
+            }else{
+                //判断是否关注
+                try {
+                    WeixinUser temp = WeixinUtil.getUser(setting,user.getOpenId());
+                    if(temp == null) {
+                        result.setResMsg("您未关注公众号");
+                        return result;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    result.setResMsg("微信端错误");
+                    return result;
+                }
+            }
+            if(user == null) {
+                result.setResMsg("您未关注公众号");
+                return result;
+            }
             String no = OrderUtil.createNo();
-            boolean flag = WeixinHbUtil.sendHb(setting, no,member.getOpenId(),StringNumber.mul(record.getMoney(),"100"),ip,rootPath);
+            boolean flag = WeixinHbUtil.sendHb(setting, no,user.getOpenId(),StringNumber.mul(record.getMoney(),"100"),ip,rootPath);
             if(flag) {
                 record.setHbNo(no);
                 record.setPushMoney(true);
@@ -222,5 +246,49 @@ public class QuestRecordServiceImpl implements QuestRecordService {
         flow.setCreateTime(System.currentTimeMillis());
         this.baseMyBatisDao.insert(MemberFlowDao.class, flow);
         this.baseMyBatisDao.update(MemberMoneyDao.class, memberMoney);
+    }
+
+    private WeixinUser findUser(WeixinPaySet set,String unionId){
+        List<WeixinUser> list = this.baseMyBatisDao.findAll(WeixinUserDao.class);
+        Map<String,String> map = new HashMap<>();
+        WeixinUser temp = null;
+        if(list != null && list.size() > 0) {
+            for(WeixinUser user : list) {
+                map.put(user.getOpenId(), user.getOpenId());
+            }
+        }
+        try {
+            List<String> openIdList = WeixinUtil.getUserList(set);
+            List<WeixinUser> saveList = new ArrayList<>();
+            if(openIdList != null && openIdList.size() > 0) {
+                for(String id : openIdList) {
+                    if(map.get(id) == null) {//新用户
+                        WeixinUser user = WeixinUtil.getUser(set,id);
+                        if(user != null) {
+                            user.setId(UUIDFactory.random());
+                            saveList.add(user);
+                            if(user.getUnionId().equals(unionId)){
+                                temp = user;
+                            }
+                        }
+                    }
+                }
+                if(saveList.size() > 0) {
+                    int len = saveList.size();
+                    int end =10;
+                    int size = len%end > 0 ? len/end+1 : len/end;
+                    for(int i=0; i<size;i++){
+                        if(i != size-1) {
+                            this.baseMyBatisDao.saveBatch(WeixinUserDao.class, saveList.subList(i * end, (i + 1) * end));
+                        }else{
+                            this.baseMyBatisDao.saveBatch(WeixinUserDao.class, saveList.subList(i * end, len));
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return temp;
     }
 }

@@ -12,17 +12,18 @@
         <result column="f_pay_key" property="payKey"/>
         <result column="f_status" property="status"/>
         <result column="f_cer_path" property="cerPath"/>
+        <result column="f_gz_app_id" property="gzAppId"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.WeixinPaySet">
-        insert into base_weixin_pay_set (f_id, f_app_id,f_mch_no,f_secret,f_pay_key,f_status,f_cer_path)
-        VALUES (#{id},#{appId},#{mchNo},#{secret},#{payKey},#{status},#{cerPath})
+        insert into base_weixin_pay_set (f_id, f_app_id,f_mch_no,f_secret,f_pay_key,f_status,f_cer_path,f_gz_app_id)
+        VALUES (#{id},#{appId},#{mchNo},#{secret},#{payKey},#{status},#{cerPath},#{gzAppId})
     </insert>
     <select id="findById" resultMap="base_weixin_pay_set">
         SELECT * from base_weixin_pay_set
     </select>
     <update id="update" parameterType="com.scht.admin.entity.WeixinPaySet">
         update base_weixin_pay_set set f_app_id=#{appId},f_secret=#{secret},
-        f_mch_no=#{mchNo},f_pay_key=#{payKey},f_status=#{status},f_cer_path=#{cerPath} where f_id=#{id}
+        f_mch_no=#{mchNo},f_pay_key=#{payKey},f_status=#{status},f_cer_path=#{cerPath},f_gz_app_id=#{gzAppId} where f_id=#{id}
     </update>
 
 </mapper>

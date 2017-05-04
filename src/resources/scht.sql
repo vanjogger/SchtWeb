@@ -4302,3 +4302,12 @@ alter table base_weixin_pay_set add f_cer_path varchar(512) default '';
 alter table t_quest_record add f_hb_no varchar(32) default '';
 
 -------------------------------------
+
+alter table base_weixin_pay_set add f_gz_app_id varchar(32) DEFAULT '';
+
+CREATE TABLE t_weixin_user(
+f_id varchar(32) primary key,
+f_open_id varchar(100) default '',
+f_union_id varchar(100) default ''
+);
+-----------------------------------------

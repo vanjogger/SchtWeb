@@ -88,5 +88,7 @@
     <task:scheduled-tasks>
         <!-- 定时执行订单关闭、完成 1小时执行1次 -->
         <task:scheduled ref="orderTask" method="execute" cron="0 0 0/1 * * ?"/>
+        <!-- 定时查询微信公众号关注列表 -->
+        <task:scheduled ref="weixinUserTask" method="execute" cron="0 0 0/4 * * ?"/>
     </task:scheduled-tasks>
 </beans>

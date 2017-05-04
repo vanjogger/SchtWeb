@@ -8,6 +8,7 @@ package com.scht.util; /**
 
 
 
+import com.scht.admin.bean.WeixinUser;
 import com.scht.admin.entity.*;
 
 import java.lang.reflect.Field;
@@ -23,7 +24,7 @@ public class XmlMapUtil {
     private static String Mapper_PreFix = "my";
 
     public static void main(String[] args) {
-        Class clazz = CouponRecord.class;
+        Class clazz = WeixinUser.class;
         System.out.println(createTableSql(clazz));
         System.out.println(createResultMapper(clazz));
         System.out.println(createSaveSql(clazz));

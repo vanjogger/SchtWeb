@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.scht.admin.dao.WeixinUserDao">
+
+    <resultMap id="my_weixin_user" type="com.scht.admin.bean.WeixinUser">
+        <id column="f_id" property="id"/>
+        <result column="f_open_id" property="openId"/>
+        <result column="f_union_id" property="unionId"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.bean.WeixinUser">
+        insert into t_weixin_user(f_id,f_open_id,f_union_id)
+        values(#{id},#{openId},#{unionId})
+    </insert>
+     <insert id="insertBatch" parameterType="List">
+          insert into t_weixin_user(f_id,f_open_id,f_union_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+        (#{item.id},#{item.openId},#{item.unionId})
+        </foreach>
+     </insert>
+    <select id="findById" resultMap="my_weixin_user">
+        select * from t_weixin_user where f_union_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_weixin_user">
+        select * from t_weixin_user
+    </select>
+    <delete id="delete">
+        DELETE from t_weixin_user where f_open_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+</mapper>
