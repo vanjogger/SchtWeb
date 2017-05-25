@@ -1,6 +1,7 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.Question;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface QuestionDao {
 
-    Question findForMember(String memberId);
+    Question findForMember(@Param("memberId")String memberId, @Param("region")String region);
 
     void updateCount(String id);
 }

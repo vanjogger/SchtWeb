@@ -71,8 +71,8 @@ public class QuestionServiceImpl implements QuestionService {
      * rest
      */
     @Override
-    public Question findForMember(String memberId) {
-       Question data =  questionDao.findForMember(memberId);
+    public Question findForMember(String memberId, String region) {
+       Question data =  questionDao.findForMember(memberId, region);
         if(data != null) {
             data.setShopName(((Shop)this.baseMyBatisDao.findById(ShopDao.class,data.getShopId())).getName());
             data.setList(questAnswerDao.listByQuest(data.getId()));

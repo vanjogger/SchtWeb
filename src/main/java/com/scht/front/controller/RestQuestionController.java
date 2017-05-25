@@ -97,7 +97,7 @@ public class RestQuestionController extends BaseController {
     //拉取下一个问题
     @RequestMapping(value = "quest", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object quest(String memberId, HttpServletRequest request){
+    public Object quest(String memberId, String region, HttpServletRequest request){
         //判断今天回答问题数量
         QuestSet set = this.baseService.findById(QuestSetDao.class, "");
         if(set != null && set.getDayCount() > 0) {
@@ -107,7 +107,7 @@ public class RestQuestionController extends BaseController {
                 return JSON.toJSON(result);
             }
         }
-        Question question = questionService.findForMember(memberId);
+        Question question = questionService.findForMember(memberId, region);
         if(question == null) {
             RetResult result = new RetResult(RetResult.RetCode.Quest_Not_Have);
             return JSON.toJSON(result);

@@ -18,5 +18,5 @@ public interface QuestionService {
 
     List<QuestAnswer> listAnswer(String questId);
 
-    Question findForMember(String memberId);
+    Question findForMember(String memberId, String region);
 }

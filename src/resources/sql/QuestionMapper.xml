@@ -88,6 +88,9 @@
         select f_quest_id from t_quest_record where f_member_id=#{memberId}
         )
         and f_status='NORMAL'
+        <if test="region != null and region != ''">
+            and f_shop_id in (select f_id from t_shop where f_province_id=#{region} or f_city_id=#{region} or f_district_id=#{region})
+        </if>
         order by f_create_time desc limit 0,1
     </select>
     <update id="updateCount">
