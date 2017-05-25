@@ -509,7 +509,7 @@ public class OrderServiceImpl implements OrderService {
             return;
         }
         r.setPayTime(System.currentTimeMillis());
-        this.baseMyBatisDao.update(OrderPayRecord.class, r);
+        this.baseMyBatisDao.update(OrderPayRecordDao.class, r);
         if(PayStatus.SUCCESS.name().equals(r.getStatus())) {
             //支付成功
             Order order = this.baseMyBatisDao.findById(OrderDao.class, r.getOrderId());
@@ -522,6 +522,14 @@ public class OrderServiceImpl implements OrderService {
             order.setPayType(r.getPayType());
             payOver(order);
         }
+    }
+
+    @Override
+    public void pushReceiveMessage(Order order) {
+        PushRecord record = PushRecord.createMemberOrder(order.getMemberId(), "接单提醒","商家已接单", order.getId());
+        this.baseMyBatisDao.insert(PushRecordDao.class, record);
+        PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
+        executor.execute(thread);
     }
 
     @Override

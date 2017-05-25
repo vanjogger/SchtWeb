@@ -48,4 +48,5 @@ public interface OrderService {
     //支付返回
     void payBack(OrderPayRecord record);
 
+    void pushReceiveMessage(Order order);
 }

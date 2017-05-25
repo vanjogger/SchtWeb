@@ -118,6 +118,7 @@ public class RestOrderController extends BaseController {
             return JSON.toJSON(result);
         }
         order.setStatus(OrderStatus.RECEIVE.name());
+        orderService.pushReceiveMessage(order);
         this.baseService.update(OrderDao.class, order);
         result = new RetResult(RetResult.RetCode.OK);
         return JSON.toJSON(result);

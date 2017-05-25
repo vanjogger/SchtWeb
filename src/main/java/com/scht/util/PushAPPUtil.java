@@ -1,8 +1,7 @@
 package com.scht.util;
 
 import cn.jpush.api.JPushClient;
-import cn.jpush.api.common.resp.APIConnectionException;
-import cn.jpush.api.common.resp.APIRequestException;
+
 import cn.jpush.api.push.model.Message;
 import cn.jpush.api.push.model.Options;
 import cn.jpush.api.push.model.Platform;
@@ -10,8 +9,8 @@ import cn.jpush.api.push.model.PushPayload;
 import cn.jpush.api.push.model.audience.Audience;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
+import com.alibaba.fastjson.JSONObject;
 import com.scht.admin.entity.PushSet;
-import net.sf.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +39,7 @@ public class PushAPPUtil {
         try {
             map.put("title", title);
             Message message = Message.newBuilder().addExtra("time_to_live",86400*3)
-                    .setMsgContent(String.valueOf(JSONObject.fromObject(map))).build();
+                    .setMsgContent(String.valueOf(JSONObject.toJSONString(map))).build();
             Notification notification = Notification.newBuilder().addPlatformNotification(IosNotification.newBuilder()
                     .setSound("happy").setAlert(title).addExtras(map).disableBadge().build()).build();
                    // Notification.ios(title, map);
@@ -49,8 +48,8 @@ public class PushAPPUtil {
 //            PushPayload payload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.alias(alias)).setNotification(notification)
 //                    .setNotification(androidNoti).build();
-            PushPayload payLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload payLoadAndroid = builder.setNotification(androidNoti).build();
+            PushPayload payLoadIOS = builder.setNotification(notification).setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload payLoadAndroid = builder.setNotification(androidNoti).setMessage(message).build();
             if("member".equalsIgnoreCase(type)){
                 try {
                     new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(payLoadIOS);
@@ -87,14 +86,14 @@ public class PushAPPUtil {
         }
         try {
             Message message = Message.newBuilder().addExtra("time_to_live", 86400 * 3)
-                    .setMsgContent(JSONObject.fromObject(map).toString()).build();
+                    .setMsgContent(JSONObject.toJSONString(map).toString()).build();
             Notification notification = Notification.newBuilder().addPlatformNotification(IosNotification.newBuilder()
             .setSound("happy").addExtras(map).setAlert(title).disableBadge().build()).build();
                     //Notification.ios(title, map) ;
             Notification androidNoti = Notification.android(map.get("content"), title, map);
             PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.tag(tags));
-            PushPayload pushPayLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload pushPayLoadAndroid = builder.setNotification(androidNoti).build();
+            PushPayload pushPayLoadIOS = builder.setNotification(notification).setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload pushPayLoadAndroid = builder.setNotification(androidNoti).setMessage(message).build();
 //            PushPayload pushPayload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.tag(tags)).setNotification(notification).setNotification(androidNoti)
 //                    .build();
@@ -130,6 +129,12 @@ public class PushAPPUtil {
         Map<String,String> map = new HashMap<>();
         map.put("title", "titlesss");
         map.put("content", "contentss");
-        System.out.println(JSONObject.fromObject(map));
+        PushSet set = new PushSet();
+        set.setAndroidAppKey("5e5ccec24cf8f0a233afec0c");
+        set.setAndroidMasterSecret("5399ab07ba2d480603511b79");
+        set.setIosAppKey("5e5ccec24cf8f0a233afec0c");
+        set.setIosMasterSecret("5399ab07ba2d480603511b79");
+        pushMessageByTags(set, map.get("title"), map, new String[]{DEFAULT_TAG}, null);
+        System.out.println(com.alibaba.fastjson.JSONObject.toJSONString(map));
     }
 }
