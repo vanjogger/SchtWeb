@@ -4311,3 +4311,4 @@ f_open_id varchar(100) default '',
 f_union_id varchar(100) default ''
 );
 -----------------------------------------
+alter table t_shop add f_images varchar(2000) DEFAULT '';

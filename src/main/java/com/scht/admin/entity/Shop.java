@@ -34,11 +34,20 @@ public class Shop {
     private String districtName;
 
     private String perPrice; //店铺人均消费
+    private String images; //商家多图片
 
 
     private int saleCount; //商家总销量
     private List<SubShop> list;
     private int subSize;
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
 
     public int getSaleCount() {
         return saleCount;

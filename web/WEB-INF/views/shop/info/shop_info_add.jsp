@@ -72,6 +72,14 @@
         <input type="hidden" name="icon" id="icon" value="${dto.icon}"/>
      </div>
     </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">商家图片：</label>
+        <div id="J_Uploader1" style="margin-left: 100px;">
+
+        </div>
+      </div>
+    </div>
 
     <div class="row">
       <div class="control-group span20">
@@ -158,6 +166,7 @@
 
     <div class="row form-actions actions-bar">
       <div class="span13 offset3 ">
+        <input type="hidden" name="images" id="images"/>
         <button type="submit" class="button button-primary">保存</button>
         <button type="reset" class="button">重置</button>
       </div>
@@ -197,6 +206,16 @@
         if($("#J_Uploader img").length != 0) {
           $("#icon").val($("#J_Uploader img").attr("src"));
         }
+        //图片
+        var images = $("#J_Uploader1 img");
+        var imgstr = "";
+        for(var i = 0; i < images.length; i++) {
+          imgstr += $(images[i]).attr("src");
+          if(i != images.length - 1){
+            imgstr += "|";
+          }
+        }
+        $("#images").val(imgstr);
         $("#provinceId").val($("#t_province").val());
         $("#provinceName").val($("#t_province").find("option:selected").text());
         $("#cityId").val($("#t_city").val());
@@ -234,6 +253,25 @@
       rules: {
         //上传的最大个数
         max: [1, '文件的最大个数不能超过{0}个'],
+        //文件大小的最大值,单位也是kb
+        maxSize: [2048, '文件大小不能大于2M']
+      }
+    }).render();
+
+    var uploader1 = new Uploader.Uploader({
+      //指定使用主题
+      theme: 'imageView',
+      render: '#J_Uploader1',
+      url: '/upload/buiUpload',
+      queue: {
+        resultTpl: {
+          'success': '<div class="success"><img src="{url}" title="{name}" width="100px;padding:5px;"/></div>',
+          'error': '<div class="error"><span class="uploader-error">{msg}</span></div>'
+        }
+      },
+      rules: {
+        //上传的最大个数
+        max: [100, '文件的最大个数不能超过{0}个'],
         //文件大小的最大值,单位也是kb
         maxSize: [2048, '文件大小不能大于2M']
       }
