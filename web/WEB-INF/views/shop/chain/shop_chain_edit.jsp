@@ -76,12 +76,8 @@
       <div class="control-group span20">
         <label class="control-label">链接Code：</label>
         <div class="controls">
-          <select name="code" id="code">
-            <option value=""> -- 请选择 -- </option>
-            <c:forEach items="${list}" var="e">
-              <option value="${e.key}" <c:if test="${dto.code eq e.key}">selected</c:if>>${e.value}</option>
-            </c:forEach>
-          </select>
+          <input name="code" type="text"    value="${dto.code}" class="input-large"/>
+
         </div>
       </div>
     </div>
