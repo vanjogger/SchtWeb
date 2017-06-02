@@ -16,10 +16,18 @@
         <result column="f_icon" property="icon"/>
         <result column="f_content" property="content"/>
         <result column="f_coupon_id" property="couponId"/>
+        <result column="f_shop_name" property="shopName"/>
+        <result column="f_telephone" property="telephone"/>
+        <result column="f_province_id" property="provinceId"/>
+        <result column="f_province_name" property="provinceName"/>
+        <result column="f_city_id" property="cityId"/>
+        <result column="f_city_name" property="cityName"/>
+        <result column="f_district_id" property="districtId"/>
+        <result column="f_district_name" property="districtName"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.Question">
-        insert into t_question(f_coupon_id,f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status,f_icon,f_content)
-        values(#{couponId},#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status},#{icon},#{content,jdbcType=VARCHAR})
+        insert into t_question(f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status,f_icon,f_content,f_coupon_id,f_shop_name,f_telephone,f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name)
+        values(#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status},#{icon},#{content},#{couponId},#{shopName},#{telephone},#{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Question">
         update t_question
@@ -41,7 +49,30 @@
             <if test="status != null and status != ''">
                 f_status = #{status},
             </if>
-
+            <if test="shopName!=null and shopName!=''">
+                f_shop_name = #{shopName},
+            </if>
+            <if test="telephone!=null and telephone!=''">
+                f_telephone = #{telephone},
+            </if>
+            <if test="provinceId!=null and provinceId!=''">
+                f_province_id = #{provinceId},
+            </if>
+            <if test="provinceName!=null and provinceName!=''">
+                f_province_name = #{provinceName},
+            </if>
+            <if test="cityId!=null and cityId!=''">
+                f_city_id = #{cityId},
+            </if>
+            <if test="cityName!=null and cityName!=''">
+                f_city_name = #{cityName},
+            </if>
+            <if test="districtId!=null and districtId!=''">
+                f_district_id = #{districtId},
+            </if>
+            <if test="districtName!=null and districtName!=''">
+                f_district_name = #{districtName},
+            </if>
         </set>
         where f_id=#{id}
     </update>
@@ -53,11 +84,9 @@
     </select>
     <sql id="querySql">
         <where>
-            <if test="shopId != null and shopId != ''">
-                and f_shop_id=#{shopId}
-            </if>
+
             <if test="shopName != null and shopName != ''">
-                and f_shop_id in (select f_id from t_shop where f_name like concat('%',concat(#{shopName},'%')))
+                and f_shop_name   like concat('%',concat(#{shopName},'%'))
             </if>
             <if test="title != null and title != ''">
                 and f_title like concat('%',concat(#{title}, '%'))
@@ -89,7 +118,7 @@
         )
         and f_status='NORMAL'
         <if test="region != null and region != ''">
-            and f_shop_id in (select f_id from t_shop where f_province_id=#{region} or f_city_id=#{region} or f_district_id=#{region})
+            and  ( f_province_id=#{region} or f_city_id=#{region} or f_district_id=#{region})
         </if>
         order by f_create_time desc limit 0,1
     </select>

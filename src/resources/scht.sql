@@ -4312,3 +4312,12 @@ f_union_id varchar(100) default ''
 );
 -----------------------------------------
 alter table t_shop add f_images varchar(2000) DEFAULT '';
+
+alter table t_question add f_shop_name varchar(512) default '';
+alter table t_question add f_telephone varchar(32) default '';
+alter table t_question add f_province_id varchar(32) default '';
+alter table t_question add f_province_name varchar(512) default '';
+alter table t_question add f_city_id varchar(32) default '';
+alter table t_question add f_city_name varchar(512) default '';
+alter table t_question add f_district_id varchar(32) default '';
+alter table t_question add f_district_name varchar(512) default '';

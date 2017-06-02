@@ -25,17 +25,50 @@
         </div>
       </div>
     </div>
-    <div class="row" id="shops_div"  >
+    <%--<div class="row" id="shops_div"  >--%>
+      <%--<div class="control-group span20">--%>
+        <%--<label class="control-label">关联商家：</label>--%>
+        <%--<div class="controls control-row4" style="height:150px;">--%>
+          <%--<input type="hidden" name="shopId" id="shopId"/>--%>
+          <%--<input type="text" class="input-normal control-text" id="shopName">--%>
+          <%--<input type="button" class="button" onclick="searchShop()" value="检索"/>--%>
+          <%--<br/>--%>
+          <%--<select id="shops" class="input-large" onchange="selShop(this)" size="6" style="height:115px;">--%>
+          <%--</select>--%>
+        <%--</div>--%>
+      <%--</div>--%>
+    <%--</div>--%>
+    <div class="row">
       <div class="control-group span20">
-        <label class="control-label">关联商家：</label>
-        <div class="controls control-row4" style="height:150px;">
-          <input type="hidden" name="shopId" id="shopId"/>
-          <input type="text" class="input-normal control-text" id="shopName">
-          <input type="button" class="button" onclick="searchShop()" value="检索"/>
-          <br/>
-          <select id="shops" class="input-large" onchange="selShop(this)" size="6" style="height:115px;">
-          </select>
+        <label class="control-label"><s>*</s>商家名称：</label>
+        <div class="controls">
+          <input type="text" name="shopName" class="control-text"
+                />
+          <span class="tip-text">商家名称或出资人姓名。</span>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label"><s>*</s>联系电话：</label>
+        <div class="controls">
+          <input type="text" name="telephone" class="control-text"
+                  />
+          <span class="tip-text">商家或出资人联系电话。</span>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">所在区域：</label>
+      <div class="controls  control-row-auto">
+        <select id="t_province" name="t_province" onchange="loadArea(2)">
+        </select>
+        <select id="t_city"  name="t_city" onchange="loadArea(3)">
+
+        </select>
+        <select id="t_district" name="t_district">
+
+        </select>
       </div>
     </div>
     <div class="row">
@@ -135,6 +168,12 @@
       <div class="span13 offset3 ">
         <input type="hidden" name="jsonStr" id="jsonStr"/>
         <input type="hidden" name="icon" id="icon"/>
+        <input type="hidden" name="provinceId" id="provinceId" />
+        <input type="hidden" name="provinceName" id="provinceName"/>
+        <input type="hidden" name="cityId" id="cityId" />
+        <input type="hidden" name="cityName" id="cityName"/>
+        <input type="hidden" name="districtId" id="districtId" />
+        <input type="hidden" name="districtName"  id="districtName"/>
         <button type="submit" class="button button-primary" >保存</button>
         <button type="button" class="button" onclick="back()">返回</button>
       </div>
@@ -207,6 +246,12 @@ var icon_i=1;
         beforesubmit:function(){
           $("#icon").val($("#J_Uploader img").attr("src"));
           $("#content").val(editor.html());
+          $("#provinceId").val($("#t_province").val());
+          $("#provinceName").val($("#t_province").find("option:selected").text());
+          $("#cityId").val($("#t_city").val());
+          $("#cityName").val($("#t_city").find("option:selected").text());
+          $("#districtId").val($("#t_district").val());
+          $("#districtName").val($("#t_district").find("option:selected").text());
           if($("#money").val() == '' &&$("#couponId").val() == '') {
             BUI.Message.Alert("请设置奖励金额或奖励优惠券",function(){
               return false;
@@ -323,6 +368,56 @@ var icon_i=1;
       }
     });
   });
+
+
+var defaultDistrict = "371602";
+$(function(){
+  if(defaultDistrict) {
+    loadArea(1, defaultDistrict.substring(0,2) + "0000");
+
+    loadArea(2,defaultDistrict.substring(0,4) + "00");
+    loadArea(3, defaultDistrict);
+  }else{
+    loadArea(1);
+  }
+
+})
+
+function loadArea(i,_r){
+  var parentId = "";
+  if(i==2){
+    parentId = $("#t_province").val();
+  }else if(i==3){
+    parentId = $("#t_city").val();
+  }
+  $.ajax({
+    url:"/common/listNationByParentId?r="+Math.random(),
+    type:"post",
+    data:{
+      lx : i,
+      id:parentId
+    },
+    success:function(res){
+      if(res.success){
+        var html = "<option value=''>-- 请选择 --</option>";
+        $.each(res.data,function(j,n){
+          if(_r && n.id==_r) {
+            html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+          }else
+            html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+        })
+        if(i==1){
+          $("#t_province").html(html);
+        }else if(i==2){
+          $("#t_city").html(html);
+        }else if(i==3){
+          $("#t_district").html(html);
+        }
+      }
+    },
+    error:function(){}
+  })
+}
 </script>
 
 <body>

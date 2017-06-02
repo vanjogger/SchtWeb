@@ -1035,11 +1035,20 @@ public class StringUtil {
     }
 
     public static void main(String[] args){
-        String chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-        StringBuffer buffer = new StringBuffer();
-        for(int i=0 ; i < 8; i++){
-            buffer.append(chars.charAt((int)(Math.random() * 36)));
-        }
-        System.out.println(buffer.toString());
+        String str = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAM27UYShbywpBMZq" +
+                "xqW4sDflx8Pi+Q6HRYGTu49kUZ6lwYGvXHruo8oQOtmAs381IA22wm4z7KCVyRdL" +
+                "U6FO3Ri4uMNWADK3NQFLY0y6rz4MxI938vntAKdMqYf7Udr+ErLlXvQxkMjD/Bnr" +
+                "NS7ZjXNgGnmaLXoWAkogrXzMN5l7AgMBAAECgYB3s+n2dcettiAlIrN6cT93Bqd4" +
+                "/nNTVLnIbyDOidxDpsY0osf4bym1xEO5kfzeoxaHZDM009l2hjB+8UEztiNF1n9W" +
+                "X7A+StNKy9aRlkvsEsevtSPOeloA2IAf1ee7eC/7vYV7Z0JeJf7XMVwxspe+SH9F" +
+                "cBoBu2fNvE1WCKcygQJBAP9a0COZIyDZtWXZGAzCOIlvJGuG2AA9YXCOF0SHqDeL" +
+                "U5WxJ4VP6j9EmABjPY+33tvIF4O3g5VJ55vfLXKw0QsCQQDOQGeWyt09/vzzk0y8" +
+                "Hx2Hf2a4LzQCkKiIIMFQ/Sh9rWXvIVivYiio/XRT53xftfCtsYqB4YBO+eaxobCM" +
+                "U39RAkBqGPNuNwyPc6WZIbCKbJBNGi7Jtoc84kQAHimwwaS1H2ClS6weCexMSVXW" +
+                "o2VKt50TOHn8sl0rxD9FVl9tzeWtAkAFkgO6NNxo0jwur+nAou5/PFef3dZ/wzxq" +
+                "AMh30X6IdmhsXvAwPGxws/eyVGwtgZJwfn0JKPf4KhOq9Hz6LT8hAkEA8Y23xYZA" +
+                "HumZgmeG3RcXwB/FKtqueSXbsjTZ9U2feCQdL3fvhxGXKwSXYruZOSjXN0HXYV3V" +
+                "bEqBqjG9YmpQlQ==";
+        System.out.println(str.replaceAll(" ",""));
     }
 }

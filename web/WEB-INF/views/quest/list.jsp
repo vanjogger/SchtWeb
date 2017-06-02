@@ -21,7 +21,7 @@
         </div>
       </div>
        <div class="control-group span8">
-            <label class="control-label">关联商家：</label>
+            <label class="control-label">商家：</label>
             <div class="controls">
                 <input type="text" class="control-text" name="shopName">
             </div>
@@ -53,8 +53,8 @@
   var store,gridCfg;
   BUI.use(['common/search','common/page','bui/grid','bui/overlay','bui/form'],function (Search,Page,Grid,Overlay,Form) {
     var  columns = [
-      {title:'问题',dataIndex:'title',width:350},
-      {title:'关联商家',dataIndex:'shopName',width:150},
+      {title:'问题',dataIndex:'title',width:150},
+      {title:'商家',dataIndex:'shopName',width:150},
       {title:'问题数量',dataIndex:'sumCount',width:80},
       {title:'已参数数量',dataIndex:'count',width:80},
       {title:'问题奖励',dataIndex:'money',width:80,renderer:function(v,o){
@@ -65,6 +65,9 @@
         return o.status== 'FROZEN'?'下架':'上架';
       }},
       {title:'发布时间',dataIndex:'dateStr',width:150},
+      {title:'地区',dataIndex:'',width:150,renderer:function(value,obj){
+        return obj.provinceName+obj.cityName+obj.districtName;
+      }},
       {title:'操作',dataIndex:'',renderer : function(value,obj){
         var editStr =  Search.createLink({ //链接使用 此方式
           id : 'edit' + obj.id,

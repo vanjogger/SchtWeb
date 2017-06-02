@@ -23,12 +23,75 @@ public class Question {
     private String icon; // 图片
     private String content; //内容
     private String couponId; //奖励优惠券
+    private String shopName; //商家名称或者出资人
+    private String telephone; //商家联系电话
+    private String provinceId;//所在省id
+    private String provinceName;//所在省名称
+    private String cityId;//所在地市
+    private String cityName;//
+    private String districtId;//所在区域
+    private String districtName;
 
 
     //not save
     private List<QuestAnswer> list; //答案列表
-    private String shopName; //商家名称
     private String dateStr; //时间
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
+    }
 
     public String getCouponId() {
         return couponId;

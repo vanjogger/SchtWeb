@@ -25,17 +25,50 @@
         </div>
       </div>
     </div>
-    <div class="row" id="shops_div"  >
+    <%--<div class="row" id="shops_div"  >--%>
+      <%--<div class="control-group span20">--%>
+        <%--<label class="control-label">关联商家：</label>--%>
+        <%--<div class="controls control-row4" style="height:150px;">--%>
+          <%--<input type="hidden" name="shopId" id="shopId" value="${data.shopId}"/>--%>
+          <%--<input type="text" class="input-normal control-text" id="shopName" value="${data.shopName}">--%>
+          <%--<input type="button" class="button" onclick="searchShop()" value="检索"/>--%>
+          <%--<br/>--%>
+          <%--<select id="shops" class="input-large" onchange="selShop(this)" size="6" style="height:115px;">--%>
+          <%--</select>--%>
+        <%--</div>--%>
+      <%--</div>--%>
+    <%--</div>--%>
+    <div class="row">
       <div class="control-group span20">
-        <label class="control-label">关联商家：</label>
-        <div class="controls control-row4" style="height:150px;">
-          <input type="hidden" name="shopId" id="shopId" value="${data.shopId}"/>
-          <input type="text" class="input-normal control-text" id="shopName" value="${data.shopName}">
-          <input type="button" class="button" onclick="searchShop()" value="检索"/>
-          <br/>
-          <select id="shops" class="input-large" onchange="selShop(this)" size="6" style="height:115px;">
-          </select>
+        <label class="control-label"><s>*</s>商家名称：</label>
+        <div class="controls">
+          <input type="text" name="shopName" class="control-text" value="${data.shopName}"
+                  />
+          <span class="tip-text">商家名称或出资人姓名。</span>
         </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label"><s>*</s>联系电话：</label>
+        <div class="controls">
+          <input type="text" name="telephone" class="control-text" value="${data.telephone}"
+                  />
+          <span class="tip-text">商家或出资人联系电话。</span>
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">所在区域：</label>
+      <div class="controls  control-row-auto">
+        <select id="t_province" name="t_province" onchange="loadArea(2)">
+        </select>
+        <select id="t_city"  name="t_city" onchange="loadArea(3)">
+
+        </select>
+        <select id="t_district" name="t_district">
+
+        </select>
       </div>
     </div>
     <div class="row">
@@ -157,6 +190,12 @@
         <input type="hidden" name="jsonStr" id="jsonStr"/>
         <input type="hidden" name="icon" id="icon" value="${data.icon}"/>
         <input type="hidden" name="id" value="${data.id}"/>
+        <input type="hidden" name="provinceId" id="provinceId" value="${data.provinceId}"/>
+        <input type="hidden" name="provinceName" id="provinceName" value="${data.provinceName}"/>
+        <input type="hidden" name="cityId" id="cityId" value="${data.cityId}"/>
+        <input type="hidden" name="cityName" id="cityName" value="${data.cityName}"/>
+        <input type="hidden" name="districtId" id="districtId" value="${data.districtId}"/>
+        <input type="hidden" name="districtName"  id="districtName" value="${data.districtName}"/>
         <button type="submit" class="button button-primary" >保存</button>
         <button type="button" class="button" onclick="back()">返回</button>
       </div>
@@ -168,6 +207,7 @@
 <script type="text/javascript" src="/resources/js/sea.js"></script>
 <script type="text/javascript" src="/resources/js/bui-min.js"></script>
 <script type="text/javascript" src="/resources/js/config-min.js"></script>
+<script type="text/javascript" src="/resources/js/LocalResizeIMG.js"></script>
 
 
 <script type="text/javascript">
@@ -228,6 +268,12 @@
         beforesubmit:function(){
           $("#icon").val($("#J_Uploader img").attr("src"));
           $("#content").val(editor.html());
+          $("#provinceId").val($("#t_province").val());
+          $("#provinceName").val($("#t_province").find("option:selected").text());
+          $("#cityId").val($("#t_city").val());
+          $("#cityName").val($("#t_city").find("option:selected").text());
+          $("#districtId").val($("#t_district").val());
+          $("#districtName").val($("#t_district").find("option:selected").text());
           if($("#money").val() == '' &&$("#couponId").val() == '') {
             BUI.Message.Alert("请设置奖励金额或奖励优惠券",function(){
               return false;
@@ -306,7 +352,7 @@
     top.topManager.reloadPage(backId);
   }
 
-  searchShop();
+//  searchShop();
 
   var a_icon_id;
   $(document).ready(function(){
@@ -332,6 +378,70 @@
       }
     });
   });
+
+  $(function(){
+    loadArea(1);
+    var cId = $("#cityId").val();
+    if(cId!='')
+      loadArea(2);
+    var dId = $("#districtId").val();
+    if(dId!='')
+      loadArea(3);
+  })
+
+  function loadArea(i){
+    var parentId = "";
+    if(i==2){
+      parentId = $("#t_province").val();
+      if(parentId=='')
+        parentId = $("#provinceId").val();
+    }else if(i==3){
+      parentId = $("#t_city").val();
+      if(parentId=='')
+        parentId = $("#cityId").val();
+    }
+    $.ajax({
+      url:"/common/listNationByParentId?r="+Math.random(),
+      type:"post",
+      data:{
+        lx : i,
+        id:parentId
+      },
+      success:function(res){
+        if(res.success){
+          var html = "<option value=''>-- 请选择 --</option>";
+          $.each(res.data,function(j,n){
+            html += "<option value='"+ n.id+"'";
+            var sel = "";
+            var pId = $("#provinceId").val();
+            var cId = $("#cityId").val();
+            var dId = $("#districtId").val();
+            if(i==1){
+              if(n.id==pId)
+                sel = " selected ";
+            }else if(i==2){
+              if(n.id==cId)
+                sel = " selected ";
+            }else if(i==3){
+              if(n.id==dId)
+                sel = " selected ";
+            }
+            html += sel + ">";
+            html += n.mc;
+            html += "</option>"
+          })
+          if(i==1){
+            $("#t_province").html(html);
+          }else if(i==2){
+            $("#t_city").html(html);
+          }else if(i==3){
+            $("#t_district").html(html);
+          }
+        }
+      },
+      error:function(){}
+    })
+  }
 </script>
 
 <body>
