@@ -48,8 +48,8 @@ public class PushAPPUtil {
 //            PushPayload payload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.alias(alias)).setNotification(notification)
 //                    .setNotification(androidNoti).build();
-            PushPayload payLoadIOS = builder.setNotification(notification).setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload payLoadAndroid = builder.setNotification(androidNoti).setMessage(message).build();
+            PushPayload payLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload payLoadAndroid = builder.setNotification(androidNoti).build();
             if("member".equalsIgnoreCase(type)){
                 try {
                     new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(payLoadIOS);
@@ -92,8 +92,8 @@ public class PushAPPUtil {
                     //Notification.ios(title, map) ;
             Notification androidNoti = Notification.android(map.get("content"), title, map);
             PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.tag(tags));
-            PushPayload pushPayLoadIOS = builder.setNotification(notification).setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload pushPayLoadAndroid = builder.setNotification(androidNoti).setMessage(message).build();
+            PushPayload pushPayLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload pushPayLoadAndroid = builder.setNotification(androidNoti).build();
 //            PushPayload pushPayload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.tag(tags)).setNotification(notification).setNotification(androidNoti)
 //                    .build();

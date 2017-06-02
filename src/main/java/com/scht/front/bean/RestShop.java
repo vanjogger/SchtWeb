@@ -27,8 +27,17 @@ public class RestShop {
     private int commentCount; //评论数，商品评论数
 
     private String juli; //距离， 单位
+    private String images; //
 
     private List<Product> products; //推广商品列表
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
 
     public int getCommentCount() {
         return commentCount;
