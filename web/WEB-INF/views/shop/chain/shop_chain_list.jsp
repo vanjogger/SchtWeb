@@ -113,7 +113,7 @@
                 return editStr+delStr ;
               }}
             ];
-            store = Search.createStore('/chainShop/listData');
+            store = Search.createStore('/chainShop/listDate');
             gridCfg = Search.createGridCfg(columns,{
               tbar : {
                 items : [

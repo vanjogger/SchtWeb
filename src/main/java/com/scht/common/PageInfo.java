@@ -22,7 +22,7 @@ public class PageInfo<T> implements Serializable{
 	private Integer total;				//根据查询参数查询出的所有记录总数
 	private Map<String, Object> params;	//查询参数
 	private List<?> result;		//查询结果集
-	
+
 	public Integer getLimit() {
 		return limit;
 	}

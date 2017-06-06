@@ -4321,3 +4321,9 @@ alter table t_question add f_city_id varchar(32) default '';
 alter table t_question add f_city_name varchar(512) default '';
 alter table t_question add f_district_id varchar(32) default '';
 alter table t_question add f_district_name varchar(512) default '';
+
+
+CREATE TABLE t_site_setting(
+f_id varchar(32) primary key,
+f_telephone varchar(100) default ''
+);

@@ -47,24 +47,44 @@ public class ShopChainController extends BaseController {
     public String list(){
         return "shop/chain/shop_chain_list";
     }
-        @RequestMapping("/listData")
+
+    @RequestMapping("/listDate")
     @ResponseBody
-    public Object listData(String name, String status,PageInfo page, HttpServletRequest request){
+    public Object listDate(String name, String status, PageInfo pageInfo, HttpServletRequest request){
         Map<String,Object> map = new HashMap<>();
         if(!StringUtil.isNullOrEmpty(name)) {
             map.put("name", name);
         }
-        if(!StringUtil.isNullOrEmpty(status)) {
+        if(!StringUtil.isNullOrEmpty(status)){
             map.put("status", status);
         }
         Admin admin = (Admin) this.getCurrentUser(request);
-        if("1".equals(admin.getType())){
+        if ("1".equals(admin.getType())){
             map.put("agentId", admin.getId());
         }
-        page.setParams(map);
-        page = this.page(OneLinkDao.class,page);
-        return this.getPageResult(page);
+        pageInfo.setParams(map);
+        pageInfo = this.page(OneLinkDao.class, pageInfo);
+        return this.getPageResult(pageInfo);
     }
+
+//    @RequestMapping("/listData")
+//    @ResponseBody
+//    public Object listData(String name, String status,PageInfo page, HttpServletRequest request){
+//        Map<String,Object> map = new HashMap<>();
+//        if(!StringUtil.isNullOrEmpty(name)) {
+//            map.put("name", name);
+//        }
+//        if(!StringUtil.isNullOrEmpty(status)) {
+//            map.put("status", status);
+//        }
+//        Admin admin = (Admin) this.getCurrentUser(request);
+//        if("1".equals(admin.getType())){
+//            map.put("agentId", admin.getId());
+//        }
+//        page.setParams(map);
+//        page = this.page(OneLinkDao.class,page);
+//        return this.getPageResult(page);
+//    }
 
 
 //    @RequestMapping("/listData")

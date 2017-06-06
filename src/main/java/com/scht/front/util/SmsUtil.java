@@ -17,6 +17,13 @@ public class SmsUtil {
 	private static String SEND_URL = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
 	private static String QUERY_URL = "http://106.ihuyi.cn/webservice/sms.php?method=GetNum";
 
+
+	//发送订单短信
+	public static void sendOrderMsg(String telephone, String title, String memberAccount){
+		String msg = "新订单提醒，会员"+memberAccount+"购买了您店里的"+title +"，请确保库存充足。";
+		sendSms(telephone, msg);
+	}
+
 	/**
 	 * 转换xml字符串为Document
 	 * 
@@ -95,5 +102,6 @@ public class SmsUtil {
 //		System.out.println(queryNum());
 		System.out.println(sendSms("13306499202", "您的验证码是：1321。请不要把验证码泄露给其他人。"));
 	}
+
 
 }

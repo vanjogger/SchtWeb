@@ -6,6 +6,7 @@ import com.scht.admin.entity.*;
 import com.scht.admin.service.OrderService;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
+import com.scht.front.util.SmsUtil;
 import com.scht.util.*;
 import com.scht.util.PayUtil.AliPayUtil;
 import com.scht.util.PayUtil.WeixinPayUtil;
@@ -125,6 +126,10 @@ public class OrderServiceImpl implements OrderService {
         String message = "您好，您购买的商品“" + product.get(0).getProductName() + "”";
         if(order.isWb()) {
             message += "由快递员配送，联系电话：" + order.getWbTelephone() +",请注意查收！";
+            //发送短信
+            Member member = this.baseMyBatisDao.findById(MemberDao.class, order.getMemberId());
+            if(member != null && !StringUtil.isNullOrEmpty(member.getTelephone()))
+                SmsUtil.sendSms(member.getTelephone(),message);
         }else {
             if (!StringUtil.isNullOrEmpty(order.getExpressName())) {
                 message += "已由快递公司" + order.getExpressName() + "承接配送。";
@@ -442,6 +447,21 @@ public class OrderServiceImpl implements OrderService {
             PushOrderThread thread = new PushOrderThread((PushSet)this.baseMyBatisDao.findById(PushSetDao.class,""), record);
             executor.execute(thread);
         }
+        //发送短信
+        if(OrderStatus.PAY.name().equals(order.getStatus())) {
+            if(!StringUtil.isNullOrEmpty(product.getShopId())) {
+                Shop shop = this.baseMyBatisDao.findById(ShopDao.class, product.getShopId());
+                if(shop != null && !StringUtil.isNullOrEmpty(shop.getLinkMobile())) {
+                    SmsUtil.sendOrderMsg(shop.getLinkMobile(),product.getTitle(), member.getAccount());
+                }
+            }else{
+                //自营
+                SiteSetting setting = this.baseMyBatisDao.findById(SiteSettingDao.class, "");
+                if(setting != null && !StringUtil.isNullOrEmpty(setting.getTelephone())) {
+                    SmsUtil.sendOrderMsg(setting.getTelephone(),product.getTitle(), member.getAccount());
+                }
+            }
+        }
         if(!ProductTypeEnum.EXTEND.name().equals(product.getProductType())) {
             //减少库存
             productDao.updateStock(productId, 0 - amount);
@@ -526,7 +546,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void pushReceiveMessage(Order order) {
-        PushRecord record = PushRecord.createMemberOrder(order.getMemberId(), "接单提醒","商家已接单", order.getId());
+        PushRecord record = PushRecord.createMemberOrder(order.getMemberId(), "接单提醒", "商家已接单", order.getId());
         this.baseMyBatisDao.insert(PushRecordDao.class, record);
         PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
         executor.execute(thread);
@@ -723,6 +743,22 @@ public class OrderServiceImpl implements OrderService {
             this.baseMyBatisDao.insert(PushRecordDao.class,record);
             PushOrderThread thread = new PushOrderThread((PushSet) this.baseMyBatisDao.findById(PushSetDao.class, ""), record);
             executor.execute(thread);
+        }
+        //发送短信
+        //发送短信
+        if(OrderStatus.PAY.name().equals(order.getStatus())) {
+            if(!StringUtil.isNullOrEmpty(order.getShopId())) {
+                Shop shop = this.baseMyBatisDao.findById(ShopDao.class, order.getShopId());
+                if(shop != null && !StringUtil.isNullOrEmpty(shop.getLinkMobile())) {
+                    SmsUtil.sendOrderMsg(shop.getLinkMobile(),product.get(0).getProductName(),order.getMemberAccount());
+                }
+            }else{
+                //自营
+                SiteSetting setting = this.baseMyBatisDao.findById(SiteSettingDao.class, "");
+                if(setting != null && !StringUtil.isNullOrEmpty(setting.getTelephone())) {
+                    SmsUtil.sendOrderMsg(setting.getTelephone(),product.get(0).getProductName(),order.getMemberAccount());
+                }
+            }
         }
         if(StringUtil.isNotNull(order.getCouponId())) {
             //使用了优惠券

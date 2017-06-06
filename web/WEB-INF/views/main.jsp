@@ -197,6 +197,9 @@
           <shiro:hasPermission name="tssz:list">
           {id:'tg_list',text:'推送设置',href:'/pushSet/find',closeable:true},
                 </shiro:hasPermission>
+          <shiro:hasPermission name="site_setting">
+          {id:'site_setting',text:'平台设置',href:'/siteSet/find',closeable:true},
+                </shiro:hasPermission>
 
           <shiro:hasPermission name="sms:list">
           {id:'sms_list',text:'短信余额查询',href:'/common/querySms',closeable:true}

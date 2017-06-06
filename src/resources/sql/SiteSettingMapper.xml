@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.SiteSettingDao">
+
+    <resultMap id="my_site_setting" type="com.scht.admin.bean.SiteSetting">
+        <id column="f_id" property="id"/>
+        <result column="f_telephone" property="telephone"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.bean.SiteSetting">
+        insert into t_site_setting(f_id,f_telephone)
+        values(#{id},#{telephone})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.bean.SiteSetting">
+        update t_site_setting
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="telephone!=null and telephone!=''">
+                f_telephone = #{telephone},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_site_setting">
+        select * from t_site_setting
+    </select>
+</mapper>
