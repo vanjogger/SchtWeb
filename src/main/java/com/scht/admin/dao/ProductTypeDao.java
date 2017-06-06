@@ -1,6 +1,7 @@
 package com.scht.admin.dao;
 
 import com.scht.admin.entity.ProductType;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,5 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductTypeDao {
 
-    ProductType findByKey(String key);
+    ProductType findByKey(@Param("key")String key, @Param("type") String type);
 }

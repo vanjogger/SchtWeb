@@ -11,10 +11,11 @@
         <result column="f_sort" property="sort"/>
         <result column="f_icon" property="icon"/>
         <result column="f_status" property="status"/>
+        <result column="f_type" property="type"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.ProductType">
-        insert into t_product_type(f_id,f_name,f_key,f_sort,f_icon,f_status)
-        values(#{id},#{name},#{key},#{sort},#{icon},#{status})
+        insert into t_product_type(f_id,f_name,f_key,f_sort,f_icon,f_status,f_type)
+        values(#{id},#{name},#{key},#{sort},#{icon},#{status},#{type})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.ProductType">
         update t_product_type
@@ -52,6 +53,9 @@
             <if test="status != null and status != ''">
                 and f_status=#{status}
             </if>
+            <if test="type != null and type != ''">
+                and f_type=#{type}
+            </if>
         </where>
         order by f_sort limit #{start},#{limit}
     </select>
@@ -63,6 +67,9 @@
             </if>
             <if test="status != null and status != ''">
                 and f_status=#{status}
+            </if>
+            <if test="type != null and type != ''">
+                and f_type=#{type}
             </if>
         </where>
     </select>
@@ -76,7 +83,7 @@
     </select>
 
     <select id="findByKey" resultMap="my_product_type">
-        SELECT * from t_product_type where f_key=#{key}
+        SELECT * from t_product_type where f_key=#{key} and f_type=#{type}
     </select>
 
 </mapper>

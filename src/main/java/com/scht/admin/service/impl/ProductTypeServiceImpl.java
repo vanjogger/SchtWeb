@@ -15,7 +15,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
     @Autowired
     ProductTypeDao productTypeDao;
     @Override
-    public ProductType findByKey(String key) {
-        return productTypeDao.findByKey(key);
+    public ProductType findByKey(String key, String type) {
+        return productTypeDao.findByKey(key, type);
     }
 }

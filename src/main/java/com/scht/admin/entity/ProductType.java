@@ -15,8 +15,18 @@ public class ProductType {
     private String icon; //图标
     private String status;//NORMAL 正常  Frozen删除
 
+    private String type; //类型  0  外卖商品分类， 1 普通商品分类
+
     //改分分类下商品列表
     private List<Product> productList;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public List<Product> getProductList() {
         return productList;

@@ -33,7 +33,9 @@
     <select name="typeId"  data-rules="{required:true}"
     <option value="">请选择</option>
     <c:forEach items="${typeList}" var="e">
+      <c:if test="${e.type == '0'}">
     <option value="${e.id}" ${data.typeId == e.id ? "selected":''}>${e.name}</option>
+      </c:if>
     </c:forEach>
     </select>
     </div>

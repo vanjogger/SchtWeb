@@ -14,6 +14,7 @@
 <div class="container">
   <form id="J_Form" class="form-horizontal" action="/productType/update">
     <input type="hidden" name="id" value="${data.id}"/>
+    <input type="hidden" name="type" value="${data.type}"/>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>分类名称：</label>
@@ -86,13 +87,16 @@
         }
       },
       callback:function(data){
+        var pid = 'product_type_list';
+        if('${data.type}' == '0')
+          pid = 'product_category_list';
         BUI.Message.Alert(data.msg,function(){
           if(data.success){
             top.topManager.openPage({
-              id : 'product_category_list',
+              id : pid,
               isClose : true
             });
-            top.topManager.reloadPage('product_category_list');
+            top.topManager.reloadPage(pid);
           }
         },'info');
       }

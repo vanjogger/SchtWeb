@@ -36,6 +36,22 @@ public class RestProductTypeController extends BaseController {
     ProductTypeService productTypeService;
     @Autowired
     BaseService baseService;
+    //查询分类列表
+    @RequestMapping(value = "normalList", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object normalList(@RequestParam(value = "pageNo", defaultValue = "1")int pageNo,
+                       @RequestParam(value = "pageSize", defaultValue = "10")int pageSize){
+        Map<String,Object> map = new HashMap<>();
+        map.put("start", (pageNo-1)*pageSize);
+        map.put("limit", pageSize);
+        map.put("status", Status.NORMAL.name());
+        map.put("type","1");
+        List list = this.baseService.searchByPage(ProductTypeDao.class,map);
+        RetResult result = new RetResult(RetResult.RetCode.OK);
+        RetData data = new RetData(list);
+        result.setData(data);
+        return JSON.toJSON(result);
+    }
 
     //查询分类列表
     @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
@@ -46,6 +62,7 @@ public class RestProductTypeController extends BaseController {
         map.put("start", (pageNo-1)*pageSize);
         map.put("limit", pageSize);
         map.put("status", Status.NORMAL.name());
+        map.put("type","0");
        List list = this.baseService.searchByPage(ProductTypeDao.class,map);
         RetResult result = new RetResult(RetResult.RetCode.OK);
         RetData data = new RetData(list);
@@ -62,6 +79,7 @@ public class RestProductTypeController extends BaseController {
         map.put("start", 0);
         map.put("limit", Integer.MAX_VALUE);
         map.put("status", Status.NORMAL.name());
+        map.put("type","0");
         List<ProductType> list = this.baseService.searchByPage(ProductTypeDao.class,map);
         if(list == null || list.size() == 0) return JSON.toJSON(result);
 

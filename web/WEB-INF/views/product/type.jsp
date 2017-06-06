@@ -14,6 +14,7 @@
 <div class="container">
 
   <form id="searchForm" class="form-horizontal">
+    <input type="hidden" name="type" value="${type}"/>
     <div class="row">
       <div class="control-group span8">
         <label class="control-label">分类名称：</label>
@@ -82,7 +83,7 @@
       tbar : {
         items : [
           {text : '<i class="icon-plus"></i>新建',btnCls : 'button button-small',handler:function(){
-            top.topManager.openPage({id:"product_type_add",href:"/productType/add",title:"新增"});
+            top.topManager.openPage({id:"product_type_add",href:"/productType/add?type=${type}",title:"新增"});
           }}
         ]
       },

@@ -109,6 +109,9 @@
       menu:[{
         text:'商品管理',
         items:[
+          <shiro:hasPermission name="product_types">
+          {id:'product_type_list',text:'普通商品分类',href:'/productType/list?type=1',closeable:true},
+          </shiro:hasPermission>
           <shiro:hasPermission name="product:list">
           {id:'product_list',text:'普通商品管理',href:'/product/list?type=NORMAL',closeable:true},
           </shiro:hasPermission>
@@ -246,7 +249,7 @@
         text:'外卖管理',
         items:[
           <shiro:hasPermission name="product:typelist">
-          {id:'product_category_list',text:'商品分类管理',href:'/productType/list',closeable:true},
+          {id:'product_category_list',text:'商品分类管理',href:'/productType/list?type=0',closeable:true},
           </shiro:hasPermission>
           <shiro:hasPermission name="product:wblist">
           {id:'wb_product_list',text:'外卖商品',href:'/product/wbList',closeable:true},

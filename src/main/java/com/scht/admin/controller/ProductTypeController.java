@@ -34,16 +34,21 @@ public class ProductTypeController extends BaseController {
     ProductTypeService productTypeService;
 
     @RequestMapping("list")
-    public String list(){
+    public String list(String type, ModelMap map)
+    {
+        map.put("type", type);
         return "/product/type";
     }
 
     @RequestMapping("listData")
     @ResponseBody
-    public JSONObject listData(PageInfo pageInfo, String name, String status){
+    public JSONObject listData(PageInfo pageInfo, String name,String type, String status){
         Map<String,Object> map = new HashMap<>();
         if(!StringUtil.isNullOrEmpty(name)){
             map.put("name", name);
+        }
+        if(!StringUtil.isNullOrEmpty(type)) {
+            map.put("type", type);
         }
         if(!StringUtil.isNullOrEmpty(status)){
             map.put("status", status);
@@ -54,14 +59,15 @@ public class ProductTypeController extends BaseController {
     }
 
     @RequestMapping("add")
-    public String add(){
+    public String add(String type, ModelMap map){
+        map.put("type", type);
         return "/product/type_add";
     }
 
     @RequestMapping("save")
     @ResponseBody
     public JSONObject save(ProductType type, HttpServletRequest request){
-        if(this.productTypeService.findByKey(type.getKey()) != null){
+        if(this.productTypeService.findByKey(type.getKey(), type.getType()) != null){
             return this.FmtResult(false,"KEY值已被使用",null);
         }
         type.setId(UUIDFactory.random());
@@ -80,7 +86,7 @@ public class ProductTypeController extends BaseController {
     @RequestMapping("update")
     @ResponseBody
     public JSONObject update(ProductType type, HttpServletRequest request){
-        ProductType data = this.productTypeService.findByKey(type.getKey());
+        ProductType data = this.productTypeService.findByKey(type.getKey(), type.getType());
         if(data != null && !data.getId().equals(type.getId())){
             return this.FmtResult(false,"KEY值已被使用",null);
         }

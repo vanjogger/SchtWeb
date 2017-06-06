@@ -28,7 +28,9 @@
       <select name="typeId">
       <option value="">所有商品</option>
       <c:forEach items="${typeList}" var="e">
+        <c:if test="${e.type == '0'}">
       <option value="${e.id}">${e.name}</option>
+        </c:if>
       </c:forEach>
       </select>
       </div>

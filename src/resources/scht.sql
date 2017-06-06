@@ -4327,3 +4327,5 @@ CREATE TABLE t_site_setting(
 f_id varchar(32) primary key,
 f_telephone varchar(100) default ''
 );
+
+alter table t_product_type add f_type varchar(32) DEFAULT '0';

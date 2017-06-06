@@ -49,7 +49,7 @@ public class ProductController extends BaseController {
     @RequestMapping("list")
     public String list(String type, ModelMap map){
         map.put("type", type);
-//        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
+        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
         return "/product/list";
     }
 
@@ -125,9 +125,9 @@ public class ProductController extends BaseController {
             Shop shop = this.baseService.findById(ShopDao.class, data.getShopId());
             data.setShopName(shop.getName());
         }
+        map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
         map.put("data", data);
         if(data.isWb()) {
-            map.put("typeList", this.baseService.findAll(ProductTypeDao.class));
             return "/product/wbedit";
         }
         return "/product/edit";

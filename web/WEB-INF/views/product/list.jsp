@@ -22,17 +22,19 @@
           <input type="text" class="control-text" name="title">
         </div>
       </div>
-      <%--<div class="control-group span8">--%>
-        <%--<label class="control-label">商品分类：</label>--%>
-        <%--<div class="controls">--%>
-          <%--<select name="typeId">--%>
-            <%--<option value="">所有商品</option>--%>
-            <%--<c:forEach items="${typeList}" var="e">--%>
-              <%--<option value="${e.id}">${e.name}</option>--%>
-            <%--</c:forEach>--%>
-          <%--</select>--%>
-        <%--</div>--%>
-      <%--</div>--%>
+      <div class="control-group span8">
+        <label class="control-label">商品分类：</label>
+        <div class="controls">
+          <select name="typeId">
+            <option value="">所有商品</option>
+            <c:forEach items="${typeList}" var="e">
+              <c:if test="${e.type == '1'}">
+              <option value="${e.id}">${e.name}</option>
+              </c:if>
+            </c:forEach>
+          </select>
+        </div>
+      </div>
       <div class="control-group span8">
         <label class="control-label">状态：</label>
         <div class="controls" >
@@ -71,7 +73,7 @@
         }
       }},
       {title:'商品名称',dataIndex:'title',width:150},
-//      {title:'分类名称',dataIndex:'typeName',width:100},
+      {title:'分类名称',dataIndex:'typeName',width:100},
       {title:'商品价格',dataIndex:'price',width:80},
         <c:if test="${type != 'NORMAL'}">
       {title:'所属商家',dataIndex:'a',width:150,id:"shop_id",renderer:function(v,o){

@@ -8,5 +8,5 @@ import com.scht.admin.entity.ProductType;
 
 public interface ProductTypeService {
 
-    ProductType findByKey(String key);
+    ProductType findByKey(String key, String type);
 }
