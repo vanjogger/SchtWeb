@@ -125,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderProduct> product = orderProductDao.listByOrderId(order.getId());
         String message = "您好，您购买的商品“" + product.get(0).getProductName() + "”";
         if(order.isWb()) {
-            message += "由快递员配送，联系电话：" + order.getWbTelephone() +",请注意查收！";
+            message += "由快递员"+order.getWbName()+"配送，联系电话：" + order.getWbTelephone() +",请注意查收！";
             //发送短信
             Member member = this.baseMyBatisDao.findById(MemberDao.class, order.getMemberId());
             if(member != null && !StringUtil.isNullOrEmpty(member.getTelephone()))

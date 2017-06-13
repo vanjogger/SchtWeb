@@ -77,7 +77,7 @@
     <div class="row">
       <div class="control-group span8">
         <label class="control-label" id="expressName">快递公司名称：</label>
-        <div class="controls">
+        <div class="controls" id="express_div">
           <input type="text" class="input-normal control-text" name="expressName">
         </div>
       </div>
@@ -223,10 +223,31 @@
     $("#content #orderId").val(_id);
     if(_f == '1') {
       //外卖
-      $("#content #expressName").html("外卖人员电话：");
+      $("#content #expressName").html("快递员：");
       $("#content #expressNo").hide();
+      $.ajax({
+        url:'/dispatchMember/listData',
+        dataType:'json',data:{start:0,limit:1000},
+        success:function(d){
+          console.info(d);
+          if(d.rows){
+            var rows = d.rows;
+            var html = '<select class="input-normal control-text" name="expressName">';
+            for(var i=0; i < rows.length; i++){
+              html += '<option value="'+rows[i].id+'">' + rows[i].name + '['+rows[i].telephone + ']</option>';
+
+            }
+            html += "</select>";
+            $("#content #express_div").html(html);
+          }
+          dialog.show();
+        }
+      });
+    }else{
+      $("#content #expressName").html("物流公司：");
+      $("#content #express_div").html('<input type="text" class="input-normal control-text" name="expressName">');
+      dialog.show();
     }
-    dialog.show();
   }
 </script>
 <script type="text/javascript" src="/views/js/list.js"></script>

@@ -2,14 +2,8 @@ package com.scht.front.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.scht.admin.bean.OrderStatus;
-import com.scht.admin.dao.OrderDao;
-import com.scht.admin.dao.OrderLimitSetDao;
-import com.scht.admin.dao.OrderProductDao;
-import com.scht.admin.dao.ShopDao;
-import com.scht.admin.entity.Member;
-import com.scht.admin.entity.Order;
-import com.scht.admin.entity.OrderLimitSet;
-import com.scht.admin.entity.Shop;
+import com.scht.admin.dao.*;
+import com.scht.admin.entity.*;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.OrderProductService;
 import com.scht.admin.service.OrderService;
@@ -123,6 +117,17 @@ public class RestOrderController extends BaseController {
         result = new RetResult(RetResult.RetCode.OK);
         return JSON.toJSON(result);
     }
+
+    //快递员
+    @RequestMapping(value = "dispatchMember", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object dispatchMember(){
+        List<DispatchMember> list = this.baseService.findAll(DispatchMemberDao.class);
+        RetResult result = new RetResult(RetResult.RetCode.OK);
+        RetData data = new RetData(list);
+        result.setData(data);
+        return JSON.toJSON(result);
+    }
     //发货
 //发货操作
     @RequestMapping(value = "dispatch", produces = "application/json;charset=utf-8")
@@ -137,7 +142,16 @@ public class RestOrderController extends BaseController {
         }
         if(order.isWb()) {
             //外卖
-            order.setWbTelephone(expressName);
+            if(StringUtil.isNullOrEmpty(expressName)) {
+                return this.FmtResult(false,"请选择快递员",null);
+            }
+            DispatchMember dm = this.baseService.findById(DispatchMemberDao.class, expressName);
+            if(dm == null){
+                return this.FmtResult(false,"快递员不存在",null);
+            }
+            //外卖
+            order.setWbName(dm.getName());
+            order.setWbTelephone(dm.getTelephone());
         }else {
             if (order == null || !"1".equals(order.getExpress()) || !OrderStatus.PAY.name().equals(order.getStatus())) {
                 result = new RetResult(RetResult.RetCode.Illegal_Request);

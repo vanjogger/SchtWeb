@@ -4329,3 +4329,13 @@ f_telephone varchar(100) default ''
 );
 
 alter table t_product_type add f_type varchar(32) DEFAULT '0';
+
+CREATE TABLE t_dispatch_member(
+f_id varchar(32) primary key,
+f_name varchar(100) not null,
+f_telephone varchar(100) default '',
+f_address varchar(512) default '',
+f_create_time bigint default 0
+);
+
+alter table t_order add f_wb_name varchar(32) default '';

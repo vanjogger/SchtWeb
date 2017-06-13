@@ -162,30 +162,30 @@ public class QuestRecordServiceImpl implements QuestRecordService {
                 result.setResMsg("您未绑定微信账号");
                 return result;
             }
-            WeixinUser user = this.baseMyBatisDao.findById(WeixinUserDao.class, member.getOpenId());
-            if(user == null) {
-                //重新拉去openId
-                user = findUser(setting, member.getOpenId());
-            }else{
-                //判断是否关注
-                try {
-                    WeixinUser temp = WeixinUtil.getUser(setting,user.getOpenId());
-                    if(temp == null) {
-                        result.setResMsg("您未关注公众号");
-                        return result;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    result.setResMsg("微信端错误");
-                    return result;
-                }
-            }
-            if(user == null) {
-                result.setResMsg("您未关注公众号");
-                return result;
-            }
+//            WeixinUser user = this.baseMyBatisDao.findById(WeixinUserDao.class, member.getOpenId());
+//            if(user == null) {
+//                //重新拉去openId
+//                user = findUser(setting, member.getOpenId());
+//            }else{
+//                //判断是否关注
+//                try {
+//                    WeixinUser temp = WeixinUtil.getUser(setting,user.getOpenId());
+//                    if(temp == null) {
+//                        result.setResMsg("您未关注公众号");
+//                        return result;
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    result.setResMsg("微信端错误");
+//                    return result;
+//                }
+//            }
+//            if(user == null) {
+//                result.setResMsg("您未关注公众号");
+//                return result;
+//            }
             String no = OrderUtil.createNo();
-            boolean flag = WeixinHbUtil.sendHb(setting, no,user.getOpenId(),StringNumber.mul(record.getMoney(),"100"),ip,rootPath);
+            boolean flag = WeixinHbUtil.sendHb(setting, no,member.getOpenId(),StringNumber.mul(record.getMoney(),"100"),ip,rootPath);
             if(flag) {
                 record.setHbNo(no);
                 record.setPushMoney(true);

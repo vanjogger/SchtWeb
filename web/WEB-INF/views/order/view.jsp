@@ -63,6 +63,7 @@
           <c:if test="${!empty data.wbTelephone}">
             <div class="row">
               <div class="span10">快递电话：${data.wbTelephone}</div>
+              <div class="span10">快递员：${data.wbName}</div>
             </div>
           </c:if>
           <div class="row">

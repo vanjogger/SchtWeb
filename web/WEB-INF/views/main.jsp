@@ -257,6 +257,9 @@
           <shiro:hasPermission name="order:wblist">
           {id:'wb_order_list',text:'外卖订单',href:'/order/list?wb=1',closeable:true},
           </shiro:hasPermission>
+          <shiro:hasPermission name="dispatch:list">
+          {id:'dispatch_list',text:'快递员管理',href:'/dispatchMember/list',closeable:true},
+          </shiro:hasPermission>
           <shiro:hasPermission name="coupon:list">
           {id:'coupon_list',text:'优惠券',href:'/coupon/list',closeable:true},
           </shiro:hasPermission>

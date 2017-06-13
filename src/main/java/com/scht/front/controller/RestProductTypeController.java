@@ -88,6 +88,7 @@ public class RestProductTypeController extends BaseController {
         if(!StringUtil.isNullOrEmpty(shopId)) {
             map.put("shopId", shopId);
         }
+        map.remove("type");
         map.put("wb", "1");
         List<Product> productList = this.baseService.searchByPage(ProductDao.class,map);
         Map<String,List<Product>> tempMap = new HashMap<>();

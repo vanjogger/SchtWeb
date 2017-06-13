@@ -1,14 +1,8 @@
 package com.scht.admin.controller;
 
 import com.scht.admin.bean.OrderStatus;
-import com.scht.admin.dao.OrderDao;
-import com.scht.admin.dao.OrderLimitSetDao;
-import com.scht.admin.dao.OrderProductDao;
-import com.scht.admin.dao.ShopDao;
-import com.scht.admin.entity.Admin;
-import com.scht.admin.entity.Order;
-import com.scht.admin.entity.OrderLimitSet;
-import com.scht.admin.entity.Shop;
+import com.scht.admin.dao.*;
+import com.scht.admin.entity.*;
 import com.scht.admin.service.BaseService;
 import com.scht.admin.service.OrderProductService;
 import com.scht.admin.service.OrderService;
@@ -110,8 +104,16 @@ public class OrderController extends BaseController {
             return this.FmtResult(false,"订单不存在",null);
         }
         if(order.isWb()) {
+            if(StringUtil.isNullOrEmpty(expressName)) {
+                return this.FmtResult(false,"请选择快递员",null);
+            }
+            DispatchMember dm = this.baseService.findById(DispatchMemberDao.class, expressName);
+            if(dm == null){
+                return this.FmtResult(false,"快递员不存在",null);
+            }
             //外卖
-           order.setWbTelephone(expressName);
+            order.setWbName(dm.getName());
+           order.setWbTelephone(dm.getTelephone());
         }else {
             if (order == null || !"1".equals(order.getExpress()) || !OrderStatus.PAY.name().equals(order.getStatus())) {
                 return this.FmtResult(false, "该订单不需要发货", null);

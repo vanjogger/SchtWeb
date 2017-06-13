@@ -48,6 +48,7 @@ public class Order {
 
     private boolean wb; //是否外卖订单   true 是 false 不是
     private String wbTelephone; //外卖快递员电话
+    private String wbName; //外卖快递员姓名
 
 
     //一下不存数据库
@@ -59,6 +60,14 @@ public class Order {
     private String dispatchDate;
     private String successDate;
     private String overDate;
+
+    public String getWbName() {
+        return wbName;
+    }
+
+    public void setWbName(String wbName) {
+        this.wbName = wbName;
+    }
 
     public String getCouponId() {
         return couponId;

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.DispatchMemberDao">
+
+    <resultMap id="my_dispatch_member" type="com.scht.admin.entity.DispatchMember">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_telephone" property="telephone"/>
+        <result column="f_address" property="address"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.DispatchMember">
+        insert into t_dispatch_member(f_id,f_name,f_telephone,f_address,f_create_time)
+        values(#{id},#{name},#{telephone},#{address},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.DispatchMember">
+        update t_dispatch_member
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="telephone!=null and telephone!=''">
+                f_telephone = #{telephone},
+            </if>
+            <if test="address!=null and address!=''">
+                f_address = #{address},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_dispatch_member">
+        select * from t_dispatch_member where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_dispatch_member">
+        select * from t_dispatch_member where 1=1 order by f_create_time desc
+    </select>
+
+    <select id="searchByPage" resultMap="my_dispatch_member" parameterType="HashMap">
+        SELECT * from t_dispatch_member order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        select count(f_id) from t_dispatch_member
+    </select>
+    <delete id="delete">
+        DELETE  from t_dispatch_member where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+</mapper>
