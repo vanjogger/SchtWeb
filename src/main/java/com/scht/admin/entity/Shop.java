@@ -36,10 +36,29 @@ public class Shop {
     private String perPrice; //店铺人均消费
     private String images; //商家多图片
 
+    private String wb; //是否外卖商家， 1 是， 0 不是
+    private String telephone; //短信订单通知手机号码
+
 
     private int saleCount; //商家总销量
     private List<SubShop> list;
     private int subSize;
+
+    public String getWb() {
+        return wb;
+    }
+
+    public void setWb(String wb) {
+        this.wb = wb;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
     public String getImages() {
         return images;

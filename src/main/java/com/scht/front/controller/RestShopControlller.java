@@ -78,18 +78,19 @@ public class RestShopControlller extends BaseFrontController{
 
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object list(String shopTypeKey,String sortType,
+    public Object list(String shopTypeKey,String sortType,String region,String wb,
                        String name,String type, String code,@RequestParam(value = "pageNo",defaultValue = "1") int pageNo,
                        @RequestParam(value="pageSize",defaultValue = "10") int pageSize){
-        RetResult result = this.shopService.list(name, shopTypeKey, sortType, type, code, pageNo, pageSize);
+        RetResult result = this.shopService.list(name, shopTypeKey, sortType, type, code, pageNo, pageSize,region,wb);
         return JSON.toJSON(result);
     }
 
     @RequestMapping(value = "/juliList", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object juliList(String code,String lat,String lng,String name, String shopTypeKey, String type, @RequestParam(value = "pageNo", defaultValue = "1")int pageNo, @RequestParam(value = "pageSize",
+    public Object juliList(String code,String lat,String lng,String name, String region,String wb,
+                           String shopTypeKey, String type, @RequestParam(value = "pageNo", defaultValue = "1")int pageNo, @RequestParam(value = "pageSize",
     defaultValue = "10")int pageSize){
-        RetResult result = this.shopService.juliList(code,lat,lng,name, shopTypeKey, type, pageNo, pageSize);
+        RetResult result = this.shopService.juliList(code,lat,lng,name, shopTypeKey, type, pageNo, pageSize, region,wb);
         return JSON.toJSON(result);
     }
 

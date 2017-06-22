@@ -451,15 +451,27 @@ public class OrderServiceImpl implements OrderService {
         if(OrderStatus.PAY.name().equals(order.getStatus())) {
             if(!StringUtil.isNullOrEmpty(product.getShopId())) {
                 Shop shop = this.baseMyBatisDao.findById(ShopDao.class, product.getShopId());
-                if(shop != null && !StringUtil.isNullOrEmpty(shop.getLinkMobile())) {
-                    SmsUtil.sendOrderMsg(shop.getLinkMobile(),product.getTitle(), member.getAccount());
+                if(shop != null && !StringUtil.isNullOrEmpty(shop.getTelephone())) {
+                    SmsUtil.sendOrderMsg(shop.getTelephone(),product.getTitle(), member.getAccount());
                 }
             }else{
-                //自营
-                SiteSetting setting = this.baseMyBatisDao.findById(SiteSettingDao.class, "");
-                if(setting != null && !StringUtil.isNullOrEmpty(setting.getTelephone())) {
-                    SmsUtil.sendOrderMsg(setting.getTelephone(),product.getTitle(), member.getAccount());
+                //自营,地区自营发送给agent
+                String adminTelephone = "";
+                if(!StringUtil.isNullOrEmpty(product.getAgentId())) {
+                    Admin admin = this.baseMyBatisDao.findById(AdminDao.class, product.getAgentId());
+                    if(admin != null && "1".equals(admin.getType())) {
+                        adminTelephone = admin.getTelephone();
+                    }
+                }else{
+                    SiteSetting setting = this.baseMyBatisDao.findById(SiteSettingDao.class, "");
+                    if(setting != null && !StringUtil.isNullOrEmpty(setting.getTelephone())) {
+                        adminTelephone = setting.getTelephone();
+                    }
                 }
+                if(!StringUtil.isNullOrEmpty(adminTelephone)) {
+                    SmsUtil.sendOrderMsg(adminTelephone,product.getTitle(), member.getAccount());
+                }
+
             }
         }
         if(!ProductTypeEnum.EXTEND.name().equals(product.getProductType())) {
@@ -749,14 +761,26 @@ public class OrderServiceImpl implements OrderService {
         if(OrderStatus.PAY.name().equals(order.getStatus())) {
             if(!StringUtil.isNullOrEmpty(order.getShopId())) {
                 Shop shop = this.baseMyBatisDao.findById(ShopDao.class, order.getShopId());
-                if(shop != null && !StringUtil.isNullOrEmpty(shop.getLinkMobile())) {
-                    SmsUtil.sendOrderMsg(shop.getLinkMobile(),product.get(0).getProductName(),order.getMemberAccount());
+                if(shop != null && !StringUtil.isNullOrEmpty(shop.getTelephone())) {
+                    SmsUtil.sendOrderMsg(shop.getTelephone(),product.get(0).getProductName(),order.getMemberAccount());
                 }
             }else{
                 //自营
-                SiteSetting setting = this.baseMyBatisDao.findById(SiteSettingDao.class, "");
-                if(setting != null && !StringUtil.isNullOrEmpty(setting.getTelephone())) {
-                    SmsUtil.sendOrderMsg(setting.getTelephone(),product.get(0).getProductName(),order.getMemberAccount());
+                //自营,地区自营发送给agent
+                String adminTelephone = "";
+                if(!StringUtil.isNullOrEmpty(order.getAgentId())) {
+                    Admin admin = this.baseMyBatisDao.findById(AdminDao.class, order.getAgentId());
+                    if(admin != null && "1".equals(admin.getType())) {
+                        adminTelephone = admin.getTelephone();
+                    }
+                }else{
+                    SiteSetting setting = this.baseMyBatisDao.findById(SiteSettingDao.class, "");
+                    if(setting != null && !StringUtil.isNullOrEmpty(setting.getTelephone())) {
+                        adminTelephone = setting.getTelephone();
+                    }
+                }
+                if(!StringUtil.isNullOrEmpty(adminTelephone)) {
+                    SmsUtil.sendOrderMsg(adminTelephone,product.get(0).getProductName(),order.getMemberAccount());
                 }
             }
         }

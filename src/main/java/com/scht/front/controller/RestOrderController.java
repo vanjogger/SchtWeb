@@ -121,8 +121,22 @@ public class RestOrderController extends BaseController {
     //快递员
     @RequestMapping(value = "dispatchMember", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object dispatchMember(){
-        List<DispatchMember> list = this.baseService.findAll(DispatchMemberDao.class);
+    public Object dispatchMember(String orderId){
+        Order order = this.baseService.findById(OrderDao.class,orderId);
+        Shop shop = this.baseService.findById(ShopDao.class, order.getShopId());
+        Map<String,Object> map = new HashMap<>();
+        if(shop != null) {
+            if(StringUtil.isNotNull(shop.getDistrictId())){
+                map.put("region", shop.getDistrictId());
+            }else if(StringUtil.isNotNull(shop.getCityId())) {
+                map.put("region", shop.getCityId());
+            }else if(StringUtil.isNotNull(shop.getProvinceId())) {
+                map.put("region", shop.getProvinceId());
+            }
+        }
+        map.put("start",0);
+        map.put("limit", Integer.MAX_VALUE);
+        List<DispatchMember> list = this.baseService.searchByPage(DispatchMemberDao.class, map);
         RetResult result = new RetResult(RetResult.RetCode.OK);
         RetData data = new RetData(list);
         result.setData(data);
@@ -164,7 +178,7 @@ public class RestOrderController extends BaseController {
         order.setStatus(OrderStatus.DISPATCH.name());
         order.setDispatchTime(System.currentTimeMillis());
         //确认收货时限设置
-        OrderLimitSet set = this.baseService.findById(OrderLimitSetDao.class,"");
+        OrderLimitSet set = this.baseService.findById(OrderLimitSetDao.class, "");
         if(set != null && set.getSuccessLimit() > 0) {
             order.setLimitTime(DateUtil.addDays(System.currentTimeMillis(), set.getSuccessLimit()));
         }else{
@@ -174,6 +188,19 @@ public class RestOrderController extends BaseController {
         orderService.pushDispatchMessage(order);
         result = new RetResult(RetResult.RetCode.OK);
         return JSON.toJSON(result);
+    }
+
+    @RequestMapping(value = "createSelfOrder", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object createSelfOrder(Order order){
+        try {
+            order.setWb(false);
+            RetResult result = this.orderService.createOrder(order);
+            return JSON.toJSON(result);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JSON.toJSON(new RetResult(RetResult.RetCode.System_Error));
+        }
     }
 
     @RequestMapping(value = "createSaleOrder", produces = "application/json;charset=utf-8")
@@ -251,7 +278,8 @@ public class RestOrderController extends BaseController {
     //外卖订单支付
     @RequestMapping(value = "saleOrderPay", produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Object saleOrderPay(String orderId, String memberId, String payType, String couponRecordId, HttpServletRequest request){
+    public Object saleOrderPay(String orderId, String memberId, String payType, String couponRecordId,
+                               HttpServletRequest request){
         RetResult result = null;
         try{
             result = orderService.pay(orderId, memberId, payType,couponRecordId,request, getRequestIp(request));

@@ -29,6 +29,8 @@
         <result column="f_district_name" property="districtName"/>
         <result column="f_per_price" property="perPrice"/>
         <result column="f_images" property="images"/>
+        <result column="f_wb" property="wb"/>
+        <result column="f_telephone" property="telephone"/>
     </resultMap>
 
     <resultMap id="rest_shop" type="com.scht.front.bean.RestShop">
@@ -53,14 +55,24 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.scht.admin.entity.Shop">
-        insert into t_shop(f_images,f_per_price,f_id,f_name,f_account,f_password,f_shop_type_id,f_type,f_icon,f_status,f_link_name,f_link_mobile,f_link_address,f_agent_id,f_remark,f_create_time,f_lng,f_lat,f_code,f_province_id,
+        insert into t_shop(
+        f_wb,f_telephone,
+        f_images,f_per_price,f_id,f_name,f_account,f_password,f_shop_type_id,f_type,f_icon,f_status,f_link_name,f_link_mobile,f_link_address,f_agent_id,f_remark,f_create_time,f_lng,f_lat,f_code,f_province_id,
         f_province_name,f_city_id,f_city_name,f_district_id,f_district_name)
-        values(#{images},#{perPrice},#{id},#{name},#{account},#{password},#{shopTypeId},#{type},#{icon},#{status},#{linkName},#{linkMobile},#{linkAddress},#{agentId},#{remark},#{createTime},#{lng},#{lat},#{code},#{provinceId},
+        values(
+        #{wb},#{telephone},
+        #{images},#{perPrice},#{id},#{name},#{account},#{password},#{shopTypeId},#{type},#{icon},#{status},#{linkName},#{linkMobile},#{linkAddress},#{agentId},#{remark},#{createTime},#{lng},#{lat},#{code},#{provinceId},
         #{provinceName},#{cityId},#{cityName},#{districtId},#{districtName})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Shop">
         update t_shop
         <set>
+            <if test="wb != null and wb != ''">
+                f_wb = #{wb},
+            </if>
+            <if test="telephone != null and telephone != ''">
+                f_telephone=#{telephone},
+            </if>
             <if test="images != null and images != ''">
                 f_images=#{images},
             </if>
@@ -198,10 +210,13 @@
     <select id="listByName" resultMap="my_shop">
         select * from t_shop
         <where>
-            f_type = '0'
+            f_type = '0' and f_wb=#{wb}
           <if test="name != null and name != ''">
               and f_name like CONCAT("%",#{name},"%")
           </if>
+            <if test="agentId != null and agentId != ''">
+                 and f_agent_id=#{agentId}
+            </if>
         </where>
         order by f_create_time desc
     </select>
@@ -229,6 +244,12 @@
         (select sum(f_sale_count + f_virtual_count) as c,sum(f_comment_count) as comment,f_shop_id from t_product group by f_shop_id) as o on o.f_shop_id=t.f_id
         <where>
              t.f_status = 'NORMAL'
+            <if test="wb != null and wb != ''">
+                and t.f_wb=#{wb}
+            </if>
+            <if test="region != null and region != ''">
+                and (t.f_province_id=#{region} or t.f_city_id=#{region} or t.f_district_id=#{region})
+            </if>
             <if test="shopTypeKey!=null and shopTypeKey!=''">
                 and a.f_key = #{shopTypeKey}
             </if>
@@ -270,6 +291,12 @@
         (select sum(f_sale_count + f_virtual_count) as c,sum(f_comment_count) as comment,f_shop_id from t_product group by f_shop_id) as o on o.f_shop_id=t.f_id
         <where>
              t.f_status = 'NORMAL'
+            <if test="wb != null and wb != ''">
+                and t.f_wb=#{wb}
+            </if>
+            <if test="region != null and region != ''">
+                and (t.f_province_id=#{region} or t.f_city_id=#{region} or t.f_district_id=#{region})
+            </if>
             <if test="shopTypeKey!=null and shopTypeKey!=''">
                 and a.f_key = #{shopTypeKey}
             </if>
@@ -295,8 +322,14 @@
         from t_shop t,t_shop_type a
         <where>
             t.f_shop_type_id = a.f_id and t.f_status = 'NORMAL'
+            <if test="wb != null and wb != ''">
+                and t.f_wb=#{wb}
+            </if>
             <if test="shopTypeKey!=null and shopTypeKey!=''">
                 and a.f_key = #{shopTypeKey}
+            </if>
+            <if test="region != null and region != ''">
+                and (t.f_province_id=#{region} or t.f_city_id=#{region} or t.f_district_id=#{region})
             </if>
             <if test="districtId != null and districtId != ''">
                  and (t.f_district_id = #{districtId} or t.f_city_id=#{districtId})

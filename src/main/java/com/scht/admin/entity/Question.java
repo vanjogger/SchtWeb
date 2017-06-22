@@ -32,10 +32,29 @@ public class Question {
     private String districtId;//所在区域
     private String districtName;
 
+    private String shareImg; //分享图片
+    private String agentId; //代理商ID
+
 
     //not save
     private List<QuestAnswer> list; //答案列表
     private String dateStr; //时间
+
+    public String getShareImg() {
+        return shareImg;
+    }
+
+    public void setShareImg(String shareImg) {
+        this.shareImg = shareImg;
+    }
+
+    public String getAgentId() {
+        return agentId;
+    }
+
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
+    }
 
     public String getTelephone() {
         return telephone;

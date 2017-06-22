@@ -5,6 +5,7 @@ import com.scht.admin.bean.Status;
 import com.scht.admin.dao.ProductDao;
 import com.scht.admin.entity.Product;
 import com.scht.admin.service.BaseService;
+import com.scht.admin.service.ProductService;
 import com.scht.common.BaseController;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
@@ -32,6 +33,51 @@ public class RestProductController  extends BaseController{
 
     @Autowired
     BaseService baseService;
+    @Autowired
+    ProductService productService;
+
+    @RequestMapping(value = "regionList", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Object regionList(
+            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+            @RequestParam(value = "region",required = false) String region,
+            @RequestParam(value = "tc", required = false) String tc,
+            @RequestParam(value = "wb", required = false) String wb,
+            @RequestParam(value = "type", required = false)String type,
+            String lat,String lng
+    ){
+        Map<String,Object> map = new HashMap<>();
+        map.put("front","true");
+        map.put("status", Status.NORMAL.name());
+        map.put("start", (pageNo-1)*pageSize);
+        map.put("limit", pageSize);
+        if(!StringUtil.isNullOrEmpty(lat)) {
+            map.put("lat", lat);
+        }
+        if(!StringUtil.isNullOrEmpty(lng)) {
+            map.put("lng", lng);
+        }
+        if(!StringUtil.isNullOrEmpty(region)) {
+            map.put("region", region);
+        }
+        if(!StringUtil.isNullOrEmpty(tc)) {
+            map.put("tc", tc);
+        }
+        if(!StringUtil.isNullOrEmpty(wb)) {
+            map.put("wb", wb);
+        }
+        if(!StringUtil.isNullOrEmpty(type)){
+            map.put("type", type);
+        }
+        List list = productService.regionList(map);
+        int count = this.baseService.count4Page(ProductDao.class, map);
+        RetResult result = new RetResult(RetResult.RetCode.OK);
+        RetData data = new RetData(pageNo,pageSize,list, count);
+        result.setData(data);
+        return JSON.toJSON(result);
+
+    }
 
     @RequestMapping(value = "list", produces = "application/json;charset=utf-8")
     @ResponseBody
@@ -41,6 +87,9 @@ public class RestProductController  extends BaseController{
                        @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
                        @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                        @RequestParam(value = "typeId", required = false)String typeId,
+                       @RequestParam(value = "region",required = false) String region,
+                       @RequestParam(value = "tc", required = false) String tc,
+                       @RequestParam(value = "wb", required = false) String wb,
                        @RequestParam(value = "type", required = false)String type){
         Map<String,Object> map = new HashMap<>();
         map.put("front","true");
@@ -49,6 +98,15 @@ public class RestProductController  extends BaseController{
         map.put("limit", pageSize);
         if(!StringUtil.isNullOrEmpty(typeId)) {
             map.put("typeId", typeId);
+        }
+        if(!StringUtil.isNullOrEmpty(region)) {
+            map.put("region", region);
+        }
+        if(!StringUtil.isNullOrEmpty(tc)) {
+            map.put("tc", tc);
+        }
+        if(!StringUtil.isNullOrEmpty(wb)) {
+            map.put("wb", wb);
         }
         if(!StringUtil.isNullOrEmpty(type)){
             map.put("type", type);

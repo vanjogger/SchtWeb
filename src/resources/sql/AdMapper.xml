@@ -15,6 +15,13 @@
         <result column="f_create_time" property="createTime"/>
         <result column="f_sort" property="sort"/>
         <result column="remark" property="remark"/>
+        <result column="f_province_id" property="provinceId"/>
+        <result column="f_province_name" property="provinceName"/>
+        <result column="f_city_id" property="cityId"/>
+        <result column="f_city_name" property="cityName"/>
+        <result column="f_district_id" property="districtId"/>
+        <result column="f_district_name" property="districtName"/>
+        <result column="f_agent_id" property="agentId"/>
     </resultMap>
 
     <resultMap id="rest_advert" type="com.scht.front.bean.RestAdvert">
@@ -25,11 +32,36 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.scht.admin.entity.Advert">
-        insert into base_advert(f_id,f_title,f_url,f_image,f_status,f_place_id,f_start_time,f_end_time,f_create_time,f_sort,f_remark)
-         VALUES (#{id},#{title},#{url},#{image},#{status},#{placeId},#{startTime},#{endTime},#{createTime},#{sort},#{remark})
+        insert into base_advert(
+        f_agent_id,
+        f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name,
+        f_id,f_title,f_url,f_image,f_status,f_place_id,f_start_time,f_end_time,f_create_time,f_sort,f_remark)
+         VALUES (
+         #{agentId},
+         #{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName},
+         #{id},#{title},#{url},#{image},#{status},#{placeId},#{startTime},#{endTime},#{createTime},#{sort},#{remark})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Advert">
-        update base_advert set f_title=#{title},
+        update base_advert set
+        <if test="provinceId!=null and provinceId!=''">
+            f_province_id = #{provinceId},
+        </if>
+        <if test="provinceName!=null and provinceName!=''">
+            f_province_name = #{provinceName},
+        </if>
+        <if test="cityId!=null and cityId!=''">
+            f_city_id = #{cityId},
+        </if>
+        <if test="cityName!=null and cityName!=''">
+            f_city_name = #{cityName},
+        </if>
+        <if test="districtId!=null and districtId!=''">
+            f_district_id = #{districtId},
+        </if>
+        <if test="districtName!=null and districtName!=''">
+            f_district_name = #{districtName},
+        </if>
+        f_title=#{title},
         f_url = #{url},f_image=#{image},f_status=#{status},f_place_id=#{placeId},f_start_time=#{startTime},f_end_time=#{endTime},
         f_sort=#{sort},f_remark=#{remark} where f_id=#{id}
     </update>
@@ -41,6 +73,9 @@
     <select id="searchByPage" parameterType="HashMap" resultMap="my_advert">
         select * from base_advert
         <where>
+            <if test="agentId != null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
             <if test="placeId != null and placeId != ''">
                 and f_place_id=#{placeId}
             </if>
@@ -60,6 +95,9 @@
     <select id="count4Page" parameterType="HashMap" resultType="int">
         select count(f_id) from base_advert
         <where>
+            <if test="agentId != null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
             <if test="placeId != null and placeId != ''">
                 and f_place_id=#{placeId}
             </if>
@@ -90,6 +128,9 @@
             t.f_place_id = p.f_id
             <if test="code!=null and code!=''">
                 and p.f_code = #{code}
+            </if>
+            <if test="region != null and region != ''">
+                and (t.f_province_id=#{region} or t.f_city_id=#{region} or t.f_district_id=#{region})
             </if>
             <if test="status!=null and status!=''">
                 and t.f_status = #{status}

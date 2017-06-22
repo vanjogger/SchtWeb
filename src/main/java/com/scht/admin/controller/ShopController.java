@@ -178,7 +178,12 @@ public class ShopController extends BaseController {
     //根据名称模糊检索所有商家
     @RequestMapping("/ajaxList")
     @ResponseBody
-    public JSONObject searchShop(String name){
-        return this.FmtResult(true,"", shopService.listByName(name));
+    public JSONObject searchShop(String name,String wb,HttpServletRequest request){
+        Admin admin = (Admin) getCurrentUser(request);
+        String agentId = "";
+        if("1".equals(admin.getType())) {
+            agentId = admin.getId();
+        }
+        return this.FmtResult(true,"", shopService.listByName(name, agentId, wb));
     }
 }

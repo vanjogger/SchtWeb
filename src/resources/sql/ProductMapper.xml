@@ -25,6 +25,16 @@
         <result column="f_self" property="self"/>
         <result column="f_shop_id" property="shopId"/>
         <result column="f_wb" property="wb"/>
+        <result column="f_province_id" property="provinceId"/>
+        <result column="f_province_name" property="provinceName"/>
+        <result column="f_city_id" property="cityId"/>
+        <result column="f_city_name" property="cityName"/>
+        <result column="f_district_id" property="districtId"/>
+        <result column="f_district_name" property="districtName"/>
+        <result column="f_tc" property="tc"/>
+        <result column="juli" property="juli"/>
+        <result column="shopName" property="shopName"/>
+
     </resultMap>
 
     <resultMap id="rest_product" type="com.scht.front.bean.RestProduct">
@@ -44,12 +54,37 @@
 
 
     <insert id="insert" parameterType="com.scht.admin.entity.Product">
-        insert into t_product(f_wb,f_id,f_title,f_product_type,f_type_id,f_description,f_price,f_market_price,f_agent_id,f_images,f_stock,f_sale_count,f_virtual_count,f_comment_count,f_content,f_status,f_create_time,f_sort,f_self,f_shop_id)
-        values(#{wb},#{id},#{title},#{productType},#{typeId},#{description},#{price},#{marketPrice},#{agentId},#{images},#{stock},#{saleCount},#{virtualCount},#{commentCount},#{content},#{status},#{createTime},#{sort},#{self},#{shopId})
+        insert into t_product(
+        f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name,f_tc,
+        f_wb,f_id,f_title,f_product_type,f_type_id,f_description,f_price,f_market_price,f_agent_id,f_images,f_stock,f_sale_count,f_virtual_count,f_comment_count,f_content,f_status,f_create_time,f_sort,f_self,f_shop_id)
+        values(
+        #{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName},#{tc},
+        #{wb},#{id},#{title},#{productType},#{typeId},#{description},#{price},#{marketPrice},#{agentId},#{images},#{stock},#{saleCount},#{virtualCount},#{commentCount},#{content},#{status},#{createTime},#{sort},#{self},#{shopId})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Product">
         update t_product
         <set>
+            <if test="provinceId!=null and provinceId!=''">
+                f_province_id = #{provinceId},
+            </if>
+            <if test="provinceName!=null and provinceName!=''">
+                f_province_name = #{provinceName},
+            </if>
+            <if test="cityId!=null and cityId!=''">
+                f_city_id = #{cityId},
+            </if>
+            <if test="cityName!=null and cityName!=''">
+                f_city_name = #{cityName},
+            </if>
+            <if test="districtId!=null and districtId!=''">
+                f_district_id = #{districtId},
+            </if>
+            <if test="districtName!=null and districtName!=''">
+                f_district_name = #{districtName},
+            </if>
+            <if test="tc != null and tc != ''">
+                f_tc=#{tc},
+            </if>
 
             <if test="title!=null and title!=''">
                 f_title = #{title},
@@ -101,6 +136,53 @@
     <select id="findById" resultMap="my_product">
         select * from t_product where f_id=#{id}
     </select>
+    <select id="regionList" resultMap="my_product" parameterType="HashMap">
+         SELECT  p.*, t.f_name as shopName,
+          round(6378.138*2*asin(sqrt(pow(sin( (t.f_lat*pi()/180-#{lat}*pi()/180)/2),2)+cos(t.f_lat*pi()/180)*cos(#{lat}*pi()/180)*
+        pow(sin( (t.f_lng*pi()/180-#{lng}*pi()/180)/2),2)))*1000) as juli
+          from t_product p left join t_shop t on t.f_id=p.f_shop_id
+        <where>
+            <choose>
+                <when test='"1" == wb'>
+                    and p.f_wb='1'
+                </when>
+                <otherwise>
+                    and p.f_wb!='1'
+                </otherwise>
+            </choose>
+            <if test="tc != null and tc != ''">
+                and p.f_tc=#{tc}
+            </if>
+            <if test="region != null and region != ''">
+                and (p.f_province_id=#{region} or p.f_city_id=#{region} or p.f_district_id=#{region})
+            </if>
+
+            <if test="type != null and type != ''">
+                and p.f_product_type=#{type}
+            </if>
+
+            <if test="status != null and status != ''">
+                and p.f_status =#{status}
+            </if>
+
+
+            <if test="front != null and front != ''">
+                and (
+                p.f_self='0' or ( p.f_self='1' and
+                p.f_shop_id in (
+                select f_id from t_shop where f_status='NORMAL'
+                )
+                )
+                )
+            </if>
+        </where>
+        order by
+          juli asc,
+        <if test="front != null and front != ''">
+            p.f_sort asc,
+        </if>
+        p.f_create_time desc limit #{start},#{limit}
+    </select>
     <select id="searchByPage" resultMap="my_product" parameterType="HashMap">
         SELECT  * from t_product
         <where>
@@ -112,6 +194,12 @@
                     and f_wb!='1'
                 </otherwise>
             </choose>
+            <if test="tc != null and tc != ''">
+                and f_tc=#{tc}
+            </if>
+            <if test="region != null and region != ''">
+                and (f_province_id=#{region} or f_city_id=#{region} or f_district_id=#{region})
+            </if>
             <if test="title != null and title != ''">
                 and f_title like "%"#{title}"%"
             </if>
@@ -176,6 +264,12 @@
                     and f_wb='0'
                 </otherwise>
             </choose>
+            <if test="tc != null and tc != ''">
+                and f_tc=#{tc}
+            </if>
+            <if test="region != null and region != ''">
+                and (f_province_id=#{region} or f_city_id=#{region} or f_district_id=#{region})
+            </if>
             <if test="title != null and title != ''">
                 and f_title like "%"#{title}"%"
             </if>

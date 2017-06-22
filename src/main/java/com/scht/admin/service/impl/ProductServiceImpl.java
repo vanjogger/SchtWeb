@@ -1,5 +1,6 @@
 package com.scht.admin.service.impl;
 
+import com.scht.admin.dao.BaseMyBatisDao;
 import com.scht.admin.dao.ProductDao;
 import com.scht.admin.entity.Product;
 import com.scht.admin.service.ProductService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vanjoger on 2016/12/11.
@@ -19,6 +21,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductDao productDao;
+
+    @Autowired
+    BaseMyBatisDao baseMyBatisDao;
 
     @Override
     public RetResult list(String id, String productName, int pageNo, int pageSize) {
@@ -37,5 +42,10 @@ public class ProductServiceImpl implements ProductService {
             result = new RetResult(RetResult.RetCode.Execute_Error);
         }
         return result;
+    }
+
+    @Override
+    public List regionList(Map<String, Object> map) {
+       return productDao.regionList(map);
     }
 }

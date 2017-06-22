@@ -2,8 +2,11 @@ package com.scht.admin.controller;
 
 import com.scht.admin.dao.DispatchMemberDao;
 import com.scht.admin.dao.HotKeyDao;
+import com.scht.admin.dao.ShopDao;
+import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.DispatchMember;
 import com.scht.admin.entity.HotKey;
+import com.scht.admin.entity.Shop;
 import com.scht.admin.service.BaseService;
 import com.scht.common.BaseController;
 import com.scht.common.PageInfo;
@@ -37,8 +40,24 @@ public class DispatchMemberController extends BaseController {
 
     @RequestMapping(value = "listData")
     @ResponseBody
-    public Object listData(PageInfo pageInfo,HttpServletRequest request, String name){
+    public Object listData(PageInfo pageInfo,HttpServletRequest request, String shopId){
         Map<String,Object> map = new HashMap<>();
+        Admin admin = (Admin) getCurrentUser(request);
+        if("1".equals(admin.getType())) {
+            map.put("agentId", admin.getId());
+        }
+        if(!StringUtil.isNullOrEmpty(shopId)) {
+           Shop shop = this.baseService.findById(ShopDao.class, shopId);
+            if(shop != null) {
+                if(StringUtil.isNotNull(shop.getDistrictId())){
+                    map.put("region", shop.getDistrictId());
+                }else if(StringUtil.isNotNull(shop.getCityId())) {
+                    map.put("region", shop.getCityId());
+                }else if(StringUtil.isNotNull(shop.getProvinceId())) {
+                    map.put("region", shop.getProvinceId());
+                }
+            }
+        }
         pageInfo.setParams(map);
         pageInfo = this.page(DispatchMemberDao.class, pageInfo);
         return this.getPageResult(pageInfo);
@@ -51,9 +70,12 @@ public class DispatchMemberController extends BaseController {
 
     @RequestMapping("save")
     @ResponseBody
-    public Object save(DispatchMember data){
+    public Object save(DispatchMember data, HttpServletRequest request){
         data.setId(UUIDFactory.random());
         data.setCreateTime(System.currentTimeMillis());
+        Admin admin = (Admin) getCurrentUser(request);
+        if("1".equals(admin.getType()))
+            data.setAgentId(admin.getId());
         this.baseService.insert(DispatchMemberDao.class, data);
         return this.FmtResult(true,"保存成功",null);
     }

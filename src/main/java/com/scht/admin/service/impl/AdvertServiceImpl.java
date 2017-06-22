@@ -6,6 +6,7 @@ import com.scht.admin.service.AdvertService;
 import com.scht.front.bean.RestAdvert;
 import com.scht.front.bean.RetData;
 import com.scht.front.bean.RetResult;
+import com.scht.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +24,16 @@ public class AdvertServiceImpl implements AdvertService {
 
 
     @Override
-    public RetResult list(String code) {
+    public RetResult list(String code, String region) {
         RetResult result = null;
         try{
             Map map = new HashMap();
             map.put("currentTime",System.currentTimeMillis());
             map.put("status", Status.NORMAL.name());
             map.put("code",code);
+            if(!StringUtil.isNullOrEmpty(region)) {
+                map.put("region", region);
+            }
             List<RestAdvert> list = this.advertDao.list(map);
             RetData data = new RetData(list);
             result = new RetResult(RetResult.RetCode.OK);

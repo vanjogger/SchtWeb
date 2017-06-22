@@ -131,7 +131,7 @@
         if(obj.wb && obj.status == 'PAY') {
           dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"recive('"+obj.id+"')\"> 接单 </a>&nbsp;&nbsp;"
         }else if(obj.status == 'RECEIVE') {
-          dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"dispatch('"+obj.id+"','1')\"> 发货 </a>&nbsp;&nbsp;"
+          dispatchStr = " &nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"dispatch('"+obj.id+"','1','"+obj.shopId+"')\"> 发货 </a>&nbsp;&nbsp;"
         }
 
         var viewStr = Search.createLink({ //链接使用 此方式
@@ -219,7 +219,7 @@
 
   });
 
-  function dispatch(_id,_f){
+  function dispatch(_id,_f,_shopId){
     $("#content #orderId").val(_id);
     if(_f == '1') {
       //外卖
@@ -227,7 +227,7 @@
       $("#content #expressNo").hide();
       $.ajax({
         url:'/dispatchMember/listData',
-        dataType:'json',data:{start:0,limit:1000},
+        dataType:'json',data:{start:0,limit:1000,shopId : _shopId},
         success:function(d){
           console.info(d);
           if(d.rows){

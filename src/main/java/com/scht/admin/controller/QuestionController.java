@@ -4,6 +4,7 @@ import com.scht.admin.dao.CouponDao;
 import com.scht.admin.dao.ProductTypeDao;
 import com.scht.admin.dao.QuestionDao;
 import com.scht.admin.dao.ShopDao;
+import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.QuestAnswer;
 import com.scht.admin.entity.Question;
 import com.scht.admin.entity.Shop;
@@ -47,8 +48,12 @@ public class QuestionController extends BaseController {
 
     @RequestMapping("listData")
     @ResponseBody
-    public JSONObject listData(PageInfo pageInfo, String title, String shopName, String status){
+    public JSONObject listData(HttpServletRequest request,PageInfo pageInfo, String title, String shopName, String status){
         Map<String,Object> map = new HashMap<>();
+        Admin admin = (Admin) getCurrentUser(request);
+        if("1".equals(admin.getType())) {
+            map.put("agentId" , admin.getId());
+        }
         if(!StringUtil.isNullOrEmpty(title)){
             map.put("title", title);
         }
@@ -74,6 +79,10 @@ public class QuestionController extends BaseController {
     @ResponseBody
     public JSONObject save( Question data, String jsonStr,HttpServletRequest request){
         try {
+            Admin admin = (Admin) getCurrentUser(request);
+            if("1".equals(admin.getType())) {
+                data.setAgentId(admin.getId());
+            }
             if (StringUtil.isNullOrEmpty(jsonStr)) {
                 return this.FmtResult(false, "请填写答案", null);
             }

@@ -34,6 +34,20 @@
         </div>
       </div>
     </div>
+    <div class="control-group">
+      <label class="control-label">所在区域：</label>
+      <div class="controls  control-row-auto">
+        <select id="t_province" name="t_province" onchange="loadArea(2)">
+
+        </select>
+        <select id="t_city"  name="t_city" onchange="loadArea(3)">
+
+        </select>
+        <select id="t_district" name="t_district">
+
+        </select>
+      </div>
+    </div>
     <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>联系地址：</label>
@@ -43,7 +57,12 @@
         </div>
       </div>
     </div>
-
+    <input type="hidden" name="provinceId" id="provinceId" />
+    <input type="hidden" name="provinceName" id="provinceName"/>
+    <input type="hidden" name="cityId" id="cityId" />
+    <input type="hidden" name="cityName" id="cityName"/>
+    <input type="hidden" name="districtId" id="districtId" />
+    <input type="hidden" name="districtName"  id="districtName"/>
     <div class="row form-actions ">
       <div class="span13 offset3 ">
         <button type="submit" class="button button-primary">保存</button>
@@ -69,7 +88,12 @@
       submitType:"ajax",
       listeners:{
         beforesubmit:function(){
-
+          $("#provinceId").val($("#t_province").val());
+          $("#provinceName").val($("#t_province").find("option:selected").text());
+          $("#cityId").val($("#t_city").val());
+          $("#cityName").val($("#t_city").find("option:selected").text());
+          $("#districtId").val($("#t_district").val());
+          $("#districtName").val($("#t_district").find("option:selected").text());
           return true;
         }
       },
@@ -91,6 +115,81 @@
       isClose : true
     });
     top.topManager.reloadPage('dispatch_list');
+  }
+
+
+  var defaultDistrict = "371602";
+  $(function(){
+
+    if('${sessionScope.ADMIN.provinceId}' != ''){
+      loadArea(1,'${sessionScope.ADMIN.provinceId}');
+      if('${sessionScope.ADMIN.cityId}' != '') {
+        loadArea(2,'${sessionScope.ADMIN.cityId}');
+      }
+      if('${sessionScope.ADMIN.districtId}' != ''){
+        loadArea(3,'${sessionScope.ADMIN.districtId}');
+      }
+
+    }else {
+      if (defaultDistrict) {
+        loadArea(1, defaultDistrict.substring(0, 2) + "0000");
+        loadArea(2, defaultDistrict.substring(0, 4) + "00");
+        loadArea(3, defaultDistrict);
+      } else {
+        loadArea(1);
+      }
+    }
+
+  })
+
+  function loadArea(i,_r){
+    var parentId = "";
+    if(i==2){
+      parentId = $("#t_province").val();
+    }else if(i==3){
+      parentId = $("#t_city").val();
+    }
+    if(!parentId && _r){
+      if(i == 2) parentId = _r.substring(0,2) + '0000';
+      else if(i == 3) parentId = _r.substring(0,4) + '00';
+    }
+    $.ajax({
+      url:"/common/listNationByParentId?r="+Math.random(),
+      type:"post",async:false,
+      data:{
+        lx : i,
+        id:parentId
+      },
+      success:function(res){
+        if(res.success){
+          var html = "<option value=''>-- 请选择 --</option>";
+          $.each(res.data,function(j,n){
+            if(_r && n.id==_r) {
+              html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+            }else
+              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+          })
+          if(i==1){
+            $("#t_province").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_province").attr("disabled","disabled");
+            }
+          }else if(i==2){
+            $("#t_city").html(html);
+            $("#t_district").html("<option value=''>-- 请选择 --</option>");
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_city").attr("disabled","disabled");
+            }
+          }else if(i==3){
+            $("#t_district").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_district").attr("disabled","disabled");
+            }
+          }
+        }
+      },
+      error:function(){}
+    })
   }
 </script>
 

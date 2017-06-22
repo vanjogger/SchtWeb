@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/11/27.
@@ -31,4 +32,6 @@ public interface ProductDao {
     List<Product> searchSaleCountGroupByShopId(String[] shopIds);
 
     List<Product> searchExtendProductByShopIds(String[] shopIds);
+
+    List<Product> regionList(Map<String, Object> map);
 }

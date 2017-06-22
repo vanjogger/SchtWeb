@@ -4339,3 +4339,44 @@ f_create_time bigint default 0
 );
 
 alter table t_order add f_wb_name varchar(32) default '';
+------------------------------------------
+
+alter table base_admin add f_telephone varchar(32) DEFAULT '';
+alter table base_admin add f_province_id varchar(32) default '370000';
+alter table base_admin add f_province_name varchar(512) default '山东省';
+alter table base_admin add f_city_id varchar(32) default '371600';
+alter table base_admin add f_city_name varchar(512) default '滨州市';
+alter table base_admin add f_district_id varchar(32) default '371602';
+alter table base_admin add f_district_name varchar(512) default '滨城区';
+
+alter table t_shop add f_wb varchar(2) DEFAULT '0';
+alter table t_shop add f_telephone varchar(32) default '';
+
+alter table base_advert add f_agent_id varchar(32) default '';
+alter table base_advert add f_province_id varchar(32) default '370000';
+alter table base_advert add f_province_name varchar(512) default '山东省';
+alter table base_advert add f_city_id varchar(32) default '371600';
+alter table base_advert add f_city_name varchar(512) default '滨州市';
+alter table base_advert add f_district_id varchar(32) default '371602';
+alter table base_advert add f_district_name varchar(512) default '滨城区';
+
+alter table t_product add f_province_id varchar(32) default '370000';
+alter table t_product add f_province_name varchar(512) default '山东省';
+alter table t_product add f_city_id varchar(32) default '371600';
+alter table t_product add f_city_name varchar(512) default '滨州市';
+alter table t_product add f_district_id varchar(32) default '371602';
+alter table t_product add f_district_name varchar(512) default '滨城区';
+alter table t_product add f_tc varchar(512) default '';
+
+alter table t_question add f_share_img varchar(512) default '';
+alter table t_question add f_agent_id varchar(32) default '';
+
+alter table t_dispatch_member add f_agent_id varchar(32) default '';
+alter table t_dispatch_member add f_province_id varchar(32) default '370000';
+alter table t_dispatch_member add f_province_name varchar(512) default '山东省';
+alter table t_dispatch_member add f_city_id varchar(32) default '371600';
+alter table t_dispatch_member add f_city_name varchar(512) default '滨州市';
+alter table t_dispatch_member add f_district_id varchar(32) default '371602';
+alter table t_dispatch_member add f_district_name varchar(512) default '滨城区';
+
+

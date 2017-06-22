@@ -2,6 +2,7 @@ package com.scht.admin.controller;
 
 import com.scht.admin.dao.AdvertDao;
 import com.scht.admin.dao.AdvertPlaceDao;
+import com.scht.admin.entity.Admin;
 import com.scht.admin.entity.Advert;
 import com.scht.admin.service.AdvertPlaceService;
 import com.scht.admin.service.BaseService;
@@ -33,16 +34,22 @@ public class AdvertController extends BaseController {
 
     @RequestMapping("list")
     public String list(ModelMap map){
+
         map.put("places", baseService.findAll(AdvertPlaceDao.class));
         return "/advert/advert";
     }
 
     @RequestMapping(value = "listData")
     @ResponseBody
-    public JSONObject listData(PageInfo pageInfo,String placeId,String title,String status){
+    public JSONObject listData(HttpServletRequest request, PageInfo pageInfo,String placeId,String title,String status){
+        Admin admin = (Admin) getCurrentUser(request);
+
         Map<String,Object> map = new HashMap<>();
         if(!StringUtil.isNullOrEmpty(placeId)) {
             map.put("placeId", placeId);
+        }
+        if ("1".equals(admin.getType())) {
+          map.put("agentId", admin.getId());
         }
         if(!StringUtil.isNullOrEmpty(title)) {
             map.put("title", title);
@@ -68,6 +75,10 @@ public class AdvertController extends BaseController {
     public JSONObject save(Advert advert, HttpServletRequest request){
         advert.setId(UUIDFactory.random());
         advert.setCreateTime(System.currentTimeMillis());
+        Admin admin = (Admin) getCurrentUser(request);
+        if("1".equals(admin.getType())) {
+            advert.setAgentId(admin.getId());
+        }
         baseService.insert(AdvertDao.class, advert);
         this.saveLog("添加广告“" + advert.getTitle() + "”", request);
         return this.FmtResult(true,"添加广告成功",null);

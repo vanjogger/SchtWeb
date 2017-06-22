@@ -17,11 +17,21 @@
         <result column="f_type" property="type"/>
         <result column="f_mobile" property="mobile"/>
         <result column="f_address" property="address"/>
+        <result column="f_telephone" property="telephone"/>
+        <result column="f_province_id" property="provinceId"/>
+        <result column="f_province_name" property="provinceName"/>
+        <result column="f_city_id" property="cityId"/>
+        <result column="f_city_name" property="cityName"/>
+        <result column="f_district_id" property="districtId"/>
+        <result column="f_district_name" property="districtName"/>
     </resultMap>
 
     <insert id="insert" parameterType="com.scht.admin.entity.Admin">
-        insert into base_admin (f_id, f_loginName, f_password,
+        insert into base_admin (
+        f_telephone,f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name,
+        f_id, f_loginName, f_password,
         f_roleId,f_last_login_time,f_login_ip,f_login_cnt,f_status,f_roleName,f_realName,f_type,f_mobile,f_address) values (
+        #{telephone},#{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName},
         #{id}, #{loginName}, #{password}, #{roleId},#{lastLoginTime},#{loginIP},#{loginCnt},#{status},#{roleName},#{realName},#{type},#{mobile},#{address})
     </insert>
 
@@ -67,6 +77,27 @@
             </if>
             <if test="address!=null and address!=''">
                 f_address = #{address} ,
+            </if>
+            <if test="telephone!=null and telephone!=''">
+                f_telephone = #{telephone},
+            </if>
+            <if test="provinceId!=null and provinceId!=''">
+                f_province_id = #{provinceId},
+            </if>
+            <if test="provinceName!=null and provinceName!=''">
+                f_province_name = #{provinceName},
+            </if>
+            <if test="cityId!=null and cityId!=''">
+                f_city_id = #{cityId},
+            </if>
+            <if test="cityName!=null and cityName!=''">
+                f_city_name = #{cityName},
+            </if>
+            <if test="districtId!=null and districtId!=''">
+                f_district_id = #{districtId},
+            </if>
+            <if test="districtName!=null and districtName!=''">
+                f_district_name = #{districtName},
             </if>
         </set>
         where f_id = #{id}

@@ -61,6 +61,9 @@
                       return "商城管理员";
                   }
               }},
+              {title:'地区',dataIndex:'provinceName',width:130,renderer:function(v,o){
+                  return o.provinceName + o.cityName + o.districtName;
+              }},
               {title:'最近登录时间',dataIndex:'formatLoginTime',width:130},
               {title:'登录次数',dataIndex:'loginCnt',width:80},
               {title:'状态',dataIndex:'status',width:60,renderer:function(value,obj){

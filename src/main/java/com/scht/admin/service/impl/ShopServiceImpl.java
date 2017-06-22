@@ -95,8 +95,8 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public List<Shop> listByName(String name) {
-        return shopDao.listByName(name);
+    public List<Shop> listByName(String name, String agentId, String wb) {
+        return shopDao.listByName(name, agentId,wb);
     }
 
     @Override
@@ -187,13 +187,14 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public RetResult list(String name,String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize) {
+    public RetResult list(String name,String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize,
+                          String region, String wb) {
         RetResult result = null;
         try{
             if(pageNo<1)
                 pageNo = 1;
-            List<RestShop> list = this.shopDao.list(name,shopTypeKey,sortType,type,code,(pageNo-1)*pageSize,pageSize);
-            Integer count = this.shopDao.count(null,name,shopTypeKey,sortType,type,code);
+            List<RestShop> list = this.shopDao.list(name,shopTypeKey,sortType,type,code,(pageNo-1)*pageSize,pageSize,region,wb);
+            Integer count = this.shopDao.count(null,name,shopTypeKey,sortType,type,code,region,wb);
 //            initSaleCount(list);
             ShopType shopType = null;
             if(!StringUtil.isNullOrEmpty(shopTypeKey)) {
@@ -219,13 +220,14 @@ public class ShopServiceImpl implements ShopService {
     }
 
     @Override
-    public RetResult juliList(String code,String lat,String lng,String name, String shopTypeKey, String type, int pageNo, int pageSize) {
+    public RetResult juliList(String code,String lat,String lng,String name, String shopTypeKey, String type, int pageNo,
+                              int pageSize, String region, String wb) {
         RetResult result = null;
         try{
             if(pageNo<1)
                 pageNo = 1;
-            List<RestShop> list = this.shopDao.juliList(code,lat, lng, name, shopTypeKey, type, (pageNo - 1) * pageSize, pageSize);
-            Integer count = this.shopDao.count(code,name,shopTypeKey,null,type,null);
+            List<RestShop> list = this.shopDao.juliList(code,lat, lng, name, shopTypeKey, type, (pageNo - 1) * pageSize, pageSize,region,wb);
+            Integer count = this.shopDao.count(code,name,shopTypeKey,null,type,null, region,wb);
 //            initSaleCount(list);
             ShopType shopType = null;
             if(!StringUtil.isNullOrEmpty(shopTypeKey)) {

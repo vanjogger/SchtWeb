@@ -153,7 +153,22 @@
         </div>
       </div>
     </div>
+    <div class="control-group">
+      <label class="control-label">外卖商家：</label>
+      <div class="controls">
+        <label class="radio" for="wb1"> <input type="radio" name="wb" ${dto.wb=='1'?'checked':''} value="1" id="wb1" />是</label>
+        <label class="radio" for="wb0"><input type="radio" name="wb" value="0" id="wb0"  ${dto.wb!='1'?'checked':''}/>不是</label>
+      </div>
 
+    </div>
+    <div class="control-group">
+      <label class="control-label">订单通知：</label>
+      <div class="controls">
+        <input type="text" name="telephone" class="input-normal control-text" value="${dto.telephone}">
+        订单短信通知手机号码。
+      </div>
+
+    </div>
     <div class="control-group">
       <label class="control-label">备注：</label>
       <div class="controls  control-row-auto">
@@ -288,67 +303,67 @@
     $('#btnShow').on('click',function () {
       $(".dmdDialog").show();
     });
-    loadArea(1);
-    var cId = $("#cityId").val();
-    if(cId!='')
-      loadArea(2);
-    var dId = $("#districtId").val();
-    if(dId!='')
-      loadArea(3);
+    if($("#provinceId").val()){
+      loadArea(1,$("#provinceId").val());
+      if($("#cityId").val()) {
+        loadArea(2,$("#cityId").val());
+      }
+      if($("#districtId").val()){
+        loadArea(3,$("#districtId").val());
+      }
+    }else{
+      loadArea(1);
+    }
   })
 
-  function loadArea(i){
+  function loadArea(i,_r){
     var parentId = "";
     if(i==2){
       parentId = $("#t_province").val();
-      if(parentId=='')
-        parentId = $("#provinceId").val();
     }else if(i==3){
       parentId = $("#t_city").val();
-      if(parentId=='')
-        parentId = $("#cityId").val();
     }
-      $.ajax({
-        url:"/common/listNationByParentId?r="+Math.random(),
-        type:"post",
-        data:{
-          lx : i,
-          id:parentId
-        },
-        success:function(res){
-          if(res.success){
-            var html = "<option value=''>-- 请选择 --</option>";
-            $.each(res.data,function(j,n){
-              html += "<option value='"+ n.id+"'";
-              var sel = "";
-              var pId = $("#provinceId").val();
-              var cId = $("#cityId").val();
-              var dId = $("#districtId").val();
-                if(i==1){
-                  if(n.id==pId)
-                    sel = " selected ";
-                }else if(i==2){
-                  if(n.id==cId)
-                    sel = " selected ";
-                }else if(i==3){
-                  if(n.id==dId)
-                    sel = " selected ";
-                }
-              html += sel + ">";
-              html += n.mc;
-              html += "</option>"
-            })
-            if(i==1){
-              $("#t_province").html(html);
-            }else if(i==2){
-              $("#t_city").html(html);
-            }else if(i==3){
-              $("#t_district").html(html);
+    if(!parentId && _r){
+      if(i == 2) parentId = _r.substring(0,2) + '0000';
+      else if(i == 3) parentId = _r.substring(0,4) + '00';
+    }
+    $.ajax({
+      url:"/common/listNationByParentId?r="+Math.random(),
+      type:"post",async:false,
+      data:{
+        lx : i,
+        id:parentId
+      },
+      success:function(res){
+        if(res.success){
+          var html = "<option value=''>-- 请选择 --</option>";
+          $.each(res.data,function(j,n){
+            if(_r && n.id==_r) {
+              html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+            }else
+              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+          })
+          if(i==1){
+            $("#t_province").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_province").attr("disabled","disabled");
+            }
+          }else if(i==2){
+            $("#t_city").html(html);
+            $("#t_district").html("<option value=''>-- 请选择 --</option>");
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_city").attr("disabled","disabled");
+            }
+          }else if(i==3){
+            $("#t_district").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_district").attr("disabled","disabled");
             }
           }
-        },
-        error:function(){}
-      })
+        }
+      },
+      error:function(){}
+    })
   }
 
 

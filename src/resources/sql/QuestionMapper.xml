@@ -24,16 +24,25 @@
         <result column="f_city_name" property="cityName"/>
         <result column="f_district_id" property="districtId"/>
         <result column="f_district_name" property="districtName"/>
+        <result column="f_share_img" property="shareImg"/>
+        <result column="f_agent_id" property="agentId"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.Question">
-        insert into t_question(f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status,f_icon,f_content,f_coupon_id,f_shop_name,f_telephone,f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name)
-        values(#{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status},#{icon},#{content},#{couponId},#{shopName},#{telephone},#{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName})
+        insert into t_question(
+         f_share_img,f_agent_id,
+        f_id,f_shop_id,f_title,f_sum_count,f_money,f_count,f_create_time,f_status,f_icon,f_content,f_coupon_id,f_shop_name,f_telephone,f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name)
+        values(
+        #{shareImg},#{agentId},
+        #{id},#{shopId},#{title},#{sumCount},#{money},#{count},#{createTime},#{status},#{icon},#{content},#{couponId},#{shopName},#{telephone},#{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.Question">
         update t_question
         <set>
             f_icon=#{icon},f_content=#{content},
             f_coupon_id = #{couponId},
+            <if test="shareImg!=null and shareImg!=''">
+                f_share_img = #{shareImg},
+            </if>
             <if test="shopId!=null and shopId!=''">
                 f_shop_id = #{shopId},
             </if>
@@ -84,7 +93,9 @@
     </select>
     <sql id="querySql">
         <where>
-
+            <if test="agentId !=  null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
             <if test="shopName != null and shopName != ''">
                 and f_shop_name   like concat('%',concat(#{shopName},'%'))
             </if>

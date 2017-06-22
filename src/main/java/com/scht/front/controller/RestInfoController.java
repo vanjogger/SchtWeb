@@ -26,8 +26,8 @@ public class RestInfoController extends BaseFrontController {
 
     @RequestMapping(value = "/queryAdvert", produces = "application/json;charset=UTF-8")
     @ResponseBody
-    public Object list(@RequestParam("code") String code){
-       RetResult result = this.advertService.list(code);
+    public Object list(@RequestParam("code") String code, @RequestParam(value = "region", required = false)String region){
+       RetResult result = this.advertService.list(code, region);
        return JSON.toJSON(result);
     }
 

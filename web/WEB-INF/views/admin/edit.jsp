@@ -75,6 +75,29 @@
     </div>
     <div class="row">
       <div class="control-group span20">
+        <label class="control-label">手机号码：</label>
+        <div class="controls">
+          <input name="telephone" type="text" data-rules="{maxlength:20}" value="${admin.telephone}"
+                 class="input-normal control-text">
+          代理商时该手机号码接收自营订单短信通知。
+        </div>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">代理区域：</label>
+      <div class="controls  control-row-auto">
+        <select id="t_province" name="t_province" onchange="loadArea(2)">
+        </select>
+        <select id="t_city"  name="t_city" onchange="loadArea(3)">
+
+        </select>
+        <select id="t_district" name="t_district">
+
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
         <label class="control-label">地址：</label>
         <div class="controls">
           <input name="address" type="text" data-rules="{maxlength:100}" value="${admin.address}" class="input-normal control-text">
@@ -83,6 +106,12 @@
     </div>
     <div class="row form-actions actions-bar">
       <div class="span13 offset3 ">
+        <input type="hidden" name="provinceId" id="provinceId" value="${admin.provinceId}"/>
+        <input type="hidden" name="provinceName" id="provinceName" value="${admin.provinceName}"/>
+        <input type="hidden" name="cityId" id="cityId" value="${admin.cityId}"/>
+        <input type="hidden" name="cityName" id="cityName" value="${admin.cityName}"/>
+        <input type="hidden" name="districtId" id="districtId" value="${admin.districtId}"/>
+        <input type="hidden" name="districtName"  id="districtName" value="${admin.districtName}"/>
         <button type="submit" class="button button-primary">保存</button>
         <button type="reset" class="button">重置</button>
       </div>
@@ -102,6 +131,16 @@
       submitType:"ajax",
       listeners:{
       beforesubmit:function(){
+        if($("#type1").is(":checked") && $("#t_district").val() == '') {
+          alert("请选择代理商代理区域");
+          return false;
+        }
+        $("#provinceId").val($("#t_province").val());
+        $("#provinceName").val($("#t_province").find("option:selected").text());
+        $("#cityId").val($("#t_city").val());
+        $("#cityName").val($("#t_city").find("option:selected").text());
+        $("#districtId").val($("#t_district").val());
+        $("#districtName").val($("#t_district").find("option:selected").text());
         $("#roleName").val($("#roleId").find("option:selected").text());
         return true;
       }
@@ -121,6 +160,65 @@
 
     form.render();
   });
+
+
+
+  $(function(){
+     if($("#provinceId").val()){
+       loadArea(1,$("#provinceId").val());
+       if($("#cityId").val()) {
+         loadArea(2,$("#cityId").val());
+       }
+       if($("#districtId").val()){
+         loadArea(3,$("#districtId").val());
+       }
+
+     }else{
+       loadArea(1);
+     }
+
+  })
+
+  function loadArea(i,_r){
+    var parentId = "";
+    if(i==2){
+      parentId = $("#t_province").val();
+    }else if(i==3){
+      parentId = $("#t_city").val();
+    }
+    if(!parentId && _r){
+      if(i == 2) parentId = _r.substring(0,2) + '0000';
+      else if(i == 3) parentId = _r.substring(0,4) + '00';
+    }
+    $.ajax({
+      url:"/common/listNationByParentId?r="+Math.random(),
+      type:"post",
+      data:{
+        lx : i,
+        id:parentId
+      },
+      success:function(res){
+        if(res.success){
+          var html = "<option value=''>-- 请选择 --</option>";
+          $.each(res.data,function(j,n){
+            if(_r && n.id==_r) {
+              html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+            }else
+              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+          })
+          if(i==1){
+            $("#t_province").html(html);
+          }else if(i==2){
+            $("#t_city").html(html);
+            $("#t_district").html("<option value=''>-- 请选择 --</option>");
+          }else if(i==3){
+            $("#t_district").html(html);
+          }
+        }
+      },
+      error:function(){}
+    })
+  }
 </script>
 
 <body>

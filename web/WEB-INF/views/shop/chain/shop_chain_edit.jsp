@@ -192,29 +192,33 @@
   });
 
   $(function(){
-    loadArea(1);
-    var cId = $("#cityId").val();
-    if(cId!='')
-      loadArea(2);
-    var dId = $("#districtId").val();
-    if(dId!='')
-      loadArea(3);
+    if($("#provinceId").val()){
+      loadArea(1,$("#provinceId").val());
+      if($("#cityId").val()) {
+        loadArea(2,$("#cityId").val());
+      }
+      if($("#districtId").val()){
+        loadArea(3,$("#districtId").val());
+      }
+    }else{
+      loadArea(1);
+    }
   })
 
-  function loadArea(i){
+  function loadArea(i,_r){
     var parentId = "";
     if(i==2){
       parentId = $("#t_province").val();
-      if(parentId=='')
-        parentId = $("#provinceId").val();
     }else if(i==3){
       parentId = $("#t_city").val();
-      if(parentId=='')
-        parentId = $("#cityId").val();
+    }
+    if(!parentId && _r){
+      if(i == 2) parentId = _r.substring(0,2) + '0000';
+      else if(i == 3) parentId = _r.substring(0,4) + '00';
     }
     $.ajax({
       url:"/common/listNationByParentId?r="+Math.random(),
-      type:"post",
+      type:"post",async:false,
       data:{
         lx : i,
         id:parentId
@@ -223,38 +227,33 @@
         if(res.success){
           var html = "<option value=''>-- 请选择 --</option>";
           $.each(res.data,function(j,n){
-            html += "<option value='"+ n.id+"'";
-            var sel = "";
-            var pId = $("#provinceId").val();
-            var cId = $("#cityId").val();
-            var dId = $("#districtId").val();
-            if(i==1){
-              if(n.id==pId)
-                sel = " selected ";
-            }else if(i==2){
-              if(n.id==cId)
-                sel = " selected ";
-            }else if(i==3){
-              if(n.id==dId)
-                sel = " selected ";
-            }
-            html += sel + ">";
-            html += n.mc;
-            html += "</option>"
+            if(_r && n.id==_r) {
+              html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+            }else
+              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
           })
           if(i==1){
             $("#t_province").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_province").attr("disabled","disabled");
+            }
           }else if(i==2){
             $("#t_city").html(html);
+            $("#t_district").html("<option value=''>-- 请选择 --</option>");
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_city").attr("disabled","disabled");
+            }
           }else if(i==3){
             $("#t_district").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_district").attr("disabled","disabled");
+            }
           }
         }
       },
       error:function(){}
     })
   }
-
 
 
 </script>

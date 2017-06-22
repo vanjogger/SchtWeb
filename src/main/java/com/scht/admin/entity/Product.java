@@ -38,12 +38,85 @@ public class Product {
 
     private boolean wb; //是否外卖商品  true 是 false 不是
 
+    private String provinceId;//所在省id
+    private String provinceName;//所在省名称
+    private String cityId;//所在地市
+    private String cityName;//
+    private String districtId;//所在区域
+    private String districtName;
+    private String tc; //几人套餐
+
 
     //以下不存数据库
     private String date; //时间
     private String typeName; //分类名称
     private String icon; //多图的第一个
     private String shopName; //商家名称
+    private String juli ;//商家距离
+
+    public String getJuli() {
+        return juli;
+    }
+
+    public void setJuli(String juli) {
+        this.juli = juli;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(String districtId) {
+        this.districtId = districtId;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
+    }
+
+    public String getTc() {
+        return tc;
+    }
+
+    public void setTc(String tc) {
+        this.tc = tc;
+    }
 
     public boolean isWb() {
         return wb;

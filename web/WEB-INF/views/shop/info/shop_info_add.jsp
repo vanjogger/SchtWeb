@@ -154,7 +154,22 @@
         </div>
       </div>
     </div>
+    <div class="control-group">
+      <label class="control-label">外卖商家：</label>
+      <div class="controls">
+        <label class="radio" for="wb1"> <input type="radio" name="wb" value="1" id="wb1" />是</label>
+        <label class="radio" for="wb0"><input type="radio" name="wb" value="0" id="wb0" checked/>不是</label>
+      </div>
 
+    </div>
+    <div class="control-group">
+      <label class="control-label">订单通知：</label>
+      <div class="controls">
+        <input type="text" name="telephone" class="input-normal control-text">
+        订单短信通知手机号码。
+      </div>
+
+    </div>
     <div class="control-group">
         <label class="control-label">备注：</label>
       <div class="controls  control-row-auto">
@@ -284,13 +299,23 @@
     $('#btnShow').on('click',function () {
       $(".dmdDialog").show();
     });
-    if(defaultDistrict) {
-      loadArea(1, defaultDistrict.substring(0,2) + "0000");
+    if('${sessionScope.ADMIN.provinceId}' != ''){
+      loadArea(1,'${sessionScope.ADMIN.provinceId}');
+      if('${sessionScope.ADMIN.cityId}' != '') {
+        loadArea(2,'${sessionScope.ADMIN.cityId}');
+      }
+      if('${sessionScope.ADMIN.districtId}' != ''){
+        loadArea(3,'${sessionScope.ADMIN.districtId}');
+      }
 
-        loadArea(2,defaultDistrict.substring(0,4) + "00");
+    }else {
+      if (defaultDistrict) {
+        loadArea(1, defaultDistrict.substring(0, 2) + "0000");
+        loadArea(2, defaultDistrict.substring(0, 4) + "00");
         loadArea(3, defaultDistrict);
-    }else{
-      loadArea(1);
+      } else {
+        loadArea(1);
+      }
     }
 
   })
@@ -302,33 +327,47 @@
     }else if(i==3){
       parentId = $("#t_city").val();
     }
-      $.ajax({
-        url:"/common/listNationByParentId?r="+Math.random(),
-        type:"post",
-        data:{
-          lx : i,
-          id:parentId
-        },
-        success:function(res){
-          if(res.success){
-            var html = "<option value=''>-- 请选择 --</option>";
-            $.each(res.data,function(j,n){
-              if(_r && n.id==_r) {
-                html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
-              }else
-               html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
-            })
-            if(i==1){
-              $("#t_province").html(html);
-            }else if(i==2){
-              $("#t_city").html(html);
-            }else if(i==3){
-              $("#t_district").html(html);
+    if(!parentId && _r){
+      if(i == 2) parentId = _r.substring(0,2) + '0000';
+      else if(i == 3) parentId = _r.substring(0,4) + '00';
+    }
+    $.ajax({
+      url:"/common/listNationByParentId?r="+Math.random(),
+      type:"post",async:false,
+      data:{
+        lx : i,
+        id:parentId
+      },
+      success:function(res){
+        if(res.success){
+          var html = "<option value=''>-- 请选择 --</option>";
+          $.each(res.data,function(j,n){
+            if(_r && n.id==_r) {
+              html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+            }else
+              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
+          })
+          if(i==1){
+            $("#t_province").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_province").attr("disabled","disabled");
+            }
+          }else if(i==2){
+            $("#t_city").html(html);
+            $("#t_district").html("<option value=''>-- 请选择 --</option>");
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_city").attr("disabled","disabled");
+            }
+          }else if(i==3){
+            $("#t_district").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_district").attr("disabled","disabled");
             }
           }
-        },
-        error:function(){}
-      })
+        }
+      },
+      error:function(){}
+    })
   }
 </script>
 

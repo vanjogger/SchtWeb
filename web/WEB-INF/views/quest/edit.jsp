@@ -126,6 +126,13 @@
       </div>
     </div>
     <div class="row">
+      <label class="control-label"><s>*</s>分享图片：</label>
+      <div class="span8">
+        <div id="J_Uploader1">
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>问题解析：</label>
         <div style="display:inline;height:40px;margin-left: 10px;">
@@ -189,6 +196,7 @@
       <div class="span13 offset3 ">
         <input type="hidden" name="jsonStr" id="jsonStr"/>
         <input type="hidden" name="icon" id="icon" value="${data.icon}"/>
+        <input type="hidden" name="shareImg" id="shareImg" value="${data.shareImg}"/>
         <input type="hidden" name="id" value="${data.id}"/>
         <input type="hidden" name="provinceId" id="provinceId" value="${data.provinceId}"/>
         <input type="hidden" name="provinceName" id="provinceName" value="${data.provinceName}"/>
@@ -267,6 +275,7 @@
       listeners:{
         beforesubmit:function(){
           $("#icon").val($("#J_Uploader img").attr("src"));
+          $("#shareImg").val($("#J_Uploader1 img").attr("src"));
           $("#content").val(editor.html());
           $("#provinceId").val($("#t_province").val());
           $("#provinceName").val($("#t_province").find("option:selected").text());
@@ -334,12 +343,36 @@
         maxSize: [2048, '文件大小不能大于2M']
       }
     }).render();
+    var uploader1 = new Uploader.Uploader({
+      //指定使用主题
+      render: '#J_Uploader1',
+      url: '/upload/buiUpload',
+      queue: {
+        resultTpl:{
+          'success': '<div class="success"><img src="{url}" title="{name}" width="100%;padding:5px;"/></div>',
+          'error': '<div class="error"><span class="uploader-error">{msg}</span></div>'
+        }
+      },
+      rules: {
+        //上传的最大个数
+        max: [1, '文件的最大个数不能超过{0}个'],
+        //文件大小的最大值,单位也是kb
+        maxSize: [2048, '文件大小不能大于2M']
+      }
+    }).render();
     if('${data.icon}' != ''){
     //图片
     $("#J_Uploader ul").append('<li class="bui-queue-item bui-queue-item-success">' +
             '<div class="success"><img src="${data.icon}" ' +
             'width="100%;padding:5px;"></div> ' +
             '<span class="action"><span class="bui-queue-item-del">删除</span></span></li>');
+    }
+    if('${data.shareImg}' != ''){
+      //图片
+      $("#J_Uploader1 ul").append('<li class="bui-queue-item bui-queue-item-success">' +
+              '<div class="success"><img src="${data.shareImg}" ' +
+              'width="100%;padding:5px;"></div> ' +
+              '<span class="action"><span class="bui-queue-item-del">删除</span></span></li>');
     }
   });
 
@@ -380,29 +413,34 @@
   });
 
   $(function(){
-    loadArea(1);
-    var cId = $("#cityId").val();
-    if(cId!='')
-      loadArea(2);
-    var dId = $("#districtId").val();
-    if(dId!='')
-      loadArea(3);
+
+    if($("#provinceId").val()){
+      loadArea(1,$("#provinceId").val());
+      if($("#cityId").val()) {
+        loadArea(2,$("#cityId").val());
+      }
+      if($("#districtId").val()){
+        loadArea(3,$("#districtId").val());
+      }
+    }else{
+      loadArea(1);
+    }
   })
 
-  function loadArea(i){
+  function loadArea(i,_r){
     var parentId = "";
     if(i==2){
       parentId = $("#t_province").val();
-      if(parentId=='')
-        parentId = $("#provinceId").val();
     }else if(i==3){
       parentId = $("#t_city").val();
-      if(parentId=='')
-        parentId = $("#cityId").val();
+    }
+    if(!parentId && _r){
+      if(i == 2) parentId = _r.substring(0,2) + '0000';
+      else if(i == 3) parentId = _r.substring(0,4) + '00';
     }
     $.ajax({
       url:"/common/listNationByParentId?r="+Math.random(),
-      type:"post",
+      type:"post",async:false,
       data:{
         lx : i,
         id:parentId
@@ -411,37 +449,34 @@
         if(res.success){
           var html = "<option value=''>-- 请选择 --</option>";
           $.each(res.data,function(j,n){
-            html += "<option value='"+ n.id+"'";
-            var sel = "";
-            var pId = $("#provinceId").val();
-            var cId = $("#cityId").val();
-            var dId = $("#districtId").val();
-            if(i==1){
-              if(n.id==pId)
-                sel = " selected ";
-            }else if(i==2){
-              if(n.id==cId)
-                sel = " selected ";
-            }else if(i==3){
-              if(n.id==dId)
-                sel = " selected ";
-            }
-            html += sel + ">";
-            html += n.mc;
-            html += "</option>"
+            if(_r && n.id==_r) {
+              html += "<option value='"+ n.id+"' selected>"+ n.mc+"</option>";
+            }else
+              html += "<option value='"+ n.id+"'>"+ n.mc+"</option>";
           })
           if(i==1){
             $("#t_province").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_province").attr("disabled","disabled");
+            }
           }else if(i==2){
             $("#t_city").html(html);
+            $("#t_district").html("<option value=''>-- 请选择 --</option>");
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_city").attr("disabled","disabled");
+            }
           }else if(i==3){
             $("#t_district").html(html);
+            if('${sessionScope.ADMIN.type}' == '1'){
+              $("#t_district").attr("disabled","disabled");
+            }
           }
         }
       },
       error:function(){}
     })
   }
+
 </script>
 
 <body>

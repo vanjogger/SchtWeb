@@ -10,14 +10,46 @@
         <result column="f_telephone" property="telephone"/>
         <result column="f_address" property="address"/>
         <result column="f_create_time" property="createTime"/>
+        <result column="f_agent_id" property="agentId"/>
+        <result column="f_province_id" property="provinceId"/>
+        <result column="f_province_name" property="provinceName"/>
+        <result column="f_city_id" property="cityId"/>
+        <result column="f_city_name" property="cityName"/>
+        <result column="f_district_id" property="districtId"/>
+        <result column="f_district_name" property="districtName"/>
+
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.DispatchMember">
-        insert into t_dispatch_member(f_id,f_name,f_telephone,f_address,f_create_time)
-        values(#{id},#{name},#{telephone},#{address},#{createTime})
+        insert into t_dispatch_member(
+        f_agent_id,
+        f_province_id,f_province_name,f_city_id,f_city_name,f_district_id,f_district_name,
+        f_id,f_name,f_telephone,f_address,f_create_time)
+        values(#{agentId},
+        #{provinceId},#{provinceName},#{cityId},#{cityName},#{districtId},#{districtName},
+        #{id},#{name},#{telephone},#{address},#{createTime})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.DispatchMember">
         update t_dispatch_member
         <set>
+            <if test="provinceId!=null and provinceId!=''">
+                f_province_id = #{provinceId},
+            </if>
+            <if test="provinceName!=null and provinceName!=''">
+                f_province_name = #{provinceName},
+            </if>
+            <if test="cityId!=null and cityId!=''">
+                f_city_id = #{cityId},
+            </if>
+            <if test="cityName!=null and cityName!=''">
+                f_city_name = #{cityName},
+            </if>
+            <if test="districtId!=null and districtId!=''">
+                f_district_id = #{districtId},
+            </if>
+            <if test="districtName!=null and districtName!=''">
+                f_district_name = #{districtName},
+            </if>
+
             <if test="id!=null and id!=''">
                 f_id = #{id},
             </if>
@@ -44,11 +76,24 @@
     </select>
 
     <select id="searchByPage" resultMap="my_dispatch_member" parameterType="HashMap">
-        SELECT * from t_dispatch_member order by f_create_time desc limit #{start},#{limit}
+        SELECT * from t_dispatch_member
+        <include refid="querySql"/>
+        order by f_create_time desc limit #{start},#{limit}
     </select>
     <select id="count4Page" resultType="int" parameterType="HashMap">
         select count(f_id) from t_dispatch_member
+        <include refid="querySql"/>
     </select>
+    <sql id="querySql">
+        <where>
+            <if test="agentId != null and agentId != ''">
+                and f_agent_id=#{agentId}
+            </if>
+            <if test="region != null and region != ''">
+                and (f_province_id=#{region} or f_city_id=#{region} or f_district_id=#{region})
+            </if>
+        </where>
+    </sql>
     <delete id="delete">
         DELETE  from t_dispatch_member where f_id in
         <foreach collection="array" item="ids" open="(" separator="," close=")">

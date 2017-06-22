@@ -125,6 +125,13 @@
       </div>
     </div>
     <div class="row">
+      <label class="control-label"><s>*</s>分享图片：</label>
+      <div class="span8">
+        <div id="J_Uploader1">
+        </div>
+      </div>
+    </div>
+    <div class="row">
       <div class="control-group span20">
         <label class="control-label"><s>*</s>问题解析：</label>
         <div style="display:inline;height:40px;margin-left: 10px;">
@@ -168,6 +175,7 @@
       <div class="span13 offset3 ">
         <input type="hidden" name="jsonStr" id="jsonStr"/>
         <input type="hidden" name="icon" id="icon"/>
+        <input type="hidden" name="shareImg" id="shareImg"/>
         <input type="hidden" name="provinceId" id="provinceId" />
         <input type="hidden" name="provinceName" id="provinceName"/>
         <input type="hidden" name="cityId" id="cityId" />
@@ -245,6 +253,7 @@ var icon_i=1;
       listeners:{
         beforesubmit:function(){
           $("#icon").val($("#J_Uploader img").attr("src"));
+          $("#shareImg").val($("#J_Uploader1 img").attr("src"));
           $("#content").val(editor.html());
           $("#provinceId").val($("#t_province").val());
           $("#provinceName").val($("#t_province").find("option:selected").text());
@@ -298,6 +307,23 @@ var icon_i=1;
     var uploader = new Uploader.Uploader({
       //指定使用主题
       render: '#J_Uploader',
+      url: '/upload/buiUpload',
+      queue: {
+        resultTpl:{
+          'success': '<div class="success"><img src="{url}" title="{name}" width="100%;padding:5px;"/></div>',
+          'error': '<div class="error"><span class="uploader-error">{msg}</span></div>'
+        }
+      },
+      rules: {
+        //上传的最大个数
+        max: [1, '文件的最大个数不能超过{0}个'],
+        //文件大小的最大值,单位也是kb
+        maxSize: [2048, '文件大小不能大于2M']
+      }
+    }).render();
+    var uploader1 = new Uploader.Uploader({
+      //指定使用主题
+      render: '#J_Uploader1',
       url: '/upload/buiUpload',
       queue: {
         resultTpl:{
@@ -372,13 +398,24 @@ var icon_i=1;
 
 var defaultDistrict = "371602";
 $(function(){
-  if(defaultDistrict) {
-    loadArea(1, defaultDistrict.substring(0,2) + "0000");
 
-    loadArea(2,defaultDistrict.substring(0,4) + "00");
-    loadArea(3, defaultDistrict);
-  }else{
-    loadArea(1);
+  if('${sessionScope.ADMIN.provinceId}' != ''){
+    loadArea(1,'${sessionScope.ADMIN.provinceId}');
+    if('${sessionScope.ADMIN.cityId}' != '') {
+      loadArea(2,'${sessionScope.ADMIN.cityId}');
+    }
+    if('${sessionScope.ADMIN.districtId}' != ''){
+      loadArea(3,'${sessionScope.ADMIN.districtId}');
+    }
+
+  }else {
+    if (defaultDistrict) {
+      loadArea(1, defaultDistrict.substring(0, 2) + "0000");
+      loadArea(2, defaultDistrict.substring(0, 4) + "00");
+      loadArea(3, defaultDistrict);
+    } else {
+      loadArea(1);
+    }
   }
 
 })
@@ -390,9 +427,13 @@ function loadArea(i,_r){
   }else if(i==3){
     parentId = $("#t_city").val();
   }
+  if(!parentId && _r){
+    if(i == 2) parentId = _r.substring(0,2) + '0000';
+    else if(i == 3) parentId = _r.substring(0,4) + '00';
+  }
   $.ajax({
     url:"/common/listNationByParentId?r="+Math.random(),
-    type:"post",
+    type:"post",async:false,
     data:{
       lx : i,
       id:parentId
@@ -408,10 +449,20 @@ function loadArea(i,_r){
         })
         if(i==1){
           $("#t_province").html(html);
+          if('${sessionScope.ADMIN.type}' == '1'){
+            $("#t_province").attr("disabled","disabled");
+          }
         }else if(i==2){
           $("#t_city").html(html);
+          $("#t_district").html("<option value=''>-- 请选择 --</option>");
+          if('${sessionScope.ADMIN.type}' == '1'){
+            $("#t_city").attr("disabled","disabled");
+          }
         }else if(i==3){
           $("#t_district").html(html);
+          if('${sessionScope.ADMIN.type}' == '1'){
+            $("#t_district").attr("disabled","disabled");
+          }
         }
       }
     },

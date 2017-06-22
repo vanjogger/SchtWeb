@@ -21,7 +21,7 @@ public interface ShopService {
     List<Shop> listByIds(String[] strings);
 
     //根据名称查询列表
-    List<Shop> listByName(String name);
+    List<Shop> listByName(String name, String agentId, String wb);
 
     Integer countShop(Map params);
 
@@ -31,7 +31,9 @@ public interface ShopService {
 
     RetResult updatePwd(String id, String oldPwd, String newPwd);
 
-    RetResult list(String name,String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize);
+    RetResult list(String name,String shopTypeKey,String sortType,String type,String code, int pageNo, int pageSize,
+                   String region,String wb);
 
-    RetResult juliList(String code,String lat,String lng,String name, String shopTypeKey, String type, int pageNo, int pageSize);
+    RetResult juliList(String code,String lat,String lng,String name, String shopTypeKey, String type, int pageNo, int pageSize,
+                       String region,String wb);
 }

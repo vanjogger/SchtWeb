@@ -49,7 +49,7 @@ public class AdvertPlaceController extends BaseController {
             return this.FmtResult(false,"广告位编号被占用",null);
         }
         this.saveLog("添加广告位置("+data.getTitle()+")", request);
-        return FmtResult(true,"添加广告为成功",null);
+        return FmtResult(true,"添加广告位成功",null);
     }
 
     @RequestMapping("find")
