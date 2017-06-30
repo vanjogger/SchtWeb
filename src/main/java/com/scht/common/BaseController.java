@@ -23,10 +23,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -73,12 +70,12 @@ public abstract class BaseController {
      * @version V1.0
      */
     public JSONObject getPageResult(PageInfo pageInfo) {
-        JSONArray array = new JSONArray();
+        List array = new ArrayList();
         if (pageInfo.getResult() != null) {
             for (Object o : pageInfo.getResult()) {
-                Object oo = JSONObject.fromObject(o);
+//                Object oo = JSONObject.fromObject(o);
                 // this.setCheckBoxState(oo);
-                array.add(oo);
+                array.add(o);
             }
         }
         JSONObject o = new JSONObject();
