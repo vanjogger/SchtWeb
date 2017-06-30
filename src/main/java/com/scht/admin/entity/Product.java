@@ -53,6 +53,15 @@ public class Product {
     private String icon; //多图的第一个
     private String shopName; //商家名称
     private String juli ;//商家距离
+    private String code; //商家code
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getJuli() {
         return juli;

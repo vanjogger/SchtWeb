@@ -44,6 +44,7 @@ public class RestProductController  extends BaseController{
             @RequestParam(value = "region",required = false) String region,
             @RequestParam(value = "tc", required = false) String tc,
             @RequestParam(value = "wb", required = false) String wb,
+            @RequestParam(value = "order", required = false)String order,
             @RequestParam(value = "type", required = false)String type,
             String lat,String lng
     ){
@@ -69,6 +70,9 @@ public class RestProductController  extends BaseController{
         }
         if(!StringUtil.isNullOrEmpty(type)){
             map.put("type", type);
+        }
+        if(!StringUtil.isNullOrEmpty(order)) {
+            map.put("order", order);
         }
         List list = productService.regionList(map);
         int count = this.baseService.count4Page(ProductDao.class, map);

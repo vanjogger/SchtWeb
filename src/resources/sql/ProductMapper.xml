@@ -34,6 +34,7 @@
         <result column="f_tc" property="tc"/>
         <result column="juli" property="juli"/>
         <result column="shopName" property="shopName"/>
+        <result column="code" property="code"/>
 
     </resultMap>
 
@@ -137,7 +138,7 @@
         select * from t_product where f_id=#{id}
     </select>
     <select id="regionList" resultMap="my_product" parameterType="HashMap">
-         SELECT  p.*, t.f_name as shopName,
+         SELECT  p.*, t.f_name as shopName,t.f_code as code,
           round(6378.138*2*asin(sqrt(pow(sin( (t.f_lat*pi()/180-#{lat}*pi()/180)/2),2)+cos(t.f_lat*pi()/180)*cos(#{lat}*pi()/180)*
         pow(sin( (t.f_lng*pi()/180-#{lng}*pi()/180)/2),2)))*1000) as juli
           from t_product p left join t_shop t on t.f_id=p.f_shop_id
@@ -177,6 +178,20 @@
             </if>
         </where>
         order by
+        <if test="order != null and order != ''">
+            <if test='order == "price_asc"'>
+                CONVERT (p.f_price, DECIMAL ) asc,
+            </if>
+            <if test='order == "price_desc"'>
+                CONVERT (p.f_price, DECIMAL ) desc,
+            </if>
+            <if test='order == "saleCount_asc"'>
+                p.f_sale_count asc,
+            </if>
+            <if test='order == "saleCount_desc"'>
+                p.f_sale_count desc,
+            </if>
+        </if>
           juli asc,
         <if test="front != null and front != ''">
             p.f_sort asc,
