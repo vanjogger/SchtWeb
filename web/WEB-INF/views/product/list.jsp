@@ -103,7 +103,8 @@
         }
 
         return editStr+delStr + updateStatus;
-      }}
+      }},
+      {title:'ID',dataIndex:'id',width:150}
     ];
     store = Search.createStore('/product/listData');
     gridCfg = Search.createGridCfg(columns,{

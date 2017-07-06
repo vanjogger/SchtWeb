@@ -46,6 +46,8 @@ public class Product {
     private String districtName;
     private String tc; //几人套餐
 
+    private String score; //评分
+
 
     //以下不存数据库
     private String date; //时间
@@ -54,6 +56,23 @@ public class Product {
     private String shopName; //商家名称
     private String juli ;//商家距离
     private String code; //商家code
+    private String typeKey; //分类key
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
+
+    public String getTypeKey() {
+        return typeKey;
+    }
+
+    public void setTypeKey(String typeKey) {
+        this.typeKey = typeKey;
+    }
 
     public String getCode() {
         return code;

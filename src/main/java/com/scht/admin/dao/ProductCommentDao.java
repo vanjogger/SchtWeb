@@ -16,4 +16,6 @@ public interface ProductCommentDao {
     Integer count(@Param("shopId")String shopId,@Param("memberId")String memberId,@Param("productId")String productId);
 
     List<ProductComment> queryByMemberIdandProductId(@Param("memberId")String memberId, @Param("productId")String productId);
+
+    Double calScore(@Param("shopId")String shopId, @Param("productId")String productId);
 }

@@ -180,6 +180,16 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">商品评分：</label>
+        <div class="controls">
+          <input type="text" name="score" value="5" data-rules="{regexp:/^\d+(.\d+)?$/}"
+                 data-messages="{regexp:'请输入有效数字'}"
+                 class="input-small control-text"/>
+        </div>
+      </div>
+    </div>
     <div class="row form-actions ">
       <div class="span13 offset3 ">
         <input type="hidden" name="provinceId" id="provinceId" />

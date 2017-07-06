@@ -176,4 +176,16 @@
         from t_product_comment t where t.f_product_id=#{productId} and t.f_member_id=#{memberId}
         order by t.f_create_time desc
     </select>
+
+    <select id="calScore" resultType="Double">
+        select sum(convert(f_grade,decimal))/count(f_id) from t_product_comment
+        <where>
+            <if test="shopId != null and shopId != ''">
+                and f_shop_id=#{shopId}
+            </if>
+            <if test="productId != null and productId != ''">
+                and f_product_id=#{productId}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -38,11 +38,20 @@ public class Shop {
 
     private String wb; //是否外卖商家， 1 是， 0 不是
     private String telephone; //短信订单通知手机号码
+    private String score; //评分
 
 
     private int saleCount; //商家总销量
     private List<SubShop> list;
     private int subSize;
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
 
     public String getWb() {
         return wb;

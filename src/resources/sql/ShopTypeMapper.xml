@@ -49,7 +49,7 @@
     </select>
 
     <select id="findAll" resultMap="my_shop_type">
-        select * from t_shop_type where  f_status = 'NORMAL' order by f_sort asc
+        select * from t_shop_type where  f_status = 'NORMAL' and f_parent_id!='0' order by f_sort asc
     </select>
 
 

@@ -134,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
             if (!StringUtil.isNullOrEmpty(order.getExpressName())) {
                 message += "已由快递公司" + order.getExpressName() + "承接配送。";
                 if (!StringUtil.isNullOrEmpty(order.getExpressNo())) {
-                    message += "快递单号：" + order.getExpressNo() + "。请注意查收";
+                    message += "快递单号：" + order.getExpressNo() + "。请注意查收！";
                 }
             } else {
                 message += "已发货，请注意查收！";

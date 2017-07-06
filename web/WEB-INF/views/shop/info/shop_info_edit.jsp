@@ -141,7 +141,16 @@
       </div>
     </div>
 
-
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">商家评分：</label>
+        <div class="controls">
+          <input type="text" name="score" value="${dto.score}" data-rules="{regexp:/^\d+(.\d+)?$/}"
+                 data-messages="{regexp:'请输入有效数字'}"
+                 class="input-small control-text"/>
+        </div>
+      </div>
+    </div>
 
     <div class="row">
       <div class="control-group span20">

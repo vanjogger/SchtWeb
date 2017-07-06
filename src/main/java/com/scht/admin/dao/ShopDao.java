@@ -33,4 +33,6 @@ public interface ShopDao {
     List<RestShop> juliList(@Param("code")String code,@Param("lat")String lat, @Param("lng")String lng,@Param("name")String name,
                             @Param("shopTypeKey")String shopTypeKey, @Param("type")String type, @Param("start")int i,
                             @Param("limit")int pageSize, @Param("region")String region,@Param("wb")String wb);
+
+    void updateScore(@Param("id")String shopId, @Param("score")String score);
 }

@@ -7,6 +7,7 @@ import cn.jpush.api.push.model.Options;
 import cn.jpush.api.push.model.Platform;
 import cn.jpush.api.push.model.PushPayload;
 import cn.jpush.api.push.model.audience.Audience;
+import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
 import com.alibaba.fastjson.JSONObject;
@@ -43,13 +44,14 @@ public class PushAPPUtil {
             Notification notification = Notification.newBuilder().addPlatformNotification(IosNotification.newBuilder()
                     .setSound("happy").setAlert(title).addExtras(map).disableBadge().build()).build();
                    // Notification.ios(title, map);
-            Notification androidNoti = Notification.android(map.get("content"), title, map);
+            Notification androidNoti = Notification.newBuilder().addPlatformNotification(AndroidNotification.newBuilder()
+                    .setAlert(title).addExtras(map).build()).build();//.android(map.get("content"), title, map);
             PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.alias(alias));
 //            PushPayload payload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.alias(alias)).setNotification(notification)
 //                    .setNotification(androidNoti).build();
-            PushPayload payLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload payLoadAndroid = builder.setNotification(androidNoti).build();
+            PushPayload payLoadIOS = builder.setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload payLoadAndroid = builder.setMessage(message).build();
             if("member".equalsIgnoreCase(type)){
                 try {
                     new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(payLoadIOS);
@@ -90,10 +92,11 @@ public class PushAPPUtil {
             Notification notification = Notification.newBuilder().addPlatformNotification(IosNotification.newBuilder()
             .setSound("happy").addExtras(map).setAlert(title).disableBadge().build()).build();
                     //Notification.ios(title, map) ;
-            Notification androidNoti = Notification.android(map.get("content"), title, map);
+            Notification androidNoti = Notification.newBuilder().addPlatformNotification(AndroidNotification.newBuilder()
+            .setAlert(title).addExtras(map).build()).build();//.android(map.get("content"), title, map);
             PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.tag(tags));
-            PushPayload pushPayLoadIOS = builder.setNotification(notification).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload pushPayLoadAndroid = builder.setNotification(androidNoti).build();
+            PushPayload pushPayLoadIOS = builder.setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload pushPayLoadAndroid = builder.setMessage(message).build();
 //            PushPayload pushPayload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.tag(tags)).setNotification(notification).setNotification(androidNoti)
 //                    .build();

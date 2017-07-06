@@ -100,7 +100,7 @@ public class SmsUtil {
 	}
 	public static void main(String[] args) {
 //		System.out.println(queryNum());
-		System.out.println(sendSms("13306499202", "您的验证码是：1321。请不要把验证码泄露给其他人。"));
+		System.out.println(sendSms("13306499202", "您好，您购买的商品测试由快递员张三派送，联系电话：123123123，请注意查收！"));
 	}
 
 

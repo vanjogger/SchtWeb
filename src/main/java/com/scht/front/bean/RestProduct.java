@@ -16,6 +16,15 @@ public class RestProduct {
     private int saleCount; //销量
     private int virtualCount; //虚拟销量
     private int commentCount; //评论数量
+    private String score;
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
 
     public String getId() {
         return id;

@@ -142,7 +142,16 @@
         <textarea  name="linkAddress" type="text" data-rules="{maxlength:100}" value="" class="control-row4 input-large"></textarea>
       </div>
     </div>
-
+    <div class="row">
+      <div class="control-group span20">
+        <label class="control-label">商家评分：</label>
+        <div class="controls">
+          <input type="text" name="score" value="5" data-rules="{regexp:/^\d+(.\d+)?$/}"
+                 data-messages="{regexp:'请输入有效数字'}"
+                 class="input-small control-text"/>
+        </div>
+      </div>
+    </div>
 
     <div class="row">
       <div class="control-group span20">

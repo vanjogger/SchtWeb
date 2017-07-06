@@ -85,7 +85,8 @@
                   }
                   var resetPwd = "&nbsp;&nbsp;<a href=\"javascript:void(0);\" onclick=\"resetPwd('"+obj.id+"')\">重置密码</a>&nbsp;&nbsp;";
                 return editStr+delStr+resetPwd;
-              }}
+              }},
+        {title:'ID',dataIndex:'id',width:150}
             ];
             store = Search.createStore('/shop/listData');
             gridCfg = Search.createGridCfg(columns,{

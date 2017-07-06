@@ -28,6 +28,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     MemberDao memberDao;
     @Autowired
     ProductDao productDao;
+    @Autowired
+    ShopDao shopDao;
 
     @Override
     public RetResult list(String shopId,String memberId,String productId, int pageNo, int pageSize) {
@@ -93,11 +95,24 @@ public class ProductCommentServiceImpl implements ProductCommentService {
             order.setMemberAssess("1");
             this.baseMyBatisDao.update(OrderDao.class, order);
             productDao.updateCommentCount(productId,1);//评论数量
+            //计算商家、店铺评分
+            calScore(order.getShopId(), productId);
         }catch (Exception e){
             e.printStackTrace();
             result = new RetResult(RetResult.RetCode.Execute_Error);
         }
         return result;
+    }
+
+    private void calScore(String shopId, String productId){
+        if(!StringUtil.isNullOrEmpty(shopId)) {
+            Double score = productCommentDao.calScore(shopId, null);
+            shopDao.updateScore(shopId, score == null ? "5" : Double.toString(score));
+        }
+        if(!StringUtil.isNullOrEmpty(productId)) {
+            Double score = productCommentDao.calScore(null, productId);
+            productDao.updateScore(productId, score == null?"5":Double.toString(score));
+        }
     }
 
     @Override

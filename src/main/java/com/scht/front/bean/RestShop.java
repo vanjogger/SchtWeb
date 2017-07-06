@@ -28,8 +28,17 @@ public class RestShop {
 
     private String juli; //距离， 单位
     private String images; //
+    private String score; //pingfen
 
     private List<Product> products; //推广商品列表
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
+    }
 
     public String getImages() {
         return images;

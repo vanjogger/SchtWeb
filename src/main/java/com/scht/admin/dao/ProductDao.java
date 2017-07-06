@@ -34,4 +34,6 @@ public interface ProductDao {
     List<Product> searchExtendProductByShopIds(String[] shopIds);
 
     List<Product> regionList(Map<String, Object> map);
+
+    void updateScore(@Param("id")String id, @Param("score")String score);
 }
