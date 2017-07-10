@@ -46,12 +46,12 @@ public class PushAPPUtil {
                    // Notification.ios(title, map);
             Notification androidNoti = Notification.newBuilder().addPlatformNotification(AndroidNotification.newBuilder()
                     .setAlert(title).addExtras(map).build()).build();//.android(map.get("content"), title, map);
-            PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.alias(alias));
+            PushPayload.Builder builder = PushPayload.newBuilder().setAudience(Audience.alias(alias));
 //            PushPayload payload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.alias(alias)).setNotification(notification)
 //                    .setNotification(androidNoti).build();
-            PushPayload payLoadIOS = builder.setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload payLoadAndroid = builder.setMessage(message).build();
+            PushPayload payLoadIOS = builder.setPlatform(Platform.ios()).setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload payLoadAndroid = builder.setPlatform(Platform.android()).setMessage(message).build();
             if("member".equalsIgnoreCase(type)){
                 try {
                     new JPushClient(set.getIosMasterSecret(), set.getIosAppKey()).sendPush(payLoadIOS);
@@ -94,9 +94,9 @@ public class PushAPPUtil {
                     //Notification.ios(title, map) ;
             Notification androidNoti = Notification.newBuilder().addPlatformNotification(AndroidNotification.newBuilder()
             .setAlert(title).addExtras(map).build()).build();//.android(map.get("content"), title, map);
-            PushPayload.Builder builder = PushPayload.newBuilder().setPlatform(Platform.all()).setAudience(Audience.tag(tags));
-            PushPayload pushPayLoadIOS = builder.setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
-            PushPayload pushPayLoadAndroid = builder.setMessage(message).build();
+            PushPayload.Builder builder = PushPayload.newBuilder().setAudience(Audience.tag(tags));
+            PushPayload pushPayLoadIOS = builder.setPlatform(Platform.ios()).setMessage(message).setOptions(Options.newBuilder().setApnsProduction(true).build()).build();
+            PushPayload pushPayLoadAndroid = builder.setPlatform(Platform.android()).setMessage(message).build();
 //            PushPayload pushPayload = PushPayload.newBuilder().setPlatform(Platform.all())
 //                    .setAudience(Audience.tag(tags)).setNotification(notification).setNotification(androidNoti)
 //                    .build();
