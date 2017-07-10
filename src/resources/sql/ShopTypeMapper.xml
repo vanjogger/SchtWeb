@@ -12,14 +12,18 @@
         <result column="f_status" property="status"/>
         <result column="f_parent_id" property="parentId"/>
         <result column="f_is_product" property="isProduct"/>
+        <result column="f_code" property="code"/>
     </resultMap>
     <insert id="insert" parameterType="com.scht.admin.entity.ShopType">
-        insert into t_shop_type(f_id,f_name,f_key,f_sort,f_icon,f_status,f_parent_id,f_is_product)
-        values(#{id},#{name},#{key},#{sort},#{icon},#{status},#{parentId},#{isProduct})
+        insert into t_shop_type(f_id,f_name,f_key,f_sort,f_icon,f_status,f_parent_id,f_is_product,f_code)
+        values(#{id},#{name},#{key},#{sort},#{icon},#{status},#{parentId},#{isProduct},#{code})
     </insert>
     <update id="update" parameterType="com.scht.admin.entity.ShopType">
         update t_shop_type
         <set>
+            <if test="code != null and code != ''">
+                f_code=#{code},
+            </if>
             <if test="name!=null and name!=''">
                 f_name = #{name},
             </if>

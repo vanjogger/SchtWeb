@@ -159,6 +159,11 @@
                     and p.f_wb!='1'
                 </otherwise>
             </choose>
+            <if test="shopTypeId != null and shopTypeId != ''">
+                and p.f_shop_id in (select f_id from t_shop WHERE f_shop_type_id=#{shopTypeId} or f_shop_type_id in (
+                select f_id from t_shop_type where f_parent_id=#{shopTypeId}
+                ))
+            </if>
             <if test="tc != null and tc != ''">
                 and p.f_tc=#{tc}
             </if>
@@ -217,6 +222,11 @@
                     and p.f_wb!='1'
                 </otherwise>
             </choose>
+            <if test="shopTypeId != null and shopTypeId != ''">
+                and p.f_shop_id in (select f_id from t_shop WHERE f_shop_type_id=#{shopTypeId} or f_shop_type_id in (
+                select f_id from t_shop_type where f_parent_id=#{shopTypeId}
+                ))
+            </if>
             <if test="tc != null and tc != ''">
                 and p.f_tc=#{tc}
             </if>
@@ -289,6 +299,11 @@
             </choose>
             <if test="tc != null and tc != ''">
                 and f_tc=#{tc}
+            </if>
+            <if test="shopTypeId != null and shopTypeId != ''">
+                and f_shop_id in (select f_id from t_shop WHERE f_shop_type_id=#{shopTypeId} or f_shop_type_id in (
+                select f_id from t_shop_type where f_parent_id=#{shopTypeId}
+                ))
             </if>
             <if test="region != null and region != ''">
                 and (f_province_id=#{region} or f_city_id=#{region} or f_district_id=#{region})

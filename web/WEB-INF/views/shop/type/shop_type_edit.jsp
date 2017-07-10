@@ -25,6 +25,15 @@
     </div>
     <div class="row">
       <div class="control-group span20">
+        <label class="control-label"><s>*</s>code标示：</label>
+        <div class="controls">
+          <input name="code" type="text" data-rules="{required:true,maxlength:20}"
+                 value="${dto.code}" class="input-normal control-text">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="control-group span20">
         <label class="control-label"><s>*</s>分类key：</label>
         <div class="controls">
           <input name="key" type="text" data-rules="{required:true,maxlength:20}" value="${dto.key}" class="input-normal control-text">

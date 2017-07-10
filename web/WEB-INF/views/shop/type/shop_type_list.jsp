@@ -53,6 +53,7 @@
     var  columns = [
               {title:'分类名称',dataIndex:'name',width:150},
               {title:'分类key',dataIndex:'key',width:80},
+              {title:'code',dataIndex:'code',width:80},
               {title:'分类排序',dataIndex:'sort',width:120},
               {title:'分类图标',dataIndex:'icon',width:200,renderer:function(value,obj){
                  return  "<img src='"+obj.icon+"' style=\"width:80px;height:80px\" />"

@@ -14,8 +14,19 @@ public class ShopType {
     private String parentId;
     private String status;//NORMAL 正常  Frozen删除
     private String isProduct;//是否拉取商品套餐  0:否  1：是
+
+    private String code; //标志
+
     //下级列表
     private List<ShopType> subs;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getId() {
         return id;

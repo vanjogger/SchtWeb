@@ -46,6 +46,7 @@ public class RestProductController  extends BaseController{
             @RequestParam(value = "wb", required = false) String wb,
             @RequestParam(value = "order", required = false)String order,
             @RequestParam(value = "type", required = false)String type,
+            @RequestParam(value = "shopTypeId", required = false) String shopTypeId,
             String lat,String lng
     ){
         Map<String,Object> map = new HashMap<>();
@@ -53,6 +54,9 @@ public class RestProductController  extends BaseController{
         map.put("status", Status.NORMAL.name());
         map.put("start", (pageNo-1)*pageSize);
         map.put("limit", pageSize);
+        if(!StringUtil.isNullOrEmpty(shopTypeId)) {
+            map.put("shopTypeId", shopTypeId);
+        }
         if(!StringUtil.isNullOrEmpty(lat)) {
             map.put("lat", lat);
         }
@@ -94,12 +98,16 @@ public class RestProductController  extends BaseController{
                        @RequestParam(value = "region",required = false) String region,
                        @RequestParam(value = "tc", required = false) String tc,
                        @RequestParam(value = "wb", required = false) String wb,
+                       @RequestParam(value = "shopTypeId", required = false) String shopTypeId,
                        @RequestParam(value = "type", required = false)String type){
         Map<String,Object> map = new HashMap<>();
         map.put("front","true");
         map.put("status", Status.NORMAL.name());
         map.put("start", (pageNo-1)*pageSize);
         map.put("limit", pageSize);
+        if(!StringUtil.isNullOrEmpty(shopTypeId)) {
+            map.put("shopTypeId", shopTypeId);
+        }
         if(!StringUtil.isNullOrEmpty(typeId)) {
             map.put("typeId", typeId);
         }

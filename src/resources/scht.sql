@@ -4382,4 +4382,6 @@ alter table t_dispatch_member add f_district_name varchar(512) default '滨城�
 alter table t_product add f_score varchar(32) default '5';
 alter table t_shop add f_score varchar(32) DEFAULT  '5';
 
+alter table t_shop_type add f_code varchar(512) default '';
+
 
