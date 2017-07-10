@@ -46,6 +46,7 @@ public class RestProductController  extends BaseController{
             @RequestParam(value = "wb", required = false) String wb,
             @RequestParam(value = "order", required = false)String order,
             @RequestParam(value = "type", required = false)String type,
+            @RequestParam(value = "typeId", required = false)String typeId,
             @RequestParam(value = "shopTypeId", required = false) String shopTypeId,
             String lat,String lng
     ){
@@ -54,6 +55,9 @@ public class RestProductController  extends BaseController{
         map.put("status", Status.NORMAL.name());
         map.put("start", (pageNo-1)*pageSize);
         map.put("limit", pageSize);
+        if(!StringUtil.isNullOrEmpty(typeId)) {
+            map.put("typeId", typeId);
+        }
         if(!StringUtil.isNullOrEmpty(shopTypeId)) {
             map.put("shopTypeId", shopTypeId);
         }

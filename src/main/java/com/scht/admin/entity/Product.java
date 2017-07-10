@@ -57,6 +57,15 @@ public class Product {
     private String juli ;//商家距离
     private String code; //商家code
     private String typeKey; //分类key
+    private String shopTypeId; //商家分类ID
+
+    public String getShopTypeId() {
+        return shopTypeId;
+    }
+
+    public void setShopTypeId(String shopTypeId) {
+        this.shopTypeId = shopTypeId;
+    }
 
     public String getScore() {
         return score;

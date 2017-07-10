@@ -27,7 +27,7 @@
       <div class="control-group span20">
         <label class="control-label"><s>*</s>code标示：</label>
         <div class="controls">
-          <input name="code" type="text" data-rules="{required:true,maxlength:20}"
+          <input name="code" type="text"  
                  value="${dto.code}" class="input-normal control-text">
         </div>
       </div>

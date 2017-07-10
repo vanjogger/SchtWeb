@@ -37,6 +37,7 @@
         <result column="code" property="code"/>
         <result column="typeKey" property="typeKey"/>
         <result column="f_score" property="score"/>
+        <result column="shopTypeId" property="shopTypeId"/>
 
     </resultMap>
 
@@ -146,7 +147,7 @@
         select * from t_product where f_id=#{id}
     </select>
     <select id="regionList" resultMap="my_product" parameterType="HashMap">
-         SELECT  p.*, t.f_name as shopName,t.f_code as code,pt.f_key as typeKey,
+         SELECT  p.*, t.f_name as shopName,t.f_code as code,pt.f_key as typeKey,t.f_shop_type_id as shpTypeId,
           round(6378.138*2*asin(sqrt(pow(sin( (t.f_lat*pi()/180-#{lat}*pi()/180)/2),2)+cos(t.f_lat*pi()/180)*cos(#{lat}*pi()/180)*
         pow(sin( (t.f_lng*pi()/180-#{lng}*pi()/180)/2),2)))*1000) as juli
           from t_product p left join t_product_type as pt on p.f_type_id=pt.f_id left join t_shop t on t.f_id=p.f_shop_id
@@ -159,6 +160,9 @@
                     and p.f_wb!='1'
                 </otherwise>
             </choose>
+            <if test="typeId != null and typeId != ''">
+                and p.f_type_id=#{typeId}
+            </if>
             <if test="shopTypeId != null and shopTypeId != ''">
                 and p.f_shop_id in (select f_id from t_shop WHERE f_shop_type_id=#{shopTypeId} or f_shop_type_id in (
                 select f_id from t_shop_type where f_parent_id=#{shopTypeId}
@@ -212,7 +216,8 @@
         p.f_create_time desc limit #{start},#{limit}
     </select>
     <select id="searchByPage" resultMap="my_product" parameterType="HashMap">
-        SELECT  p.*,pt.f_key as typeKey from t_product p left join t_product_type pt on pt.f_id=p.f_type_id
+        SELECT  p.*,pt.f_key as typeKey,s.f_shop_type_id as shopTypeId from t_product p left join t_product_type pt on pt.f_id=p.f_type_id
+         left join t_shop s on p.f_shop_id=s.f_id
         <where>
             <choose>
                 <when test='"1" == wb'>
