@@ -147,7 +147,7 @@
         select * from t_product where f_id=#{id}
     </select>
     <select id="regionList" resultMap="my_product" parameterType="HashMap">
-         SELECT  p.*, t.f_name as shopName,t.f_code as code,pt.f_key as typeKey,t.f_shop_type_id as shpTypeId,
+         SELECT  p.*, t.f_name as shopName,t.f_code as code,pt.f_key as typeKey,t.f_shop_type_id as shopTypeId,
           round(6378.138*2*asin(sqrt(pow(sin( (t.f_lat*pi()/180-#{lat}*pi()/180)/2),2)+cos(t.f_lat*pi()/180)*cos(#{lat}*pi()/180)*
         pow(sin( (t.f_lng*pi()/180-#{lng}*pi()/180)/2),2)))*1000) as juli
           from t_product p left join t_product_type as pt on p.f_type_id=pt.f_id left join t_shop t on t.f_id=p.f_shop_id
@@ -413,10 +413,11 @@ where f_shop_id in
     </select>
 
     <select id="searchExtendProductByShopIds" resultMap="my_product">
-        SELECT * from t_product where f_product_type='EXTEND' and  f_shop_id in
+        SELECT * from t_product where f_status='NORMAL' and  f_shop_id in
         <foreach collection="array" item="ids" open="(" separator="," close=")">
             #{ids}
         </foreach>
+        order by f_sort
     </select>
 
     <update id="updateScore">

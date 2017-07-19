@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scht.admin.dao.ProjectDao">
+
+    <resultMap id="my_project" type="com.scht.admin.entity.Project">
+        <id column="f_id" property="id"/>
+        <result column="f_name" property="name"/>
+        <result column="f_telephone" property="telephone"/>
+        <result column="f_shop_name" property="shopName"/>
+        <result column="f_shop_address" property="shopAddress"/>
+        <result column="f_project_name" property="projectName"/>
+        <result column="f_remark" property="remark"/>
+        <result column="f_create_time" property="createTime"/>
+    </resultMap>
+    <insert id="insert" parameterType="com.scht.admin.entity.Project">
+        insert into t_project(f_id,f_name,f_telephone,f_shop_name,f_shop_address,f_project_name,f_remark,f_create_time)
+        values(#{id},#{name},#{telephone},#{shopName},#{shopAddress},#{projectName},#{remark},#{createTime})
+    </insert>
+    <update id="update" parameterType="com.scht.admin.entity.Project">
+        update t_project
+        <set>
+            <if test="id!=null and id!=''">
+                f_id = #{id},
+            </if>
+            <if test="name!=null and name!=''">
+                f_name = #{name},
+            </if>
+            <if test="telephone!=null and telephone!=''">
+                f_telephone = #{telephone},
+            </if>
+            <if test="shopName!=null and shopName!=''">
+                f_shop_name = #{shopName},
+            </if>
+            <if test="shopAddress!=null and shopAddress!=''">
+                f_shop_address = #{shopAddress},
+            </if>
+            <if test="projectName!=null and projectName!=''">
+                f_project_name = #{projectName},
+            </if>
+            <if test="remark!=null and remark!=''">
+                f_remark = #{remark},
+            </if>
+            <if test="createTime!=null and createTime!=''">
+                f_create_time = #{createTime},
+            </if>
+        </set>
+        where f_id=#{id}
+    </update>
+    <select id="findById" resultMap="my_project">
+        select * from t_project where f_id=#{id}
+    </select>
+    <select id="findAll" resultMap="my_project">
+        select * from t_project where 1=1 order by f_create_time desc
+    </select>
+    <select id="searchByPage" resultMap="my_project" parameterType="HashMap">
+        select * from t_project
+        <include refid="querySql"/>
+        order by f_create_time desc limit #{start},#{limit}
+    </select>
+    <select id="count4Page" resultType="int" parameterType="HashMap">
+        select count(f_id) from t_project
+        <include refid="querySql"/>
+    </select>
+    <delete id="delete">
+        DELETE  from t_project where f_id in
+        <foreach collection="array" item="ids" open="(" separator="," close=")">
+            #{ids}
+        </foreach>
+    </delete>
+
+    <sql id="querySql">
+        <where>
+            <if test="name != null and name != ''">
+                and f_name like concat('%',concat(#{name},'%'))
+            </if>
+            <if test="telephone != null and telephone != ''">
+                and f_telephone like concat('%',concat(#{telephone},'%'))
+            </if>
+            <if test="shopName != null and shopName != ''">
+                and f_shop_name like concat('%',concat(#{shopName},'%'))
+            </if>
+            <if test="projectName != null and projectName != ''">
+                and f_project_name like concat('%',concat(#{projectName},'%'))
+            </if>
+        </where>
+    </sql>
+
+
+</mapper>

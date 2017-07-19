@@ -4385,3 +4385,15 @@ alter table t_shop add f_score varchar(32) DEFAULT  '5';
 alter table t_shop_type add f_code varchar(512) default '';
 
 
+CREATE TABLE t_project(
+f_id varchar(32) primary key,
+f_name varchar(512) not null,
+f_telephone varchar(100) default '',
+f_shop_name varchar(512) default '',
+f_shop_address varchar(512) default '',
+f_project_name varchar(512) default '',
+f_remark varchar(2000) default '',
+f_create_time bigint default 0
+);
+
+
