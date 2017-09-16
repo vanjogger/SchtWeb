@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by vanjoger on 2016/11/26.
+ * Created by wxh on 2016/11/26.
  */
 public interface ShopTypeService {
     List<ShopType> listBySort(int sort);

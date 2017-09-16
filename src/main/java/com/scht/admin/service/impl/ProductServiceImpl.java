@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by vanjoger on 2016/12/11.
+ * Created by wxh on 2016/12/11.
  */
 @Service
 public class ProductServiceImpl implements ProductService {

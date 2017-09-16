@@ -8,9 +8,7 @@
   <link href="/resources/css/dpl-min.css" rel="stylesheet" type="text/css" />
   <link href="/resources/css/bui-min.css" rel="stylesheet" type="text/css" />
   <link href="/resources/css/page-min.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="/resources/js/editor/skins/default.css">
-  <script  type="text/javascript" src="/resources/js/editor/kindeditor.js"></script>
-  <script   type="text/javascript" src="/resources/js/editor/zh_CN.js"></script>
+
 </head>
 <body>
 
@@ -41,9 +39,14 @@
       <div class="control-group span20">
         <label class="control-label"><s>*</s>公告内容：</label>
         <div style="display:inline;height:40px;margin-left: 10px;">
-            <textarea name="content" id="content" cols=""
-                      rows="" class="textinput" style="width:700px;height:350px;visibility:hidden;"
-                      maxlength="1000">${data.content}</textarea>
+          <script type="text/javascript" src="/resources/js/ueditor/ueditor.config.js?ww"></script>
+          <script type="text/javascript" src="/resources/js/ueditor/ueditor.all.js"></script>
+          <script type="text/javascript" charset="utf-8" src="/js/resources/ueditor/lang/zh-cn/zh-cn.js"></script>
+          <script id="editor" type="text/plain" style="width:800px;height:350px;">${data.content}</script>
+          <script type="text/javascript">
+            var ue = UE.getEditor('editor');
+          </script>
+          <input type="hidden" name="content" id="content"/>
         </div>
       </div>
     </div>
@@ -71,12 +74,6 @@
 
 
 <script type="text/javascript">
-  var editor;
-  KindEditor.ready(function(K) {
-    editor = K.create('textarea[name="content"]', {
-      allowFileManager: true
-    });
-  });
 
   BUI.use('common/page'); //页面链接跳转
   BUI.use(['bui/tree','bui/form'],function (Tree,Form) {
@@ -86,7 +83,7 @@
       submitType:"ajax",
       listeners:{
         beforesubmit:function(){
-          $("#content").val(editor.html());
+          $("#content").val(UE.getEditor('editor').getContent());
           return true;
         }
       },

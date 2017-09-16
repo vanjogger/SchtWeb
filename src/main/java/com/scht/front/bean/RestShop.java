@@ -5,7 +5,7 @@ import com.scht.admin.entity.Product;
 import java.util.List;
 
 /**
- * Created by vanjoger on 2016/12/12.
+ * Created by wxh on 2016/12/12.
  */
 public class RestShop {
     private String id;

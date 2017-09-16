@@ -1,7 +1,7 @@
 package com.scht.admin.entity;
 
 /**
- * Created by vanjoger on 2016/11/26.
+ * Created by wxh on 2016/11/26.
  */
 public class AgentMoney {
 

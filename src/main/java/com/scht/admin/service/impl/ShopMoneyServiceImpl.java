@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by vanjoger on 2016/11/27.
+ * Created by wxh on 2016/11/27.
  */
 @Service
 public class ShopMoneyServiceImpl implements ShopMoneyService {

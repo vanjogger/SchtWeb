@@ -5,7 +5,7 @@ import com.scht.admin.entity.ShopMoney;
 import java.util.List;
 
 /**
- * Created by vanjoger on 2016/11/27.
+ * Created by wxh on 2016/11/27.
  */
 public interface ShopMoneyService {
 

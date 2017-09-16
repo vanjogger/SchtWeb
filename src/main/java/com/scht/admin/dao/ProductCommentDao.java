@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by vanjoger on 2016/12/10.
+ * Created by wxh on 2016/12/10.
  */
 @Repository
 public interface ProductCommentDao {

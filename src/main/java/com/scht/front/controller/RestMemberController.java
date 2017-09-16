@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by vanjoger on 2016/12/3.
+ * Created by wxh on 2016/12/3.
  */
 @Controller
 @RequestMapping("/rest/member/")

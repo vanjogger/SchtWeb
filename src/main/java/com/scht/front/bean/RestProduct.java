@@ -1,7 +1,7 @@
 package com.scht.front.bean;
 
 /**
- * Created by vanjoger on 2016/12/11.
+ * Created by wxh on 2016/12/11.
  */
 public class RestProduct {
     private String id;

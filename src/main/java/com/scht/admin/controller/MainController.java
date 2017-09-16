@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Created by vanjoger on 2016/12/2.
+ * Created by wxh on 2016/12/2.
  */
 @Controller
 @RequestMapping("/main")

@@ -1,7 +1,7 @@
 package com.scht.admin.entity;
 
 /**
- * Created by vanjoger on 2016/12/10.
+ * Created by wxh on 2016/12/10.
  */
 public class Nation {
 

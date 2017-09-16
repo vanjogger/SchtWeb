@@ -17,7 +17,7 @@ import java.lang.reflect.Field;
 /**
  * 类的功能，目的，描述等写在此处
  *
- * @author 孙鹏鹏
+ * @author beck
  * @version 1.0
  */
 public class XmlMapUtil {

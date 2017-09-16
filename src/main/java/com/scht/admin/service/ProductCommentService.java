@@ -3,7 +3,7 @@ package com.scht.admin.service;
 import com.scht.front.bean.RetResult;
 
 /**
- * Created by vanjoger on 2016/12/10.
+ * Created by wxh on 2016/12/10.
  */
 public interface ProductCommentService {
     RetResult list(String shopId,String memberId,String productId, int pageNo, int pageSize);

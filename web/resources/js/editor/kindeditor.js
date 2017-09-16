@@ -260,8 +260,8 @@ K.options = {
 		'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
 		'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
 		'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-		'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image',
-		//  'insertfile',
+		'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+		//'flash', 'media', 'insertfile',
 		'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
 		'anchor', 'link', 'unlink', '|', 'about'
 	],
@@ -3185,7 +3185,6 @@ _extend(KCmd, {
 	insertimage : function(url, title, width, height, border, align) {
 		title = _undef(title, '');
 		border = _undef(border, 0);
-
 		var html = '<img src="' + _escape(url) + '" data-ke-src="' + _escape(url) + '" ';
 		if (width) {
 			html += 'width="' + _escape(width) + '" ';

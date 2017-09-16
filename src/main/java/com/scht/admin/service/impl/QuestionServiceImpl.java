@@ -74,7 +74,10 @@ public class QuestionServiceImpl implements QuestionService {
     public Question findForMember(String memberId, String region) {
        Question data =  questionDao.findForMember(memberId, region);
         if(data != null) {
-            data.setShopName(((Shop)this.baseMyBatisDao.findById(ShopDao.class,data.getShopId())).getName());
+            Shop shop = this.baseMyBatisDao.findById(ShopDao.class, data.getShopId());
+            if(shop != null) {
+                data.setShopName(shop.getName());
+            }
             data.setList(questAnswerDao.listByQuest(data.getId()));
         }
         return data;

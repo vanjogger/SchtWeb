@@ -1,7 +1,7 @@
 package com.scht.front.bean;
 
 /**
- * Created by vanjoger on 2016/12/13.
+ * Created by wxh on 2016/12/13.
  */
 public class RestAdvert {
     private String id;

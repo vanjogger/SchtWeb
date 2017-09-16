@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by vanjoger on 2016/12/13.
+ * Created by wxh on 2016/12/13.
  */
 @Service
 public class AdvertServiceImpl implements AdvertService {

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * Created by vanjoger on 2016/11/26.
+ * Created by wxh on 2016/11/26.
  */
 @Service
 public class ShopServiceImpl implements ShopService {

@@ -2,6 +2,8 @@ package com.scht.util.PayUtil;
 
 import com.scht.admin.entity.WeixinPaySet;
 import com.scht.common.ServiceException;
+import com.scht.util.OrderUtil;
+import com.scht.util.StringNumber;
 import com.scht.util.UUIDFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -40,7 +42,7 @@ public class WeixinHbUtil {
 //        map.put("mch_appid", set.getGzAppId()); //公众号ID wx8888888
         map.put("mchid", set.getMchNo());  //微信支付商户号
         map.put("nonce_str", UUIDFactory.random());
-        map.put("parter_trade_no",no);
+        map.put("partner_trade_no",no);
         map.put("openid", openId);
         map.put("check_name", "NO_CHECK");
         map.put("amount", amount);
@@ -57,7 +59,7 @@ public class WeixinHbUtil {
         String respXml = createRespXml(map);
         try {
             Map<String, String> resultMap = sendExecute(respXml, set.getMchNo(), rootPath + set.getCerPath());
-            return dealWithBackData(map);
+            return dealWithBackData(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -154,5 +156,17 @@ public class WeixinHbUtil {
         }
         sb.append("</xml>");
         return sb.toString();
+    }
+
+    public static void main(String[] args){
+        WeixinPaySet set = new WeixinPaySet();
+        set.setAppId("wxeb69e196d927873b");
+        set.setMchNo("1463170502");
+        set.setSecret("83db53ab6281b47cd1f7f75610d69633");
+        set.setPayKey("binhengkejibinhengkejibinhengkej");
+        set.setCerPath("1500885220755.p12");
+        String no = OrderUtil.createNo();
+        boolean flag = WeixinHbUtil.sendHb(set, no,"oroDQwezGWtyF3lcihIGnZXnp6gM", StringNumber.mul("1", "100"),"127.0.0.1","E://");
+
     }
 }

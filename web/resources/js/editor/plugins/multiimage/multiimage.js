@@ -90,18 +90,21 @@ K.extend(KSWFUpload, {
 				K('.ke-progressbar', itemDiv).show();
 			},
 			upload_progress_handler : function(file, bytesLoaded, bytesTotal) {
+				console.info("upload_progress_handler" );
 				var percent = Math.round(bytesLoaded * 100 / bytesTotal);
 				var progressbar = self.progressbars[file.id];
 				progressbar.bar.css('width', Math.round(percent * 80 / 100) + 'px');
 				progressbar.percent.html(percent + '%');
 			},
 			upload_error_handler : function(file, errorCode, message) {
+				console.info("error" + message);
 				if (file && file.filestatus == SWFUpload.FILE_STATUS.ERROR) {
 					var itemDiv = K('div[data-id="' + file.id + '"]', self.bodyDiv).eq(0);
 					showError(itemDiv, self.options.errorMessage);
 				}
 			},
 			upload_success_handler : function(file, serverData) {
+				console.info("success");
 				var itemDiv = K('div[data-id="' + file.id + '"]', self.bodyDiv).eq(0);
 				var data = {};
 				try {
@@ -113,6 +116,7 @@ K.extend(KSWFUpload, {
 					showError(itemDiv, K.DEBUG ? data.message : self.options.errorMessage);
 					return;
 				}
+				console.info(data);
 				file.url = data.url;
 				K('.ke-img', itemDiv).attr('src', file.url).attr('data-status', file.filestatus).data('data', data);
 				K('.ke-status > div', itemDiv).hide();

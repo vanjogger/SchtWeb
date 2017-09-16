@@ -3,7 +3,7 @@ package com.scht.admin.entity;
 import com.scht.util.DateUtil;
 
 /**
- * Created by vanjoger on 2016/12/10.
+ * Created by wxh on 2016/12/10.
  */
 public class ProductComment {
 

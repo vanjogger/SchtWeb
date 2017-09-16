@@ -46,12 +46,14 @@
     var config = [{
       id:'home_manage',
       homePage:"data_list",
-      menu:[{
+      menu:[
+        {
         text:"工作台",
         items:[
           {id:'data_list', text:'数据统计',href:'/workspace', closeable:true}
         ]
-      },{
+      },
+        {
         text:'广告管理',
         items:[
           <shiro:hasPermission name="adplace:list">
@@ -273,6 +275,8 @@
     new PageUtil.MainPage({
       modulesConfig : config
     });
+
+
   });
 
 
@@ -285,6 +289,9 @@
 
   }
 
+  $(function(){
+
+  })
 </script>
 </body>
 </html>

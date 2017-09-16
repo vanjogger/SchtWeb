@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * Created by vanjoger on 2016/11/27.
+ * Created by wxh on 2016/11/27.
  */
 @Controller
 @RequestMapping("/productComment")

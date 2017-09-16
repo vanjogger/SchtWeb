@@ -3,7 +3,7 @@ package com.scht.admin.entity;
 import com.scht.util.DateUtil;
 
 /**
- * Created by vanjoger on 2016/11/27.
+ * Created by wxh on 2016/11/27.
  * 商家资金流水
  */
 public class ShopFlow {

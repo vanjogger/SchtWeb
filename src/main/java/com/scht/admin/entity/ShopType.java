@@ -3,7 +3,7 @@ package com.scht.admin.entity;
 import java.util.List;
 
 /**
- * Created by vanjoger on 2016/11/26.
+ * Created by wxh on 2016/11/26.
  */
 public class ShopType {
     private String id;

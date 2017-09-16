@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by vanjoger on 2016/12/11.
+ * Created by wxh on 2016/12/11.
  */
 @Controller
 @RequestMapping("/rest/shop")

@@ -71,7 +71,7 @@ public class QuestRecordServiceImpl implements QuestRecordService {
             }
         }
         String[] answer = answerIds.split(",");
-        String money = "0";
+//        String money = "0";
         //保存记录，回答正确，错误都保存记录
         QuestRecord record = new QuestRecord();
         if(answer.length == sucIds.size() && sucStr.equals(myStr)) {
@@ -123,7 +123,7 @@ public class QuestRecordServiceImpl implements QuestRecordService {
         record.setSucIds(successIds);
         record.setMyIds(answerIds);
         record.setQuestJson(JSON.toJSONString(question));
-        record.setMoney(money);
+//        record.setMoney(money);
         this.baseMyBatisDao.insert(QuestRecordDao.class, record);
 
         Shop shop = this.baseMyBatisDao.findById(ShopDao.class, question.getShopId());

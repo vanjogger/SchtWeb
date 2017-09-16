@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by vanjoger on 2016/12/2.
+ * Created by wxh on 2016/12/2.
  */
 @Repository
 public interface ShopBankDao {

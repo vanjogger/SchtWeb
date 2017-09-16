@@ -5,7 +5,7 @@ import com.scht.util.StringUtil;
 import java.util.List;
 
 /**
- * Created by vanjoger on 2016/11/26.
+ * Created by wxh on 2016/11/26.
  */
 public class Shop {
 
